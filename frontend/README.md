@@ -4,9 +4,9 @@
 
 This repository is hopefully the front and backend for MilestOWN 2. More notes will follow.
 
-The rough outline is to have a 
+The rough outline is to have a...
 
-- backend - exploring render?
+- backend - exploring render? - for now db will be stored on server
   - serving data like maps, levels, pickups
   - hosting games
   - accepting and validating movements and actions in the game and proctoring each game
