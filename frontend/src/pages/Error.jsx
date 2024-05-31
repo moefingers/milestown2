@@ -1,4 +1,6 @@
-import { useRouteError } from "react-router-dom"
+import { useRouteError, Link } from "react-router-dom"
+
+import { env } from '../determineEnvironment.mjs'
 
 export default function Error() {
     const error = useRouteError()
@@ -13,6 +15,8 @@ export default function Error() {
                 <i>{error?.statusText}</i>
                 <i>{error?.message}</i>
             </p>
+
+            <Link to={env.indexPath}><strong>go to home</strong></Link>
             
         </>
     )

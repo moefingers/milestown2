@@ -27,20 +27,22 @@ import TestClient from './pages/TestClient.jsx';
 //////////////////////
 const router = createBrowserRouter([
   {
-    path: env.indexPath,
+    path: "/",
+    errorElement: <Error />,
     children: [
       {
         index: true,
-        element: <App />,
-        errorElement: <Error />
+        element: <App />
       },
       {
-        path: env.indexPath + "/TestClient",
+        path: "TestClient",
         element: <TestClient />
       }
-    ]
+    ],
   }
-]);
+], {basename: env.indexPath});
+
+console.log(env.indexPath, env.indexPath + "TestClient")
 
 //////////////////////////
 //// REACT DOM SETUP, ////
