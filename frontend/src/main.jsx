@@ -24,12 +24,13 @@ import NotFound from './pages/NotFound.jsx'
 //////////////////////
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <App />,
-  },
-  {
-    path: "*",
-    element: <NotFound />,
+    path: "milestown2/",
+    children: [
+      {
+        index: true,
+        element: <App />,
+      },
+    ]
   }
 ]);
 
@@ -43,3 +44,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <RouterProvider router={router}/>
   </React.StrictMode>,
 )
+
+console.log(window.location.hostname)
+import { config } from './frontendEnvironment.mjs'
+console.log(config)

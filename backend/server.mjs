@@ -1,6 +1,29 @@
+///////////////////////////////
+///// IMPORT, LOAD DOTENV /////
+///////////////////////////////
+import dotenv from 'dotenv';
+dotenv.config();
+
+///////////////////////////////
+///// MODULES, DEPS, SETUP/////
+///////////////////////////////
 import express from 'express'; // import express module
 const server = express(); // create express application
-const port = process.env.PORT || 3000; // get port from environment or use 3000
+
+
+///////////////////////////
+///// SERVE FRONTEND  /////
+///////////////////////////
+import path, { dirname } from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+server.use(express.static(path.join(__dirname, '../frontend/dist')));
+
+
+//////////////////////////////
+///// CORS AND WHITELIST /////
+//////////////////////////////
 const devOrigins = ['http://localhost:5173','http://localhost:4173']; // for development CORS
 const prodOrigins = ['https://milestown2.onrender.com', "https://moefingers.github.io/milestown2/"]; // for production CORS
 const whitelist = process.env.NODE_ENV === 'production' // determine production or development environment and set whitelist to be...
@@ -19,6 +42,7 @@ server.use(function (req, res, next) { // set up CORS
   next();
 });
 
+
 // health check for render.. not literal render. Render is the service we're hosting on at the time this comment is written.
 server.get('/healthz', (req, res) => {
   console.log(`GET " /healthz ", ATTEMPTING sendStatus(200)`);
@@ -30,17 +54,16 @@ server.get('/healthz', (req, res) => {
 server.get('/', (req, res) => {
   console.log(`GET " / "`)
 
-  const data = {
-      message: `GET " / ", `,
-      date: new Date()
-  }
-
-  res.send(JSON.stringify(data));
+  res.sendFile(path.join(__dirname,  '../frontend/dist/index.html'));
 });
 
 
 
 // Start the server
-server.listen(port, () => {
-  console.log(`|||||||||||||||\nServer listening on port ${port}`);
+server.listen(process.env.PORT, () => {
+  console.log(`
+    ///////.env////////
+    NODE_ENV=${process.env.NODE_ENV}
+    PORT=${process.env.PORT}
+  `);
 });

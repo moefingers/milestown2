@@ -1,10 +1,13 @@
 {
+  "homepage":"",
   "dependencies": {
     "dotenv": "^16.4.5",
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "path": "^0.12.7"
   },
-  "scripts":{
-    "start": "node server.mjs",
+  "scripts": {
+    "start": "npm run dev",
+    "preview": "node server.mjs",
     "dev": "nodemon server.mjs"
   }
 }
