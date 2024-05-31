@@ -24,7 +24,7 @@ import NotFound from './pages/NotFound.jsx'
 //////////////////////
 const router = createBrowserRouter([
   {
-    path: "milestown2/",
+    path: "*",
     children: [
       {
         index: true,

@@ -18,5 +18,5 @@ The rough outline is to have a...
   - sends movements in the game to be evaluated and accepted by backend
 
 
-
-  ## log
+## log
+- Decided that the entire project will revolve around using render backend to serve the frontend. Down the road, we may have a backup configured differently served on ghpages.

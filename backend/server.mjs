@@ -31,6 +31,7 @@ const whitelist = process.env.NODE_ENV === 'production' // determine production 
 : devOrigins; // development origins
 
 server.use(function (req, res, next) { // set up CORS
+  console.log("middy wear")
   const origin = req.headers.origin; // get origin from request
   if (whitelist.includes(origin)) { // if origin is in whitelist
     // set CORS headers
