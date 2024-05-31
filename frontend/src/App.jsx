@@ -5,15 +5,13 @@ import { config } from './frontendEnvironment.mjs'
 function App() {
 
   async function fetchData() {
-    const res = await fetch(config.backend, {method: 'GET'})
+    const res = await fetch(config.backend + '/date', {method: 'GET'})
     const data = await res.json()
-    console.log(data)
+    return data
   }
 
   useEffect(() => {
-    console.log(config)
-
-    fetchData()
+    fetchData().then(data => console.log(data))
 
     
   },[])

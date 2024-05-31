@@ -1,61 +1,58 @@
 ///////////////////////////////
-///// IMPORT, LOAD DOTENV /////
-///////////////////////////////
-import dotenv from 'dotenv';
-dotenv.config();
-
-///////////////////////////////
 ///// MODULES, DEPS, SETUP/////
 ///////////////////////////////
 import express from 'express'; // import express module
 const server = express(); // create express application
 
+import cors from 'cors'; // import cors module
 
-///////////////////////////
-///// SERVE FRONTEND  /////
-///////////////////////////
+import dotenv from 'dotenv'; // import dot env
+dotenv.config(); // load .env
+
+/////////////////////////////////////////
+///// CORS MIDDLEWEAR AND WHITELIST /////
+/////////////////////////////////////////
+const devOrigins = '*'; // for development CORS
+const prodOrigins = ['https://milestown2.onrender.com', "https://moefingers.github.io"]; // for production CORS
+const whitelist = process.env.NODE_ENV === 'production' // determine production or development environment and set whitelist to be...
+? prodOrigins // production origins
+: devOrigins; // development origins
+
+server.use(cors({ 
+  origin: whitelist,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+ }));
+console.log(`|||||||||||||||\ncors whitelist: ${whitelist}`)
+
+////////////////////////////////////////////////////////
+///// MIDDLEWEAR SERVE FRONTEND AND ASSETS on '/'  /////
+////////////////////////////////////////////////////////
 import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 server.use(express.static(path.join(__dirname, '../frontend/dist')));
 
+//////////////////////
+//// Log requests ////
+//////////////////////
+server.use((req, res, next) => {
+  console.log(`-request received-\n    ${req.method} ${req.originalUrl}`)
+  next()
+})
 
-//////////////////////////////
-///// CORS AND WHITELIST /////
-//////////////////////////////
-const devOrigins = ['http://localhost:5173','http://localhost:4173']; // for development CORS
-const prodOrigins = ['https://milestown2.onrender.com', "https://moefingers.github.io"]; // for production CORS
-const whitelist = process.env.NODE_ENV === 'production' // determine production or development environment and set whitelist to be...
-? prodOrigins // production origins
-: devOrigins; // development origins
-
-server.use(function (req, res, next) { // set up CORS
-  console.log("middy wear")
-  const origin = req.headers.origin; // get origin from request
-  if (whitelist.includes(origin)) { // if origin is in whitelist
-    // set CORS headers
-    res.setHeader('Access-Control-Allow-Origin', origin);
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE'); 
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type'); 
-    res.setHeader('Access-Control-Allow-Credentials', true);
-  }
-  next();
-});
-
-
-// health check for render.. not literal render. Render is the service we're hosting on at the time this comment is written.
+// health check for Render.com hosting..
 server.get('/healthz', (req, res) => {
-  console.log(`GET " /healthz ", ATTEMPTING sendStatus(200)`);
   res.sendStatus(200);
 })
 
 
 // Simple route to test the server
-server.get('/', (req, res) => {
-  console.log(`GET " / "`)
-
-  // res.sendFile(path.join(__dirname,  '../frontend/dist/index.html'));
+server.get('/date', (req, res) => {
+  res.send(JSON.stringify(
+    {date : new Date()}
+  ));
 });
 
 

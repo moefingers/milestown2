@@ -45,6 +45,10 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   </React.StrictMode>,
 )
 
+
+//////////////////////
+//// DEVELOPMENT  ////
+//////////////////////
 console.log(window.location.hostname)
 import { config } from './frontendEnvironment.mjs'
 console.log(config)
