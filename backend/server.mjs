@@ -54,7 +54,7 @@ server.get('/healthz', (req, res) => {
 server.get('/', (req, res) => {
   console.log(`GET " / "`)
 
-  res.sendFile(path.join(__dirname,  '../frontend/dist/index.html'));
+  // res.sendFile(path.join(__dirname,  '../frontend/dist/index.html'));
 });
 
 

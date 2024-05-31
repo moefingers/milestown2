@@ -5,7 +5,7 @@ import { config } from './frontendEnvironment.mjs'
 function App() {
 
   async function fetchData() {
-    const res = await fetch(config.backend)
+    const res = await fetch(config.backend, {method: 'GET'})
     const data = await res.json()
     console.log(data)
   }
