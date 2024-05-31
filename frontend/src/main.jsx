@@ -18,7 +18,7 @@ import {
 import { env } from './frontendEnvironment.mjs'
 
 import App from './App.jsx'
-import NotFound from './pages/NotFound.jsx'
+import Error from './pages/Error.jsx'
 
 
 //////////////////////
@@ -31,7 +31,12 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <App />,
+        errorElement: <Error />
       },
+      {
+        path: "/page2ex",
+        element: <div>page 2 <Link to="/">go back</Link></div>
+      }
     ]
   }
 ]);

@@ -5,7 +5,10 @@ import { env } from './frontendEnvironment.mjs'
 function App() {
 
   async function fetchData() {
-    const res = await fetch(env.backend + 'date', {method: 'GET'})
+    const url = window.location.hostname === 'localhost'
+      ? env.backend + '/date'
+      : env.backend + 'date'
+    const res = await fetch(url, {method: 'GET'})
     const data = await res.json()
     return data
   }

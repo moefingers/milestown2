@@ -1,6 +1,6 @@
 import { useRouteError } from "react-router-dom"
 
-export default function NotFound() {
+export default function Error() {
     const error = useRouteError()
     return (
         <>
@@ -10,8 +10,8 @@ export default function NotFound() {
             <p>{window.location.toString()}</p>
 
             <p>
-                <i>{error.statusText}</i>
-                <i>{error.message}</i>
+                <i>{error?.statusText}</i>
+                <i>{error?.message}</i>
             </p>
             
         </>
