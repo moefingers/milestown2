@@ -4,8 +4,18 @@
 
 This repository is hopefully the front and backend for MilestOWN 2. More notes will follow.
 
-## important notes
-- To deploy to gh-pages, before running `npm run deploy` in either `/frontend` or `/` directory, please uncomment `// base: '/milestown2/'` in `/frontend/vite.config.js`
+[Hosted on Render.com!](https://milestown2.onrender.com/)
+[And a backup frontend on GitHub Pages](https://moefingers.github.io/milestown2/)
+
+## Development note: running `npm run deploy` in either `/frontend` or `/` directory will do the following:
+- **Do not run these commands**, these are not instructions.
+- This is a description of what running `npm run deploy` does.
+- *temporarily* add `base: '/milestown2/'` to vite.config.js
+- run `npm run build`
+- run `npm run gh-pages -d dist`
+- remove `base: '/milestown2/'` from vite.config.js
+- run `npm run build` (without base in vite.config.js)
+- copy `frontend/dist` to `backend/dist` (so the host will read commits from the build)
 
 
 The rough outline is to have a...
