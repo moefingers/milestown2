@@ -9,6 +9,8 @@ import cors from 'cors'; // import cors module
 import dotenv from 'dotenv'; // import dot env
 dotenv.config(); // load .env
 
+import fs from 'fs/promises';
+
 /////////////////////////////////////////
 ///// CORS MIDDLEWEAR AND WHITELIST /////
 /////////////////////////////////////////
@@ -24,6 +26,11 @@ server.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'],
  }));
 console.log(`|||||||||||||||\ncors whitelist: ${whitelist}`)
+
+//////////////////////////////////////////
+///// MIDDLEWEAR TO PARSE REQUEST BODY ///
+//////////////////////////////////////////
+server.use(express.json());
 
 ////////////////////////////////////////////////////////
 ///// MIDDLEWEAR SERVE FRONTEND AND ASSETS on '/'  /////
@@ -56,9 +63,21 @@ server.get('/date', (req, res) => {
   ));
 });
 
+//////////////////////////
+//// POST OFFER ROUTE ////
+//////////////////////////
+
+server.post('/offer', async (req, res) => {
+  const data =  JSON.parse(await fs.readFile('./db/data.json', 'utf8'));
+  data.currentOffers.push(req.body);
+  await fs.writeFile('./db/data.json', JSON.stringify(data, null, 2));
+  res.send(JSON.stringify(data.currentOffers));
+});
 
 
-// Start the server
+
+/////////////////////////////////
+//// START SERVER AND LISTEN ////
 server.listen(process.env.PORT, () => {
   console.log(`
     ///////.env////////

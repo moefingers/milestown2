@@ -1,0 +1,112 @@
+{
+  "currentOffers": [
+    {
+      "sdp": "v=0\r\no=- 566887125041792305 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=extmap-allow-mixed\r\na=msid-semantic: WMS\r\n",
+      "type": "offer"
+    },
+    {
+      "sdp": "v=0\r\no=- 7999937424734214324 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=extmap-allow-mixed\r\na=msid-semantic: WMS\r\n",
+      "type": "offer"
+    },
+    {
+      "sdp": "v=0\r\no=- 8659594113354440052 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=extmap-allow-mixed\r\na=msid-semantic: WMS\r\n",
+      "type": "offer"
+    },
+    {
+      "sdp": "v=0\r\no=- 7418704009427568680 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=extmap-allow-mixed\r\na=msid-semantic: WMS\r\n",
+      "type": "offer"
+    },
+    {
+      "sdp": "v=0\r\no=- 6090204102091352379 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=extmap-allow-mixed\r\na=msid-semantic: WMS\r\n",
+      "type": "offer"
+    },
+    {
+      "sdp": "v=0\r\no=- 8623565389295780694 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=extmap-allow-mixed\r\na=msid-semantic: WMS\r\n",
+      "type": "offer"
+    },
+    {
+      "sdp": "v=0\r\no=- 4180130086093860168 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=extmap-allow-mixed\r\na=msid-semantic: WMS\r\n",
+      "type": "offer"
+    },
+    {
+      "sdp": "v=0\r\no=- 6399174340687962852 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=extmap-allow-mixed\r\na=msid-semantic: WMS\r\n",
+      "type": "offer"
+    },
+    {
+      "sdp": "v=0\r\no=- 4129845682235485131 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=extmap-allow-mixed\r\na=msid-semantic: WMS\r\n",
+      "type": "offer"
+    },
+    {
+      "sdp": "v=0\r\no=- 3841180529162125373 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=extmap-allow-mixed\r\na=msid-semantic: WMS\r\n",
+      "type": "offer"
+    },
+    {
+      "sdp": "v=0\r\no=- 4933588714983556640 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=extmap-allow-mixed\r\na=msid-semantic: WMS\r\n",
+      "type": "offer"
+    },
+    {
+      "sdp": "v=0\r\no=- 384345352442397187 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=extmap-allow-mixed\r\na=msid-semantic: WMS\r\n",
+      "type": "offer"
+    },
+    {
+      "sdp": "v=0\r\no=- 5652891600339191168 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=extmap-allow-mixed\r\na=msid-semantic: WMS\r\n",
+      "type": "offer"
+    },
+    {
+      "sdp": "v=0\r\no=- 3318149019091755379 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=extmap-allow-mixed\r\na=msid-semantic: WMS\r\n",
+      "type": "offer"
+    },
+    {
+      "sdp": "v=0\r\no=- 4826468870824667795 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=extmap-allow-mixed\r\na=msid-semantic: WMS\r\n",
+      "type": "offer"
+    },
+    {
+      "sdp": "v=0\r\no=- 8812754053248985440 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=extmap-allow-mixed\r\na=msid-semantic: WMS\r\n",
+      "type": "offer"
+    },
+    {
+      "sdp": "v=0\r\no=- 4753244979299605432 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=extmap-allow-mixed\r\na=msid-semantic: WMS\r\n",
+      "type": "offer"
+    },
+    {
+      "sdp": "v=0\r\no=- 3000746328414011835 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=extmap-allow-mixed\r\na=msid-semantic: WMS\r\n",
+      "type": "offer"
+    },
+    {
+      "sdp": "v=0\r\no=- 4343914256873365328 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=extmap-allow-mixed\r\na=msid-semantic: WMS\r\n",
+      "type": "offer"
+    },
+    {
+      "sdp": "v=0\r\no=- 6934268661607835190 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=extmap-allow-mixed\r\na=msid-semantic: WMS\r\n",
+      "type": "offer"
+    },
+    {
+      "sdp": "v=0\r\no=- 3858538004105839435 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=extmap-allow-mixed\r\na=msid-semantic: WMS\r\n",
+      "type": "offer"
+    },
+    {
+      "sdp": "v=0\r\no=- 6523780756107980615 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=extmap-allow-mixed\r\na=msid-semantic: WMS\r\n",
+      "type": "offer"
+    },
+    {
+      "sdp": "v=0\r\no=- 938033180087865897 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=extmap-allow-mixed\r\na=msid-semantic: WMS\r\n",
+      "type": "offer"
+    },
+    {
+      "sdp": "v=0\r\no=- 6077185671825113067 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=extmap-allow-mixed\r\na=msid-semantic: WMS\r\n",
+      "type": "offer"
+    },
+    {
+      "sdp": "v=0\r\no=- 5106406107728954661 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=extmap-allow-mixed\r\na=msid-semantic: WMS\r\n",
+      "type": "offer"
+    },
+    {
+      "sdp": "v=0\r\no=- 5922230075240297210 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=extmap-allow-mixed\r\na=msid-semantic: WMS\r\n",
+      "type": "offer"
+    },
+    {
+      "sdp": "v=0\r\no=- 6172784849910926526 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=extmap-allow-mixed\r\na=msid-semantic: WMS\r\n",
+      "type": "offer"
+    }
+  ]
+}
