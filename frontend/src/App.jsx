@@ -26,7 +26,7 @@ function App() {
 
       <h1>h1 in app test</h1>
       <button>play</button>
-      <Link to={env.indexPath + "/TestClient"} >go to test client</Link>
+      <Link to={env.indexPath + "TestClient"} >go to test client</Link>
 
     </>
   )

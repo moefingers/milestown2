@@ -57,7 +57,7 @@ export default function TestClient() {
     return (
         <>
             <h1>test client</h1>
-            <Link to="/">go back</Link>
+            <Link to={env.indexPath}>go back</Link>
 
             <button onClick={offerButtonClicked}>post ip, port to server</button>
 
