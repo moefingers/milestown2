@@ -4,6 +4,10 @@
 
 This repository is hopefully the front and backend for MilestOWN 2. More notes will follow.
 
+## important notes
+- To deploy to gh-pages, before running `npm run deploy` in either `/frontend` or `/` directory, please uncomment `// base: '/milestown2/'` in `/frontend/vite.config.js`
+
+
 The rough outline is to have a...
 
 - backend - exploring render? - for now db will be stored on server
@@ -19,4 +23,3 @@ The rough outline is to have a...
 
 
 ## log
-- Decided that the entire project will revolve around using render backend to serve the frontend. Down the road, we may have a backup configured differently served on ghpages.

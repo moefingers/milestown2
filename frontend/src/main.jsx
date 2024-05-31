@@ -26,7 +26,7 @@ import NotFound from './pages/NotFound.jsx'
 //////////////////////
 const router = createBrowserRouter([
   {
-    path: env.environment === "development" ? "/" : "milestown2",
+    path: window.location.hostname === "moefingers.github.io" ? "milestown2" : "/",
     children: [
       {
         index: true,
