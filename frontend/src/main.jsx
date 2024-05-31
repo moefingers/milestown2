@@ -15,10 +15,11 @@ import {
 ////////////////////////////
 //// COMPONENT IMPORTS /////
 ////////////////////////////
-import { env } from './frontendEnvironment.mjs'
+import { env } from './determineEnvironment.mjs'
 
 import App from './App.jsx'
 import Error from './pages/Error.jsx'
+import TestClient from './pages/TestClient.jsx';
 
 
 //////////////////////
@@ -35,8 +36,8 @@ const router = createBrowserRouter([
         errorElement: <Error />
       },
       {
-        path: indexPath + "/page2ex",
-        element: <div>page 2 <Link to="/">go back</Link></div>
+        path: indexPath + "/TestClient",
+        element: <TestClient />
       }
     ]
   }

@@ -34,15 +34,16 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 server.use(express.static(path.join(__dirname, 'dist')));
 
-//////////////////////
-//// Log requests ////
-//////////////////////
+////////////////////////////////////
+//// MIDDLEWEAR TO LOG REQUESTS ////
+////////////////////////////////////
 server.use((req, res, next) => {
   console.log(`-request received-\n    ${req.method} ${req.originalUrl}`)
   next()
 })
 
-// health check for Render.com hosting..
+//////////////////////////
+/// HEALTH CHECK ROUTE ///
 server.get('/healthz', (req, res) => {
   res.sendStatus(200);
 })
