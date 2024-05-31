@@ -25,7 +25,7 @@ server.use(express.static(path.join(__dirname, '../frontend/dist')));
 ///// CORS AND WHITELIST /////
 //////////////////////////////
 const devOrigins = ['http://localhost:5173','http://localhost:4173']; // for development CORS
-const prodOrigins = ['https://milestown2.onrender.com', "https://moefingers.github.io/milestown2/"]; // for production CORS
+const prodOrigins = ['https://milestown2.onrender.com', "https://moefingers.github.io"]; // for production CORS
 const whitelist = process.env.NODE_ENV === 'production' // determine production or development environment and set whitelist to be...
 ? prodOrigins // production origins
 : devOrigins; // development origins
