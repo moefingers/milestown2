@@ -74,6 +74,26 @@ server.post('/offer', async (req, res) => {
   res.send(JSON.stringify(data.currentOffers));
 });
 
+///////////////////////////
+//// DELETE ALL OFFERS ////
+///////////////////////////
+
+server.delete('/offer', async (req, res) => {
+  const data =  JSON.parse(await fs.readFile('./db/data.json', 'utf8'));
+  data.currentOffers = [];
+  await fs.writeFile('./db/data.json', JSON.stringify(data, null, 2));
+  res.send(JSON.stringify(data.currentOffers));
+});
+
+////////////////////////
+//// GET ALL OFFERS ////
+////////////////////////
+
+server.get('/offer', async (req, res) => {
+  const data =  JSON.parse(await fs.readFile('./db/data.json', 'utf8'));
+  res.send(JSON.stringify(data.currentOffers));
+});
+
 
 
 /////////////////////////////////

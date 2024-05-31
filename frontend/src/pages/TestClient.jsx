@@ -7,51 +7,37 @@ export default function TestClient() {
 
     const[devResponse, setDevResponse] = useState(false)
 
-    async function postOffer(offer) {
-        const res = await fetch(env.backend + '/offer', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(offer)
+    async function fetchCustom(method = 'GET', path = '/date', body = undefined) {
+        const res = await fetch(env.backend + path, {
+            method: method,
+            headers: method == 'POST' ? {'Content-Type': 'application/json'} : {},
+            body: JSON.stringify(body)
         })
         const data = await res.json()
         return data
     }
+    const getAllOffers = () => fetchCustom('GET', '/offer')
+    const postOffer = (offer) => fetchCustom('POST', '/offer', offer)
+    const deleteAllOffers = () => fetchCustom('DELETE', '/offer')
 
-    async function offerButtonClicked(){
-        console.log("useeffect")
-        
+    
+    async function generateOffer(){
         try {
-            async function generateOffer() {
-                const pc = new RTCPeerConnection();
-                const offer = await pc.createOffer();
-                await pc.setLocalDescription(offer);
+            // construct peer connection
+            const pc = new RTCPeerConnection();
 
-                console.log(offer)
-                
-                // const response = await postOffer(offerJson);
-                // console.log(response)
+            // create offer
+            const offer = await pc.createOffer();
 
-                const res = await postOffer(offer)
-                setDevResponse(res)
-                // await pc.setRemoteDescription(new RTCSessionDescription(JSON.parse(response)));
-                // const answer = await pc.createAnswer();
-                // await pc.setLocalDescription(answer);
-                // const answerJson = JSON.stringify(answer);
-                // // await postOffer(answerJson); 
-                // console.log(answerJson)         
-            }
-            generateOffer()
+            // set local description
+            await pc.setLocalDescription(offer);
+
+
+            return offer
         } catch (error) {
             console.log(error)
         }
     }
-
-    useEffect(() => {
-        
-
-    }, [])
 
 
     return (
@@ -59,7 +45,12 @@ export default function TestClient() {
             <h1>test client</h1>
             <Link to={".."}>go back</Link>
 
-            <button onClick={offerButtonClicked}>post ip, port to server</button>
+            <button onClick={async (event)=>{await postOffer(await generateOffer()); setDevResponse(await getAllOffers())}}>post offer to server</button>
+
+            <button onClick={async (event)=>{await deleteAllOffers(); setDevResponse(await getAllOffers())}}>delete all offers</button>
+
+            <button onClick={async (event)=>{setDevResponse(await getAllOffers())}}>get all offers</button>
+
 
             <div>{devResponse && JSON.stringify(devResponse, null, 2)}</div>
         </>

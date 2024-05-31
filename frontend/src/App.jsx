@@ -25,8 +25,7 @@ function App() {
     <> 
 
       <h1>h1 in app test</h1>
-      <button>play</button>
-      <Link to={"TestClient"} >go to test client</Link>
+      <Link to={"TestClient"} >go to test client page</Link>
 
     </>
   )

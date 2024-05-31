@@ -42,7 +42,6 @@ const router = createBrowserRouter([
   }
 ], {basename: env.indexPath});
 
-console.log(env.indexPath, env.indexPath + "TestClient")
 
 //////////////////////////
 //// REACT DOM SETUP, ////
@@ -59,5 +58,5 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 //////////////////////
 //// DEVELOPMENT  ////
 //////////////////////
-console.log(window.location.hostname)
+console.log("window.location.hostname: " + window.location.hostname)
 console.log(env)
