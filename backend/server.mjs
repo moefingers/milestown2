@@ -4,6 +4,7 @@ const port = process.env.PORT || 3000;
 
 // Simple route to test the server
 server.get('/', (req, res) => {
+  console.log("server.get('/')")
   res.send(
         {
             message: 'all good on server.get("/")',
