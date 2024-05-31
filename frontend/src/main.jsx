@@ -24,9 +24,10 @@ import Error from './pages/Error.jsx'
 //////////////////////
 //// REACT ROUTER ////
 //////////////////////
+const indexPath = window.location.hostname === "moefingers.github.io" ? "milestown2" : "/"
 const router = createBrowserRouter([
   {
-    path: window.location.hostname === "moefingers.github.io" ? "milestown2" : "/",
+    path: indexPath,
     children: [
       {
         index: true,
@@ -34,7 +35,7 @@ const router = createBrowserRouter([
         errorElement: <Error />
       },
       {
-        path: "/page2ex",
+        path: indexPath + "/page2ex",
         element: <div>page 2 <Link to="/">go back</Link></div>
       }
     ]
