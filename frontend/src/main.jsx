@@ -15,6 +15,8 @@ import {
 ////////////////////////////
 //// COMPONENT IMPORTS /////
 ////////////////////////////
+import { env } from './frontendEnvironment.mjs'
+
 import App from './App.jsx'
 import NotFound from './pages/NotFound.jsx'
 
@@ -24,7 +26,7 @@ import NotFound from './pages/NotFound.jsx'
 //////////////////////
 const router = createBrowserRouter([
   {
-    path: "*",
+    path: env.environment === "development" ? "/" : "milestown2",
     children: [
       {
         index: true,
@@ -50,5 +52,4 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 //// DEVELOPMENT  ////
 //////////////////////
 console.log(window.location.hostname)
-import { config } from './frontendEnvironment.mjs'
-console.log(config)
+console.log(env)

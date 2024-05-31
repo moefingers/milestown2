@@ -6,6 +6,6 @@ const production = {
     environment: 'development',
     backend: 'http://localhost:3000'
   };
-  export const config = (process.env.NODE_ENV === 'development') 
+  export const env = (process.env.NODE_ENV === 'development') 
     ? development 
     : production

@@ -47,6 +47,9 @@ server.get('/healthz', (req, res) => {
   res.sendStatus(200);
 })
 
+// server.get('/', (req, res) => {
+//   res.sendFile(path.join(__dirname, '../frontend/dist/index.html'))
+// })
 
 // Simple route to test the server
 server.get('/date', (req, res) => {

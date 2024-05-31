@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
 
-import { config } from './frontendEnvironment.mjs'
+import { env } from './frontendEnvironment.mjs'
 
 function App() {
 
   async function fetchData() {
-    const res = await fetch(config.backend + '/date', {method: 'GET'})
+    const res = await fetch(env.backend + 'date', {method: 'GET'})
     const data = await res.json()
     return data
   }
