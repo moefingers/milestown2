@@ -1,20 +1,3 @@
 {
-  "currentOffers": [
-    {
-      "sdp": "v=0\r\no=- 7960541580549602100 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=extmap-allow-mixed\r\na=msid-semantic: WMS\r\n",
-      "type": "offer"
-    },
-    {
-      "sdp": "v=0\r\no=- 7817622947073686407 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=extmap-allow-mixed\r\na=msid-semantic: WMS\r\n",
-      "type": "offer"
-    },
-    {
-      "sdp": "v=0\r\no=- 888527191105758091 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=extmap-allow-mixed\r\na=msid-semantic: WMS\r\n",
-      "type": "offer"
-    },
-    {
-      "sdp": "v=0\r\no=- 6010508804790895191 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=extmap-allow-mixed\r\na=msid-semantic: WMS\r\n",
-      "type": "offer"
-    }
-  ]
+  "currentOffers": []
 }
