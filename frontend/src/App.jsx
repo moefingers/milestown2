@@ -6,9 +6,9 @@ function App() {
 
   async function fetchData() {
     const url = window.location.hostname === 'localhost'
-      ? env.backend + '/date'
-      : env.backend + 'date'
-    const res = await fetch(url, {method: 'GET'})
+      ? env.localbackend
+      : env.livebackend
+    const res = await fetch(url + '/date', {method: 'GET'})
     const data = await res.json()
     return data
   }

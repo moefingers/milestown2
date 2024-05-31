@@ -1,11 +1,5 @@
-const production = {
-    environment: 'production',
-    backend: 'https://milestown2.onrender.com/'
-  };
-  const development = {
-    environment: 'development',
-    backend: 'http://localhost:3000'
-  };
-  export const env = (process.env.NODE_ENV === 'development') 
-    ? development 
-    : production
+export const env = {
+  environment: process.env.NODE_ENV || 'development',
+  livebackend:  'https://milestown2.onrender.com',
+  localbackend: 'http://localhost:3000'
+}
