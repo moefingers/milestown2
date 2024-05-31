@@ -25,10 +25,9 @@ import TestClient from './pages/TestClient.jsx';
 //////////////////////
 //// REACT ROUTER ////
 //////////////////////
-const indexPath = window.location.hostname === "moefingers.github.io" ? "milestown2" : "/"
 const router = createBrowserRouter([
   {
-    path: indexPath,
+    path: env.indexPath,
     children: [
       {
         index: true,
@@ -36,7 +35,7 @@ const router = createBrowserRouter([
         errorElement: <Error />
       },
       {
-        path: indexPath + "/TestClient",
+        path: env.indexPath + "/TestClient",
         element: <TestClient />
       }
     ]

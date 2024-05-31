@@ -18,6 +18,13 @@ This repository is hopefully the front and backend for MilestOWN 2. More notes w
 - run `npm run build` (without base in vite.config.js)
 - copy `frontend/dist` to `backend/dist` (so the host will read commits from the build)
 
+## Other Development notes:
+- `npm run frontend` in main directory will run the vite app with live changes.
+- `npm run preview` in main directory will build and run the vite app locally in a production-style environment.
+
+- `npm run backend` in main directory will run the backend app in a production-style environment.
+- `npm run backendpreview` in main directory will run the backend with `nodemon`.
+
 
 The rough outline is to have a...
 

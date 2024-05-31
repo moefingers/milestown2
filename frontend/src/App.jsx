@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 
 import { Link } from "react-router-dom"
 
+// This determines the index path.. On github pages, it's "/milestown2" whereas on localhost or Render.com it's "/"
+
 import { env } from './determineEnvironment.mjs'
 
 function App() {
@@ -24,7 +26,7 @@ function App() {
 
       <h1>h1 in app test</h1>
       <button>play</button>
-      <Link to="/TestClient" >go to test client</Link>
+      <Link to={env.indexPath + "/TestClient"} >go to test client</Link>
 
     </>
   )
