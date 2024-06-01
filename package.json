@@ -12,7 +12,9 @@
 
         "backend":         "cd backend && npm start",
         "backenddev":      "cd backend && npm run dev",
-        "backendpreview":  "cd backend && npm run preview"
+        "backendpreview":  "cd backend && npm run preview",
 
+
+        "install": "cd frontend && npm install && cd ../backend && npm install"
     }
 }

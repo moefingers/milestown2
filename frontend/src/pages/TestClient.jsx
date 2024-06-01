@@ -56,11 +56,7 @@ export default function TestClient() {
     }
 
     async function registerWithPeerServer(){
-        let peer = new Peer({
-            host: '/',
-            path: '/peerjs/listener',
-            port: 3000
-        })
+        let peer = new Peer(env.clientPeerSettings)
 
         peer.on('open', (id) => {
             console.log('My peer ID is: ' + id);
@@ -74,6 +70,9 @@ export default function TestClient() {
             connection.on('data', (data) => {
                 console.log(data)
             })
+        })
+        peer.on('close', () => {
+            console.log('peer closed')
         })
 
         setPeer(peer)
