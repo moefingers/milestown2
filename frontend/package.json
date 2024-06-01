@@ -9,16 +9,15 @@
     "build": "vite build && npm run deleteolddist && npm run copydist",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "npm run build && vite preview --host",
-
     "renameconfig": "cd buildscripts && node renameconfig.js",
     "revertconfig": "cd buildscripts && node revertconfig.js",
     "copydist": "cd buildscripts && node copydist.js",
     "deleteolddist": "cd buildscripts && node deleteolddist.js",
-    
     "predeploy": "npm run renameconfig && npm run build",
-    "deploy": "gh-pages -d dist && npm run revertconfig && npm run build && npm run copydist"
+    "deploy": "gh-pages -d dist && npm run revertconfig && npm run build"
   },
   "dependencies": {
+    "peerjs": "^1.5.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.23.1"

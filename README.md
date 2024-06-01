@@ -16,6 +16,7 @@ This repository is hopefully the front and backend for MilestOWN 2. More notes w
 - run `npm run gh-pages -d dist`
 - remove `base: '/milestown2/'` from vite.config.js
 - run `npm run build` (without base in vite.config.js)
+- delete `backend/dist`
 - copy `frontend/dist` to `backend/dist` (so the host will read commits from the build)
 
 ## Other Development notes:

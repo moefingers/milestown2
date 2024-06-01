@@ -11,6 +11,9 @@ dotenv.config(); // load .env
 
 import fs from 'fs/promises';
 
+import { ExpressPeerServer } from 'peer';
+
+
 /////////////////////////////////////////
 ///// CORS MIDDLEWEAR AND WHITELIST /////
 /////////////////////////////////////////
@@ -51,6 +54,7 @@ server.use((req, res, next) => {
 
 //////////////////////////
 /// HEALTH CHECK ROUTE ///
+//////////////////////////
 server.get('/healthz', (req, res) => {
   res.sendStatus(200);
 })
@@ -66,7 +70,6 @@ server.get('/date', (req, res) => {
 //////////////////////////
 //// POST OFFER ROUTE ////
 //////////////////////////
-
 server.post('/offer', async (req, res) => {
   const data =  JSON.parse(await fs.readFile('./db/data.json', 'utf8'));
   data.currentOffers.push(req.body);
@@ -77,7 +80,6 @@ server.post('/offer', async (req, res) => {
 ///////////////////////////
 //// DELETE ALL OFFERS ////
 ///////////////////////////
-
 server.delete('/offer', async (req, res) => {
   const data =  JSON.parse(await fs.readFile('./db/data.json', 'utf8'));
   data.currentOffers = [];
@@ -88,7 +90,6 @@ server.delete('/offer', async (req, res) => {
 ////////////////////////
 //// GET ALL OFFERS ////
 ////////////////////////
-
 server.get('/offer', async (req, res) => {
   const data =  JSON.parse(await fs.readFile('./db/data.json', 'utf8'));
   res.send(JSON.stringify(data.currentOffers));
@@ -98,10 +99,23 @@ server.get('/offer', async (req, res) => {
 
 /////////////////////////////////
 //// START SERVER AND LISTEN ////
-server.listen(process.env.PORT, () => {
+/////////////////////////////////
+const listener = server.listen(process.env.PORT, () => {
   console.log(`
     ///////.env////////
     NODE_ENV=${process.env.NODE_ENV}
     PORT=${process.env.PORT}
   `);
 });
+
+
+/////////////////////////////
+///// START PEER SERVER /////
+/////////////////////////////
+
+const peerServer = ExpressPeerServer(listener, {
+  path: '/listener',
+  debug: true
+});
+
+server.use('/peerjs', peerServer);
