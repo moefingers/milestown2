@@ -161,7 +161,7 @@ export default function TestClient() {
             <div>my id: </div>
             <div style={{cursor: 'pointer'}} onClick={(event)=> {navigator.clipboard.writeText(peerId); console.log("copied to clipboard") }}>{peerId}</div>
             {remoteConnectionSuccessful && <>
-                <input type="text" onChange={(event)=>{setChatInput(event.target.value)}} value={chatInput}/>
+                <input type="text" onKeyUp={(event)=>{setChatInput(event.target.value); if(event.key === "Enter"){sendMessage(chatInput) }}} onChange={(event)=>{setChatInput(event.target.value)}} value={chatInput}/>
                 <button onClick={(event)=>{sendMessage(chatInput)}}>send chat</button>
             </>}
             <hr />
