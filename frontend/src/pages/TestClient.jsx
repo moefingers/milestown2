@@ -48,6 +48,7 @@ export default function TestClient() {
         peer.on('close', () => {
             console.log('peer closed')
         })
+        
 
         return peer
     }

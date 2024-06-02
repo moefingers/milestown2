@@ -20,6 +20,7 @@ import { env } from './determineEnvironment.mjs'
 import App from './App.jsx'
 import Error from './pages/Error.jsx'
 import TestClient from './pages/TestClient.jsx';
+import DrawnMap from './components/DrawnMap.jsx'
 
 
 //////////////////////

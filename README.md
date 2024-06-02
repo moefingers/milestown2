@@ -45,3 +45,4 @@ The rough outline is to have a...
 
 
 ## log
+imported and formatted maps with each map as {name, map, spawns}

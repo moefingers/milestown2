@@ -95,6 +95,14 @@ server.get('/offer', async (req, res) => {
   res.send(JSON.stringify(data.currentOffers));
 });
 
+//////////////////////
+//// GET ALL MAPS ////
+//////////////////////
+server.get('/maps', async (req, res) => {
+  const maps =  JSON.parse(await fs.readFile('./db/maps.json', 'utf8'));
+  res.send(JSON.stringify(maps));
+});
+
 
 
 /////////////////////////////////
