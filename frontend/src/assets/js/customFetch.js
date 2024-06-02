@@ -14,7 +14,7 @@ const getAllOffers = () => customFetch('GET', '/offer')
 const postOffer = (offer) => customFetch('POST', '/offer', offer)
 const deleteAllOffers = () => customFetch('DELETE', '/offer')
 const getMaps = () => customFetch('GET', '/maps')
-const getDate = () => customFetch('GET', '/date')
+const getAesthetics = () => customFetch('GET', '/aesthetics')
 
 
-export {customFetch, getAllOffers, postOffer, deleteAllOffers, getMaps, getDate}
+export {customFetch, getAllOffers, postOffer, deleteAllOffers, getMaps, getAesthetics}

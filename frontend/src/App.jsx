@@ -7,16 +7,18 @@ import { Link } from "react-router-dom"
 import { env } from './determineEnvironment.mjs'// This determines the index path.. On github pages, it's "/milestown2" whereas on localhost or Render.com it's "/"
 
 import DrawnMap from './components/DrawnMap'
-import { getMaps, getDate } from './assets/js/customFetch'
+import { getMaps, getAesthetics } from './assets/js/customFetch'
 
 function App() {
 
   const [mapList, setMapList] = useState([])
   const [map, setMap] = useState(null)
+  const [aesthetics, setAesthetics] = useState(null)
 
 
   useEffect(() => {
     getMaps().then((data) => setMapList(data))
+    getAesthetics().then((data) => setAesthetics(data))
   },[])
 
 
@@ -32,7 +34,7 @@ function App() {
         {mapList.map((map, index) => <li key={index} style={{cursor: 'pointer'}} onClick={(event)=>{setMap(map)}}>{map.name}</li>)}
       </ul>
 
-      {map && <DrawnMap mapObject={map} />}
+      {map && <DrawnMap mapObject={map} aesthetics={aesthetics}/>}
 
     </>
   )

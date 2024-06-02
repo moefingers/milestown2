@@ -1,0 +1,54 @@
+{
+    "shapes":[
+        {
+            "name":"Circle",
+            "clipPath": "circle(50% at 50% 50%)"
+        },
+        {
+            "name":"Deformed Octagon",
+            "clipPath": "polygon(50% 0%, 95% 20%, 100% 50%, 95% 80%, 50% 100%, 5% 80%, 0% 50%, 5% 20%)"
+        },
+        {
+            "name":"Diamond",
+            "clipPath": "polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)"
+        }
+    ],
+    "colors":[
+        {
+            "name":"neutral",
+            "hex":"#666666"
+        },
+        {
+            "name":"Saphire Blue",
+            "hex":"#0000ff"
+        },
+        {
+            "name":"Firetruck Red",
+            "hex":"#ff0000"
+        },
+        {
+            "name":"Orange",
+            "hex":"#ffa500"
+        },
+        {
+            "name":"Sun Yellow",
+            "hex":"#ffff00"
+        },
+        {
+            "name":"Forest Green",
+            "hex":"#00aa00"
+        },
+        {
+            "name":"Sky Blue",
+            "hex":"#add8e6"
+        },
+        {
+            "name":"Royal Purple",
+            "hex":"#800080"
+        },
+        {
+            "name":"Violet",
+            "hex":"#ee82ee"
+        }
+    ]
+}

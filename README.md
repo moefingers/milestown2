@@ -43,6 +43,8 @@ The rough outline is to have a...
   - client for game
   - sends movements in the game to be evaluated and accepted by backend
 
+## todo:
+- maybe transition from using clip paths to using svg
 
 ## log
 imported and formatted maps with each map as {name, map, spawns}

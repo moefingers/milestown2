@@ -103,6 +103,13 @@ server.get('/maps', async (req, res) => {
   res.send(JSON.stringify(maps));
 });
 
+//////////////////////
+/// GET AESTHETICS ///
+//////////////////////
+server.get('/aesthetics', async (req, res) => {
+  const aesthetics =  JSON.parse(await fs.readFile('./db/aesthetics.json', 'utf8'));
+  res.send(JSON.stringify(aesthetics));
+});
 
 
 /////////////////////////////////
