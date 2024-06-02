@@ -1,4 +1,9 @@
 :root {
+    --map-block-factor: 1;
+    /* --full-block: calc(var(--iunit) * var(--map-block-factor)); infinity unit * factor ... Factor to be determined by map size    */
+    --full-block: 5vw;
+    --map-transform: translate(-50%, -50%);
+
     --netural: 120,120,120;
     --character-one: 255, 0, 0;
     --character-two: 0, 0, 255;
@@ -8,7 +13,7 @@
 
 .map-container {
     position: absolute;
-    transform: translate(-50%, -50%);
+    transform: var(--map-transform);
     top: 50%;
     left: 50%;
 
@@ -29,8 +34,8 @@
     background-color: rgba(var(--netural), .3);
 
     position: relative;
-    width: calc(var(--full-block) * 40);
-    height: calc(var(--full-block) * 40);
+    width: var(--full-block);
+    height: var(--full-block);
 }
 
 .tile.blank {
