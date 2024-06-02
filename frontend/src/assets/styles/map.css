@@ -1,10 +1,117 @@
+.map-container {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
 .row {
     display: flex;
     flex-direction: row;
 }
 
 .tile {
-    border: 1px solid black;
-    width: 20px;
-    height: 20px;
+    background-color: rgba(255, 0, 0, 0.2);
+    outline:solid 1px black;
+
+    position: relative;
+    width: 100px;
+    height: 100px;
+}
+
+.tile.blank {
+    background-color: transparent;
+}
+
+.edge {
+    position: absolute;
+    
+    display: flex;
+    flex-direction: row;
+
+    width: 100px;
+    height: 10px;
+    background-color: rgba(0, 0, 0, 0.2);
+
+    filter:drop-shadow(0 0 2px black);
+}
+
+.edge.horizontal {
+    transform:translate(0, -50%);
+}
+.edge.vertical {
+    transform:translate(-50%, -50%) rotate(90deg) translate(50%, 0%);
+}
+
+.edge.vertical.end {
+    transform:translate(50%, -50%) rotate(90deg) translate(50%, 0%);
+    right: 0px;
+}
+
+.edge.horizontal.end {
+    transform:translate(0, 50%);
+    bottom: 0;
+}
+
+
+
+
+.half-edge {
+    background-color: rgba(0, 0, 255, 0.2);
+    flex-grow: 1;
+    height: 100%;
+
+    clip-path: polygon(
+        0 50%,
+        15% 0,
+        100% 0,
+        100% 100%,
+        15% 100%
+      );
+}
+.half-edge::after{
+    box-shadow: inset 0 0 0 1px black;
+}
+
+.half-edge.end{
+    transform: rotate(180deg);
+}
+
+.control-block {
+    clip-path: polygon(
+        0 0,
+        1% 0,
+        8% 7%,
+
+        92% 7%,
+        99% 0%,
+        100% 0%,
+        100% 1%,
+        93% 8%,
+
+        93% 92%,
+        100% 99%,
+        100% 100%,
+        99% 100%,
+        92% 93%,
+
+        8% 93%,
+        1% 100%,
+        0% 100%,
+        0% 99%,
+        7% 92%,
+
+        7% 8%,
+        0% 1%
+      );
+      
+}
+
+.testblock {
+    color: gray;
+    line-height: 80px;
+    font-size: 80px;
+    background-color: black;
+    width: 400px;
+    height: 400px;
 }

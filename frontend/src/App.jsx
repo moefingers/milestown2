@@ -40,7 +40,7 @@ function App() {
         {mapList.map((map, index) => <li key={index} style={{cursor: 'pointer'}} onClick={(event)=>{setMap(map)}}>{map.name}</li>)}
       </ul>
 
-      {map && <DrawnMap map={map} />}
+      {map && <DrawnMap mapObject={map} />}
 
     </>
   )
