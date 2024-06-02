@@ -4,8 +4,9 @@ import CharacterBlob from './CharacterBlob';
 
 import '../assets/styles/map.css'
 
-export default function DrawnMap({mapObject, preview=true, aesthetics}) {
-    const {name, map, spawns} = mapObject
+export default function DrawnMap({mapObject, preview=true, aesthetics, characters=[], blockSizeOverride=false, selfMove=false }) {
+    const {name, map, spawns=[]} = mapObject
+    console.log(map)
 
 
 
@@ -68,18 +69,22 @@ export default function DrawnMap({mapObject, preview=true, aesthetics}) {
             document.documentElement.style.setProperty('--map-transform', "translate(-50%, -50%)")
         }
     }
-    onresize = () => resizeMap(
-        document.documentElement.clientWidth,
-        document.documentElement.clientHeight,
-        map[0].length,
-        map.length
-    )
-    resizeMap(
-        document.documentElement.clientWidth,
-        document.documentElement.clientHeight,
-        map[0].length,
-        map.length
-    )
+    if(!blockSizeOverride){
+        onresize = () => resizeMap(
+            document.documentElement.clientWidth,
+            document.documentElement.clientHeight,
+            map[0].length,
+            map.length
+        )
+        resizeMap(
+            document.documentElement.clientWidth,
+            document.documentElement.clientHeight,
+            map[0].length,
+            map.length
+        )
+    } else {
+        document.documentElement.style.setProperty('--full-block', blockSizeOverride)
+    }
     // when map is rotated, 0 0 becomes top right
     const mapContainerRef = useRef()
 
@@ -93,8 +98,8 @@ export default function DrawnMap({mapObject, preview=true, aesthetics}) {
         const blobElements = Object.values(mapContainerRef.current.children).filter((child) => child.className == "character-blob").map((element) => {
             return element
         })
-        console.log(tileElements)
-        console.log(blobElements)
+        console.log("tileElements: ", tileElements)
+        console.log("blobElements: ", blobElements)
         Object.values(blobElements).forEach((blob, index) => {
             const animationOptions = {
                 duration: 3000,
@@ -116,7 +121,6 @@ export default function DrawnMap({mapObject, preview=true, aesthetics}) {
     }, [mapObject])
     return (
         <>
-            <h1>DrawnMap.jsx, map[name]: {mapObject.name}</h1>
             <div className="map-container" ref={mapContainerRef}>{
                 map.map((row, rowIndex) => {
                     return <div key={rowIndex} className="row">{row.map((tile, tileIndex) =>{
@@ -136,8 +140,12 @@ export default function DrawnMap({mapObject, preview=true, aesthetics}) {
                 )
             }
             {preview && spawns.map((spawn, index) => {
-                return <CharacterBlob key={index} shape={aesthetics.shapes[0]} x={spawn[0]} y={spawn[1]}/>
-            })}</div>
+                if(characters.length >= index){
+                    return <CharacterBlob key={index} shape={aesthetics.shapes[0]} x={spawn[0]} y={spawn[1]}/>
+                }
+            })}
+            {selfMove && <CharacterBlob shape={aesthetics.shapes[0]} x={0} y={0} selfMove={true}/>}
+            </div>
         </>
     )
 }

@@ -44,6 +44,12 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 server.use(express.static(path.join(__dirname, 'dist')));
 
+/////////////////////////////////////////
+/////   MIDDLEWARE FOR CONTROLLERS /////
+////////////////////////////////////////
+import offerController from './controllers/offerController.mjs'
+server.use('/offer', offerController)
+
 ////////////////////////////////////
 //// MIDDLEWEAR TO LOG REQUESTS ////
 ////////////////////////////////////
@@ -59,41 +65,33 @@ server.get('/healthz', (req, res) => {
   res.sendStatus(200);
 })
 
-
-// Simple route to test the server
-server.get('/date', (req, res) => {
-  res.send(JSON.stringify(
-    {date : new Date()}
-  ));
-});
-
 //////////////////////////
 //// POST OFFER ROUTE ////
 //////////////////////////
-server.post('/offer', async (req, res) => {
-  const data =  JSON.parse(await fs.readFile('./db/data.json', 'utf8'));
-  data.currentOffers.push(req.body);
-  await fs.writeFile('./db/data.json', JSON.stringify(data, null, 2));
-  res.send(JSON.stringify(data.currentOffers));
-});
+// server.post('/offer', async (req, res) => {
+//   const data =  JSON.parse(await fs.readFile('./db/data.json', 'utf8'));
+//   data.currentOffers.push(req.body);
+//   await fs.writeFile('./db/data.json', JSON.stringify(data, null, 2));
+//   res.send(JSON.stringify(data.currentOffers));
+// });
 
 ///////////////////////////
 //// DELETE ALL OFFERS ////
 ///////////////////////////
-server.delete('/offer', async (req, res) => {
-  const data =  JSON.parse(await fs.readFile('./db/data.json', 'utf8'));
-  data.currentOffers = [];
-  await fs.writeFile('./db/data.json', JSON.stringify(data, null, 2));
-  res.send(JSON.stringify(data.currentOffers));
-});
+// server.delete('/offer', async (req, res) => {
+//   const data =  JSON.parse(await fs.readFile('./db/data.json', 'utf8'));
+//   data.currentOffers = [];
+//   await fs.writeFile('./db/data.json', JSON.stringify(data, null, 2));
+//   res.send(JSON.stringify(data.currentOffers));
+// });
 
 ////////////////////////
 //// GET ALL OFFERS ////
 ////////////////////////
-server.get('/offer', async (req, res) => {
-  const data =  JSON.parse(await fs.readFile('./db/data.json', 'utf8'));
-  res.send(JSON.stringify(data.currentOffers));
-});
+// server.get('/offer', async (req, res) => {
+//   const data =  JSON.parse(await fs.readFile('./db/data.json', 'utf8'));
+//   res.send(JSON.stringify(data.currentOffers));
+// });
 
 //////////////////////
 //// GET ALL MAPS ////
@@ -101,6 +99,14 @@ server.get('/offer', async (req, res) => {
 server.get('/maps', async (req, res) => {
   const maps =  JSON.parse(await fs.readFile('./db/maps.json', 'utf8'));
   res.send(JSON.stringify(maps));
+});
+
+/////////////////////////
+//// GET DEFAULT MAP ////
+/////////////////////////
+server.get('/defaultmap', async (req, res) => {
+  const maps =  JSON.parse(await fs.readFile('./db/maps.json', 'utf8'));
+  res.send(JSON.stringify(maps[0]));
 });
 
 //////////////////////

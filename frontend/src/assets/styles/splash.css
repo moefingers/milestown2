@@ -1,0 +1,27 @@
+:root{
+    --splash-title-height: calc(40 * var(--iunit));
+}
+
+.splash-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+h1 {
+    position: relative;
+    line-height: var(--splash-title-height);
+    font-size: var(--splash-title-height);
+    text-wrap: nowrap;
+    display: flex;
+    flex-direction: row;
+}
+
+h1 > div.map-container{
+    width: var(--splash-title-height);
+    position: relative;
+    top: 0;
+    left: 0;
+    transform: none;
+}
