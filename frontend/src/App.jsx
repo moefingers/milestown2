@@ -14,16 +14,8 @@ function App() {
   const [mapList, setMapList] = useState([])
   const [map, setMap] = useState(null)
 
-  async function fetchData() {
-    const res = await fetch(env.backend + '/date', {method: 'GET'})
-    const data = await res.json()
-    return data
-  }
 
   useEffect(() => {
-    console.log("getting date from /date endpoint for general testing")
-    getDate().then((data) => console.log(data))
-
     getMaps().then((data) => setMapList(data))
   },[])
 

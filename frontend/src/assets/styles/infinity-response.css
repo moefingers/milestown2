@@ -1,0 +1,16 @@
+:root {
+    --map-block-factor: 1;
+    --full-block: calc(var(--iunit) * var(--map-block-factor)); /* infinity unit * factor ... Factor to be determined by map size    */
+}
+
+@media screen and (orientation:landscape) {
+    :root{
+        --iunit : calc(0.002 * 100vh);
+    }
+}
+
+@media screen and (orientation:portrait) {
+    :root{
+        --iunit : calc(0.002 * 100vw);
+    }
+}

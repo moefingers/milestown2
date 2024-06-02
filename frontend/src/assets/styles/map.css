@@ -1,8 +1,23 @@
+:root {
+    --netural: 120,120,120;
+    --character-one: 255, 0, 0;
+    --character-two: 0, 0, 255;
+    --character-three: 0, 255, 0;
+    --character-four: 0, 255, 255;
+}
+
 .map-container {
     position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
+
+    user-select: none;
+    pointer-events: none;
 }
 
 .row {
@@ -11,28 +26,27 @@
 }
 
 .tile {
-    background-color: rgba(255, 0, 0, 0.2);
-    outline:solid 1px black;
+    background-color: rgba(var(--netural), .3);
 
     position: relative;
-    width: 100px;
-    height: 100px;
+    width: calc(var(--full-block) * 40);
+    height: calc(var(--full-block) * 40);
 }
 
 .tile.blank {
     background-color: transparent;
 }
 
+
+/* edge container (full edge) */
 .edge {
     position: absolute;
     
     display: flex;
     flex-direction: row;
 
-    width: 100px;
-    height: 10px;
-    background-color: rgba(0, 0, 0, 0.2);
-
+    width: 100%;  /* Edge length */
+    height: 10%;  /* Edge thickness*/
 }
 
 .edge.horizontal {
@@ -54,63 +68,25 @@
 
 
 
-
+/* Half edges */
 .half-edge {
-    background-color: rgba(0, 0, 255, 0.2);
+    background-color: rgba(var(--netural), 1);
+    /* of two halves, growth will take each half length to 50% */
     flex-grow: 1;
-    height: 100%;
+    height: 100%; /* Half edge thickness should occupy container*/
 
     clip-path: polygon(
-        0 50%,
-        15% 0,
-        100% 0,
-        100% 100%,
-        15% 100%
+        0%      50%,
+
+        15%     0%,
+        /* change X to 101% to fill edge.. not sure fully why */
+        100%    0%,
+        100%    100%,
+
+        15%     100%
       );
-}
-.half-edge::after{
-    box-shadow: inset 0 0 0 1px black;
 }
 
 .half-edge.end{
     transform: rotate(180deg);
-}
-
-.control-block {
-    clip-path: polygon(
-        0 0,
-        1% 0,
-        8% 7%,
-
-        92% 7%,
-        99% 0%,
-        100% 0%,
-        100% 1%,
-        93% 8%,
-
-        93% 92%,
-        100% 99%,
-        100% 100%,
-        99% 100%,
-        92% 93%,
-
-        8% 93%,
-        1% 100%,
-        0% 100%,
-        0% 99%,
-        7% 92%,
-
-        7% 8%,
-        0% 1%
-      );
-      
-}
-
-.testblock {
-    color: gray;
-    line-height: 80px;
-    font-size: 80px;
-    background-color: black;
-    width: 400px;
-    height: 400px;
 }

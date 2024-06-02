@@ -20,7 +20,6 @@ import { env } from './determineEnvironment.mjs'
 import App from './App.jsx'
 import Error from './pages/Error.jsx'
 import TestClient from './pages/TestClient.jsx';
-import DrawnMap from './components/DrawnMap.jsx'
 
 
 //////////////////////
@@ -49,6 +48,8 @@ const router = createBrowserRouter([
 ////   STRICT MODE,   ////
 ////     ROUTER       ////
 //////////////////////////
+import './assets/styles/main.css'
+import './assets/styles/infinity-response.css'
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <RouterProvider router={router}/>
@@ -59,5 +60,5 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 //////////////////////
 //// DEVELOPMENT  ////
 //////////////////////
-console.log("window.location.hostname: " + window.location.hostname)
-console.log(env)
+console.log("window.location.hostname: ",  window.location.hostname)
+console.log("frontend env: ", env)
