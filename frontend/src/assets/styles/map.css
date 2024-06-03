@@ -34,6 +34,11 @@
     height: var(--full-block);
 }
 
+.tile.override {
+    width: var(--full-block-override);
+    height: var(--full-block-override);
+}
+
 .tile.blank {
     background-color: transparent;
 }
@@ -99,6 +104,10 @@
     height: calc(var(--full-block) * 0.25);
 
     background-color: var(--background-one);
+}
+.character-blob.override{
+    width: calc(var(--full-block-override) * 0.25);
+    height: calc(var(--full-block-override) * 0.25);
 }
 
 .character-blob > .inner {

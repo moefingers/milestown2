@@ -1,5 +1,6 @@
 :root{
     --splash-title-height: calc(40 * var(--iunit));
+    --splash-square: calc(33.5 * var(--iunit));
 }
 
 .splash-container {
@@ -9,7 +10,11 @@
     transform: translate(-50%, -50%);
 }
 
-h1 {
+.splash-container > h1 {
+    font-family: "Digital Dream Regular", Courier, monospace;
+    font-style: normal;
+    font-weight: normal;
+
     position: relative;
     line-height: var(--splash-title-height);
     font-size: var(--splash-title-height);
@@ -18,10 +23,23 @@ h1 {
     flex-direction: row;
 }
 
-h1 > div.map-container{
-    width: var(--splash-title-height);
+h1 > div.splash-square-wrapper{
     position: relative;
     top: 0;
     left: 0;
     transform: none;
+    width: var(--splash-square);
+    height: var(--splash-title-height);
+}
+h1 > div.splash-square-wrapper > .map-container{
+    width: var(--splash-square);
+    height: var(--splash-square);
+    position: relative;
+    top: 3%;
+    left: 0;
+    transform: none;
+}
+
+div.splash-container > h1 > span.second{
+    margin-left: calc(6 * var(--iunit));
 }

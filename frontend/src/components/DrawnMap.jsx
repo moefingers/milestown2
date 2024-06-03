@@ -4,12 +4,8 @@ import CharacterBlob from './CharacterBlob';
 
 import '../assets/styles/map.css'
 
-export default function DrawnMap({mapObject, preview=true, aesthetics, characters=[], blockSizeOverride=false, selfMove=false }) {
+export default function DrawnMap({mapObject, preview=true, aesthetics, characters=[], blockSizeOverride=undefined, setSplashElements, splashElements }) {
     const {name, map, spawns=[]} = mapObject
-    console.log(map)
-
-
-
     function resizeMap(containerWidth, containerHeight, mapWidth, mapHeight) { // gets fired by resize
         // const mapIsTallerThanWide = map.length > map[0].length // If this is false, it could also be square. considering rotating the map down the road
         const mapRatio = mapWidth / mapHeight;
@@ -83,40 +79,59 @@ export default function DrawnMap({mapObject, preview=true, aesthetics, character
             map.length
         )
     } else {
-        document.documentElement.style.setProperty('--full-block', blockSizeOverride)
+        document.documentElement.style.setProperty('--full-block-override', blockSizeOverride)
     }
     // when map is rotated, 0 0 becomes top right
     const mapContainerRef = useRef()
 
     useEffect(() => {
         
-        const tileElements = Object.values(mapContainerRef.current.children).filter((child) => child.className == "row").map(({children}) => {
+        const tileElements = Object.values(mapContainerRef.current.children).filter((child) => child.className.includes("row")).map(({children}) => {
             return Object.values(children).map((element) => {
                 return element
             })
-        })
-        const blobElements = Object.values(mapContainerRef.current.children).filter((child) => child.className == "character-blob").map((element) => {
+        }).flat(1)
+        const edgeElements = Object.values(mapContainerRef.current.children).filter((child) => child.className.includes("row")).map(({children}) => {
+            return Object.values(children).map(({children}) => {
+                return Object.values(children).map(({children}) => {
+                    return Object.values(children).map((element) => {
+                        return element
+                    })
+                })
+            })
+        }).flat(3)
+        const blobElements = Object.values(mapContainerRef.current.children).filter((child) => child.className.includes("character-blob")).map((element) => {
             return element
-        })
+        }).flat(1)
         console.log("tileElements: ", tileElements)
         console.log("blobElements: ", blobElements)
-        Object.values(blobElements).forEach((blob, index) => {
+        console.log("edgeElements: ", edgeElements)
+        Object.values(blobElements).filter((blob) => !blob.className.includes("override")).forEach((blob, index) => {
             const animationOptions = {
                 duration: 3000,
-                iterations: Infinity,
+                iterations: 2 - (index / blobElements.length),
                 direction: 'alternate',
                 delay: - 3000 + (index * 3000/blobElements.length)
             }
             const animateShapeKeys = aesthetics.shapes.map((shape) => {return {clipPath: shape.clipPath}})
 
+            
             blob.children[0].animate(aesthetics.colors.map((color) => {
-                    return {backgroundColor: color.hex}
-                }),
+                return {backgroundColor: color.hex}
+            }),
             animationOptions)
+            
+            
             blob.animate(animateShapeKeys, animationOptions)
             blob.children[0].animate(animateShapeKeys, animationOptions)
+            
+
+            
         })
-        
+
+        if(setSplashElements && splashElements.toString() != [...tileElements, ...blobElements, ...edgeElements].toString()){
+            setSplashElements([...tileElements, ...blobElements, ...edgeElements])
+        }
         
     }, [mapObject])
     return (
@@ -126,12 +141,12 @@ export default function DrawnMap({mapObject, preview=true, aesthetics, character
                     return <div key={rowIndex} className="row">{row.map((tile, tileIndex) =>{
                         const noRight = !row[tileIndex+1]
                         const noDown = !map[rowIndex+1] || !map[rowIndex+1][tileIndex]
-                        return <div key={tileIndex} x={tileIndex} y={rowIndex} className={tile == 1 ? "tile" : "tile blank"} style={{backgroundColor: tile==1 && aesthetics.colors[0].hex + "66"}}>
+                        return <div id={`tile-${tileIndex}-${rowIndex}`} key={tileIndex} x={tileIndex} y={rowIndex} className={`${tile == 1 ? "tile" : "tile blank"} ${blockSizeOverride ? "override" : ""}`} style={{backgroundColor: tile==1 && aesthetics.colors[0].hex + "66"}}>
                                 {tile == 1 && <>
-                                    <Edge classes="horizontal" color={aesthetics.colors[0].hex}/>                   {/* top edge */}
-                                    <Edge classes="vertical" color={aesthetics.colors[0].hex}/>                     {/* left edge */}
-                                    {noRight && <Edge classes="vertical end" color={aesthetics.colors[0].hex}/>}    {/* right edge */}
-                                    {noDown && <Edge classes="horizontal end" color={aesthetics.colors[0].hex}/>}   {/* bottom edge */}
+                                    <Edge classes="horizontal" color={aesthetics.colors[0].hex} coords={{type: "h", x: tileIndex, y: rowIndex}}/>                   {/* top edge */}
+                                    <Edge classes="vertical" color={aesthetics.colors[0].hex} coords={{type: "v", x: tileIndex, y: rowIndex}}/>                     {/* left edge */}
+                                    {noRight && <Edge classes="vertical end" color={aesthetics.colors[0].hex} coords={{type: "v", x: tileIndex+1, y: rowIndex}}/>}    {/* right edge */}
+                                    {noDown && <Edge classes="horizontal end" color={aesthetics.colors[0].hex} coords={{type: "h", x: tileIndex, y: rowIndex+1}}/>}   {/* bottom edge */}
                                 </>}
                             </div>
                         
@@ -140,21 +155,24 @@ export default function DrawnMap({mapObject, preview=true, aesthetics, character
                 )
             }
             {preview && spawns.map((spawn, index) => {
-                if(characters.length >= index){
-                    return <CharacterBlob key={index} shape={aesthetics.shapes[0]} x={spawn[0]} y={spawn[1]}/>
+                if(characters.length >= index + 1){
+                    return <CharacterBlob key={index} character={characters[index]} x={spawn[0]} y={spawn[1]}/>
                 }
             })}
-            {selfMove && <CharacterBlob shape={aesthetics.shapes[0]} x={0} y={0} selfMove={true}/>}
+            {setSplashElements && <CharacterBlob character={{shape:aesthetics.shapes[0].clipPath, color:aesthetics.colors[0].hex}} x={0} y={0} setSplashElements={setSplashElements} blockSizeOverride={true}/>}
             </div>
         </>
     )
 }
 
-function Edge ({classes, color}){
+function Edge ({classes, color, coords}){
+    const {type, x, y} = coords
+    let firstHalf = `${type}-${x}-${y}`
+    let secondHalf = type == "h" ? `${type}-${x + ",5"}-${y}` : `${type}-${x}-${y+",5"}`
     return (
         <div className={`edge ${classes}`} >
-            <div className="half-edge" style={{backgroundColor: color}}></div>
-            <div className="half-edge end" style={{backgroundColor: color}}></div>
+            <div className="half-edge" style={{backgroundColor: color}} id={firstHalf}/>
+            <div className="half-edge end" style={{backgroundColor: color}} id={secondHalf}/>
         </div>
     )
 }

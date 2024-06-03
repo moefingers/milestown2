@@ -1,3 +1,15 @@
+@font-face {
+    font-family: 'Digital Dream Regular';
+    src: url('../fonts/DigitalDreamRegular.eot');
+    src: url('../fonts/DigitalDreamRegular.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/DigitalDreamRegular.woff2') format('woff2'),
+        url('../fonts/DigitalDreamRegular.woff') format('woff'),
+        url('../fonts/DigitalDreamRegular.svg#DigitalDreamRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: fallback;
+}
+
 :root {
     --background-one: #ffffff;
 
@@ -13,4 +25,24 @@ html, body, #root {
     border: 0;
     margin: 0;
     padding: 0;
+
+    /* user-select: none;
+    font-family: "Digital Dream Regular", Courier, monospace;
+    font-style: normal;
+    font-weight: normal; */
+        
 }
+
+
+
+/* testing */
+button, input {
+    border: black solid 1px;
+}
+button:hover{
+    background-color: lightgreen;
+}
+button:active{
+    background-color: green;
+}
+
