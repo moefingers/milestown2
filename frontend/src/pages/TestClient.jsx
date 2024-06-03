@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 
 import { Peer } from 'peerjs'
 
-import { env } from '../determineEnvironment.mjs'
+import { env } from '../assets/js/determineEnvironment.mjs'
 
 export default function TestClient() {
 

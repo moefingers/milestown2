@@ -15,7 +15,7 @@ import {
 ////////////////////////////
 //// COMPONENT IMPORTS /////
 ////////////////////////////
-import { env } from './determineEnvironment.mjs'
+import { env } from './assets/js/determineEnvironment.mjs'
 
 import App from './App.jsx'
 import Error from './pages/Error.jsx'

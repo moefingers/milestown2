@@ -1,6 +1,6 @@
 import { useRouteError, Link } from "react-router-dom"
 
-import { env } from '../determineEnvironment.mjs'
+import { env } from '../assets/js/determineEnvironment.mjs'
 
 export default function Error() {
     const error = useRouteError()

@@ -11,15 +11,19 @@
 }
 
 :root {
-    color-scheme: dark;
-    --background-one: #ffffff;
+    color-scheme: light;
+    transition: 1s;
 
-    --foreground-one: #000000;
+
+    --background-one: #111111;
+
+    --foreground-one: #ffffff;
 }
 
 html, body, #root {
     height: 100%;
     width: 100%;
+    background-color: var(--background-one);
     animation: opacity0to1 1s;
 }
 
@@ -27,6 +31,9 @@ html, body, #root {
     border: 0;
     margin: 0;
     padding: 0;
+
+    color: var(--foreground-one);
+    background-color: transparent
 
     /* user-select: none;
     font-family: "Digital Dream Regular", Courier, monospace;

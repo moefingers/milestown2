@@ -1,4 +1,4 @@
-import {env} from '../../determineEnvironment.mjs'
+import {env} from './determineEnvironment.mjs'
 
 async function customFetch(method = 'GET', path = '/date', body = undefined) {
     const res = await fetch(env.backend + path, {

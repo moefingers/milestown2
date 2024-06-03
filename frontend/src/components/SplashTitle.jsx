@@ -34,14 +34,16 @@ export default function SplashTitle() {
             console.log("orderedEdges: ", orderedEdges)
             orderedEdges.forEach((element, index) => {
                 element.animate([
-                    {backgroundColor: "#000000", offset: 0, easing: 'ease-out'},
-                    {backgroundColor: "#ff0000", offset: 1/9, easing: 'ease-out'},
+                    {backgroundColor: "#ff0000", offset: 0, easing: 'ease-out'},
+                    {backgroundColor: "#ff0000", offset: 1/18, easing: 'ease-out'},
+                    {backgroundColor: "#ff0000", offset: 2/18, easing: 'ease-out'},
 
-                    {backgroundColor: "#ff0000", offset: 4/9, easing: 'ease-out'},
-                    {backgroundColor: "#000000", offset: 5/9, easing: 'ease-out'},
+                    {backgroundColor: "#ff0000", offset: 8/18, easing: 'ease-out'},
+                    {backgroundColor: "#000000", offset: 9/18, easing: 'ease-out'},
 
-                    {backgroundColor: "#000000", offset: 8/9, easing: 'ease-out'},
-                    {backgroundColor: "#000000", offset: 9/9, easing: 'ease-out'},
+                    {backgroundColor: "#000000", offset: 16/18, easing: 'ease-out'},
+                    {backgroundColor: "#000000", offset: 17/18, easing: 'ease-out'},
+                    {backgroundColor: "#ff0000", offset: 18/18, easing: 'ease-out'},
                 ], {
                     duration: 11250,
                     iterations: Infinity,
