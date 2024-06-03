@@ -149,7 +149,7 @@ server.use((req, res) => {
   res.status(404)
   res.send(`
   <div>
-    <h1>404 - Page Not Found</h1>
+    <h1>Server 404 - Page Not Found</h1>
     <div>Due to the single-page nature of this application, routes are simulated off of a single page.</div>
     <div>You may not access a page directly for now and the ultimate application may not use pages.</div>
     <div>Try navigating to the  <a href="/">index</a>.</div>

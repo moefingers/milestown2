@@ -96,7 +96,9 @@
     transform: rotate(180deg);
 }
 
-
+.character-blob {
+    transition: 1s;
+}
 .character-blob {
     position: absolute;
     transform: translate(-50%, -50%);
