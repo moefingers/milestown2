@@ -34,16 +34,18 @@ export default function SplashTitle() {
             console.log("orderedEdges: ", orderedEdges)
             orderedEdges.forEach((element, index) => {
                 element.animate([
-                    {backgroundColor: "#ff0000", offset: 0},
-                    {backgroundColor: "#ff0000", offset: 4/9},
-                    {backgroundColor: "#000000", offset: 5/9},
-                    {backgroundColor: "#000000", offset: 8/9},
+                    {backgroundColor: "#000000", offset: 0, easing: 'ease-out'},
+                    {backgroundColor: "#ff0000", offset: 1/9, easing: 'ease-out'},
 
-                    {backgroundColor: "#ff0000", offset: 9/9},
+                    {backgroundColor: "#ff0000", offset: 4/9, easing: 'ease-out'},
+                    {backgroundColor: "#000000", offset: 5/9, easing: 'ease-out'},
+
+                    {backgroundColor: "#000000", offset: 8/9, easing: 'ease-out'},
+                    {backgroundColor: "#000000", offset: 9/9, easing: 'ease-out'},
                 ], {
                     duration: 11250,
                     iterations: Infinity,
-                    delay: - 5625 +625 + (index * 625)
+                    delay: - 5625 + 625 + (index * 625)
                 })
             })
             const fullBlob = splashElements.filter((element) => element.className.includes("character-blob"))[0]

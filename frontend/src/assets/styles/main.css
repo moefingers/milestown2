@@ -11,6 +11,7 @@
 }
 
 :root {
+    color-scheme: dark;
     --background-one: #ffffff;
 
     --foreground-one: #000000;
@@ -19,6 +20,7 @@
 html, body, #root {
     height: 100%;
     width: 100%;
+    animation: opacity0to1 1s;
 }
 
 * {
@@ -46,3 +48,12 @@ button:active{
     background-color: green;
 }
 
+
+@keyframes opacity0to1 {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
