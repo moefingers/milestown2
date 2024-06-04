@@ -5,6 +5,8 @@ import { Peer } from 'peerjs'
 
 import { env } from '../assets/js/determineEnvironment.mjs'
 
+import '../assets/styles/_testing.css'
+
 export default function TestClient() {
 
 
@@ -145,7 +147,7 @@ export default function TestClient() {
 
     return (
         <>
-            <h1>test client</h1>
+            <h1 className="test-client-title">test client</h1>
             <Link to={".."}>go back</Link>
 
             {/* <button onClick={async (event)=>{await postOffer(await generateOffer()); setDevResponse(await getAllOffers())}}>post offer to server</button>

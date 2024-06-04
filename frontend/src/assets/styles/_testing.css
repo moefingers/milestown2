@@ -1,0 +1,13 @@
+
+
+
+/* testing */
+.test-client-title ~ button, .test-client-title ~ input {
+    border: black solid 1px;
+}
+.test-client-title ~ button:hover{
+    background-color: lightgreen;
+}
+.test-client-title ~ button:active{
+    background-color: green;
+}

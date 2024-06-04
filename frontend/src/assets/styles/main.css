@@ -15,11 +15,19 @@
     transition: 1s;
 
 
-    --background-one: #111111;
+    color-scheme: light;
+    --background-one: #ffffff;
+    --background-two: #333333;
+    --background-two-faded: #33333377;
+    --foreground-one: #000000;
+    --foreground-one-faded: #00000077;
+    --foreground-two: #555555;
+    --foreground-two-faded: #55555577;
+    --foreground-three: #ff0000;
+    --foreground-three-faded: #ff000077;
 
-    --foreground-one: #ffffff;
-    --foreground-two: #ff8888; /*Will generally be for clickable hovers*/
-    --foreground-three: #ff0000; /*Will generally be for clickable actives*/
+    --clickable-hover: #ff8888;
+    --clickable-active: #ff0000;
 }
 
 html, body, #root {
@@ -62,22 +70,10 @@ html, body, #root {
 }
 
 .clickable:hover {
-    color:var(--foreground-two)
+    color:var(--clickable-hover)
 }
 
 .clickable:active {
-    color:var(--foreground-three)
+    color:var(--clickable-active)
 }
 
-
-
-/* testing */
-button, input {
-    border: black solid 1px;
-}
-button:hover{
-    background-color: lightgreen;
-}
-button:active{
-    background-color: green;
-}

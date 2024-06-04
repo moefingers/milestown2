@@ -1,26 +1,37 @@
+.center-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
 .landing-options > a {
     position: relative;
     display: block;
     width: fit-content;
     margin: auto;
+    text-align: center;
+    text-wrap: nowrap;
+    margin-bottom: min(5vh, 5vw);
 
-    line-height: calc(var(--iunit) * 25);
+    /* font-size: clamp(max(calc(var(--iunit) * 20), 45px),  calc(var(--iunit) * 22), calc(var(--iunit) * 24)); */
+    font-size: min(8.5vh, 8.5vw);
+    line-height: min(9vh, 9vw);
     transition: font-size 0.5s;
 
     
     font-family: "Digital Dream Regular", Courier, monospace;
-    font-size: calc(var(--iunit) * 20);
     text-decoration: none;
 }
 
 .landing-options > a:hover {
-    font-size: calc(var(--iunit) * 22);
+    font-size: min(9.5vh, 9.5vw);
 }
 
 .landing-options {
     position: relative;
     width: fit-content;
-    top: 50%;
+    margin-top: 15%;
     left: 50%;
     transform: translate(-50%, -50%);
 }

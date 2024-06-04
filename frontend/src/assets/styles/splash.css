@@ -1,13 +1,12 @@
 :root{
-    --splash-title-height: calc(40 * var(--iunit));
-    --splash-square: calc(33.5 * var(--iunit));
+    --splash-title-height: calc(55 * var(--iunit));
+    --splash-square: calc(48 * var(--iunit));
 }
 
 .splash-container {
-    position: absolute;
-    top: 40%;
+    position: relative;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, 0);
 }
 
 .splash-container > h1 {
@@ -20,6 +19,7 @@
     font-size: var(--splash-title-height);
     text-wrap: nowrap;
     display: flex;
+    justify-content: center;
     flex-direction: row;
 }
 

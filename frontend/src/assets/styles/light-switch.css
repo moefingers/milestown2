@@ -1,8 +1,0 @@
-.light-switch {
-    position: absolute;
-    top: 1%;
-    right: 1%;
-    font-size: calc(20 * var(--iunit));
-    border:0;
-    border-radius: calc(10 * var(--iunit));
-}

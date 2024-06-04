@@ -1,0 +1,68 @@
+.theme-buttons {
+    position: absolute;
+    top: 1%;
+    right: 1%;
+}
+
+.theme-buttons > * {
+    position: relative;
+    margin-left: auto;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: calc(5 * var(--iunit));
+    line-height: max(5vh, 5vw);
+    border:0;
+    border-radius: calc(10 * var(--iunit))
+
+}
+
+.theme-buttons button {
+    font-size: max(4vh, 4vw);
+    transition: font-size .3s;
+}
+
+.theme-buttons button:hover {
+    cursor: pointer;
+    font-size: max(4.5vh, 4.5vw);
+}
+
+
+.theme-picker > * {
+    display: block;
+}
+
+.custom-picker {
+    z-index: 1;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+}
+
+.custom-picker > .list{
+    display: flex;
+    flex-direction: column;
+    transition: .3s;
+
+    opacity:0;
+    visibility: hidden;
+    width: max(0vw, 0vh);
+    height: max(0vw, 0vh);
+}
+
+.custom-picker > .list > button {
+    display: block;
+    font-size: max(1.8vh, 1.8vw);
+    text-wrap: nowrap;
+    margin-bottom: max(.5vh, .5vw);
+}
+
+.custom-picker:hover > .list {
+
+    border-radius: calc(var(--iunit) * 10);
+    background-color: var(--background-two-faded);
+    backdrop-filter: blur(5px);
+    opacity:1;
+    visibility: visible;
+    width: min(max(20vw, 20vh), 60vw);
+    height: fit-content
+}

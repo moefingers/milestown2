@@ -34,16 +34,16 @@ export default function SplashTitle() {
             console.log("orderedEdges: ", orderedEdges)
             orderedEdges.forEach((element, index) => {
                 element.animate([
-                    {backgroundColor: "#ff0000", offset: 0, easing: 'ease-out'},
-                    {backgroundColor: "#ff0000", offset: 1/18, easing: 'ease-out'},
-                    {backgroundColor: "#ff0000", offset: 2/18, easing: 'ease-out'},
+                    {backgroundColor: "var(--foreground-three)", offset: 0, easing: 'ease-out'},
+                    {backgroundColor: "var(--foreground-three)", offset: 1/18, easing: 'ease-out'},
+                    {backgroundColor: "var(--foreground-three)", offset: 2/18, easing: 'ease-out'},
 
-                    {backgroundColor: "#ff0000", offset: 8/18, easing: 'ease-out'},
-                    {backgroundColor: "#000000", offset: 9/18, easing: 'ease-out'},
+                    {backgroundColor: "var(--foreground-three)", offset: 8/18, easing: 'ease-out'},
+                    {backgroundColor: "var(--foreground-one)", offset: 9/18, easing: 'ease-out'},
 
-                    {backgroundColor: "#000000", offset: 16/18, easing: 'ease-out'},
-                    {backgroundColor: "#000000", offset: 17/18, easing: 'ease-out'},
-                    {backgroundColor: "#ff0000", offset: 18/18, easing: 'ease-out'},
+                    {backgroundColor: "var(--foreground-one)", offset: 16/18, easing: 'ease-out'},
+                    {backgroundColor: "var(--foreground-one)", offset: 17/18, easing: 'ease-out'},
+                    {backgroundColor: "var(--foreground-three)", offset: 18/18, easing: 'ease-out'},
                 ], {
                     duration: 11250,
                     iterations: Infinity,
@@ -53,12 +53,12 @@ export default function SplashTitle() {
             const fullBlob = splashElements.filter((element) => element.className.includes("character-blob"))[0]
             const blobInner = fullBlob.children[0]
             blobInner.animate([
-                {backgroundColor: "#ff0000", offset: 0},
-                {backgroundColor: "#ff0000", offset: 4/9},
-                {backgroundColor: "#000000", offset: 5/9},
-                {backgroundColor: "#000000", offset: 8/9},
+                {backgroundColor: "var(--foreground-three)", offset: 0},
+                {backgroundColor: "var(--foreground-three)", offset: 4/9},
+                {backgroundColor: "var(--foreground-one)", offset: 5/9},
+                {backgroundColor: "var(--foreground-one)", offset: 8/9},
 
-                {backgroundColor: "#ff0000", offset: 9/9},
+                {backgroundColor: "var(--foreground-three)", offset: 9/9},
             ], {
                 duration: 11250,
                 iterations: Infinity,
@@ -85,15 +85,15 @@ export default function SplashTitle() {
             const tile = splashElements.filter((element) => element.className.includes("tile"))[0]
 
             tile.animate([
-                {backgroundColor: "#ff000055", offset: 0},
-                {backgroundColor: "#33333355", offset: 2/18},
+                {backgroundColor: "var(--foreground-three-faded)", offset: 0},
+                {backgroundColor: "var(--foreground-two-faded)", offset: 2/18},
                 
-                {backgroundColor: "#33333355", offset: 7/18},
-                {backgroundColor: "#00000077", offset: 9/18},
-                {backgroundColor: "#33333355", offset: 11/18},
+                {backgroundColor: "var(--foreground-two-faded)", offset: 7/18},
+                {backgroundColor: "var(--foreground-one-faded)", offset: 9/18},
+                {backgroundColor: "var(--foreground-two-faded)", offset: 11/18},
 
-                {backgroundColor: "#33333355", offset: 16/18},
-                {backgroundColor: "#ff000055", offset: 18/18},
+                {backgroundColor: "var(--foreground-two-faded)", offset: 16/18},
+                {backgroundColor: "var(--foreground-three-faded)", offset: 18/18},
             ], {
                 duration: 11250,
                 iterations: Infinity,
@@ -114,7 +114,7 @@ export default function SplashTitle() {
                     <DrawnMap 
                         mapObject={{map:[[1]]}} 
                         aesthetics={{
-                            colors: [{hex: "#ff0000"}, {hex: "#000000"}], 
+                            colors: [{hex: "var(--foreground-three)"}, {hex: "var(--foreground-one)"}], 
                             shapes: [{clipPath: "polygon(50% 0%, 95% 20%, 100% 50%, 95% 80%, 50% 100%, 5% 80%, 0% 50%, 5% 20%)"}]
                         }} 
                         blockSizeOverride={`var(--splash-square)`}
