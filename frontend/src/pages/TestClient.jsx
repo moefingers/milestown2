@@ -89,6 +89,7 @@ export default function TestClient() {
     }
     function connectToPeer(currentPeer, remotePeerId, setConnectionState, handleDataReception, sendMessage){
         console.log('attempting to connect to peer ' + remotePeerId)
+        
 
         let remoteConnection = currentPeer.connect(remotePeerId)
 

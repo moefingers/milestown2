@@ -30,3 +30,10 @@ input.invalid:active{
 .center-wrapper.form-connection ul > li.connected {
     color:var(--positive-color)
 }
+
+.no-access {
+    pointer-events: none;
+    user-select: none;
+
+    filter: blur(calc(var(--iunit) * 2));
+}

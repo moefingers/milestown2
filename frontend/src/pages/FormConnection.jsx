@@ -42,6 +42,7 @@ export default function FormConnection() {
         }
     }
     function notifyOnTarget(notification,target, flashDuration, iterations) {
+        console.log(notification)
         const originalText = target.innerHTML
             target.innerHTML = notification
             target.animate([
@@ -68,51 +69,18 @@ export default function FormConnection() {
         const peers = await getAndSetPeerList()
         if(peers.includes(id)){
             console.log(id, " is already taken.")
+            clientIdInputRef.current.setCustomValidity('That identity is already taken. Choose a different one')
+            const oldPlaceholder = clientIdInputRef.current.placeholder
+            clientIdInputRef.current.placeholder = id + ' taken'
+            setTimeout(() => { clientIdInputRef.current.placeholder = oldPlaceholder}, 1500);
+            clientIdInputRef.current.classList.add('invalid')
             return true
-        }
-        return false
-    }
-
-    function toggleConnectionToPeer(event, Id) {
-        connectedPeers.forEach((peer) => {
-            if(peer.id == Id){
-                console.log('id already connected', Id)
-                peer.close()
-                setConnectedPeers(connectedPeers.filter(peer => peer.id !== Id))
-            }
-        })
-        
-        if(connectedPeers.includes(Id)){
-            // ADD CODE TO DISCONNECT PEER
         } else {
-            if(connectedPeers.length >= 4){
-                notifyOnTarget('already max connections',event.target, 100, 5)
-                return
-            }
-            if(!clientObject.disconnected){
-                console.log('attempting to peer since client is connected to server')
-                let peerConnection = clientObject.connect(Id)
-                console.log(peerConnection)
-            }
-            
+            clientIdInputRef.current.setCustomValidity('')
+            clientIdInputRef.current.classList.remove('invalid')
+            return false
         }
     }
-
-    async function validateIdAndStoreClient(id) {
-        resetClient()
-        let client
-        if(await checkIfIdTaken(id)){
-            notifyOnTarget('', clientIdInputRef.current, 100, 5);
-            return
-        }
-        client = new Peer(id, env.clientPeerSettings)
-        setClientObject(client)
-        setClientId(id)
-        localStorage.setItem('clientId', id)
-        console.log(client)
-        return client
-    }
-
     async function resetClient(event) {
         console.log('clearing client')
         if(clientObject){
@@ -122,8 +90,111 @@ export default function FormConnection() {
         if(clientId){
             setClientId(null)
         }
+        setPeerQuery('')
         localStorage.removeItem('clientId')
     }
+
+    function toggleConnectionToPeer(event, id) {
+        let alreadyConnected = false
+        connectedPeers.forEach((peerEntry) => {
+            if(peerEntry.id == id){
+                alreadyConnected = true
+                console.log('id already connected', id)
+                peerEntry.connection.close()
+                removeFromConnectedPeerList(id)
+            }
+        }); if(alreadyConnected){return}
+        console.log('id not already connected')
+        
+        if(connectedPeers.length >= 4){
+            notifyOnTarget('already max connections',event.target, 100, 5)
+            return
+        }
+        if(!clientObject.disconnected){
+            console.log('attempting to peer since client is connected to server')
+            let peerConnection = clientObject.connect(id)
+            console.log(peerConnection)
+
+            setConnectionProcessing(true)
+
+            peerConnection.on('open', () => {
+                console.log('connected to peer', id)
+                setConnectionProcessing(false)
+                addToConnectedPeerList(id, peerConnection)
+            })
+            peerConnection.on('close', () => {
+                console.log('disconnected from peer', id)
+                setConnectionProcessing(false)
+                removeFromConnectedPeerList(id)
+                console.log(connectedPeers)
+            })
+            peerConnection.on('error', (error, passedEvent) => {
+                console.log('error connecting to peer', id,error)
+                setConnectionProcessing(false)
+            })
+        }
+    }; useEffect(() => {console.log(connectedPeers)},[connectedPeers])
+
+    function addToConnectedPeerList(id, connection){
+        if(!connectedPeers.includes({id: id, connection: connection})){
+            setConnectedPeers([...connectedPeers, {id: id, connection: connection}])
+        }
+    }
+    function removeFromConnectedPeerList(id){
+        setConnectedPeers(connectedPeers.filter(peerEntry => peerEntry.id !== id))
+    }
+
+    // wake up all the states by initializing client and storing it
+    async function validateIdAndStoreClient(id) {
+        resetClient()
+        let client
+        if(await checkIfIdTaken(id)){
+            
+            clientIdInputRef.current.value = localStorage.getItem('clientId')
+            return
+        }
+        client = new Peer(id, env.clientPeerSettings)
+        client.on('error', (error) => {
+            console.log(error)
+            console.log(error.type)
+            if(error.type == 'network' || error.type == 'socket-closed' || error.type == 'socket-error'){
+                setClientObject(null)
+                setClientId(null)
+            }
+        })
+        client.on('connection', (connection) => {
+            setConnectionProcessing(true)
+            console.log('connection')
+            connection.on('open', () => {
+                console.log('remote open')
+                setConnectionProcessing(false)
+                getAndSetPeerList().then(()=>{
+                    addToConnectedPeerList(connection.peer, connection)
+                })
+            })
+            connection.on('data', (data) => {
+                console.log(data)
+            })
+            connection.on('close', () => {
+                console.log('remote close')
+                setConnectionProcessing(false)
+            })
+            connection.on('error', (error) => {
+                console.log(error)
+                setConnectionProcessing(false)
+            })
+        })
+
+
+
+        setClientObject(client)
+        setClientId(id)
+        localStorage.setItem('clientId', id)
+        // console.log(client)
+        return client
+    }
+
+
 
     
     useEffect(() => {
@@ -147,7 +218,7 @@ export default function FormConnection() {
                     <>
                         <h1 className='digital-dream'>IDENTIFY YOURSELF</h1>
                         <form onSubmit={(event) => {event.preventDefault(); validateIdAndStoreClient(event.target.children[0].value)}}>
-                            <input ref={clientIdInputRef} onChange={validateInput} type="text" name="clientId" id="clientId" />
+                            <input placeholder='input identity' ref={clientIdInputRef} onChange={validateInput} type="text" name="clientId" id="clientId" />
                             <input type="submit" value="submit" />
                         </form>
                     </>
@@ -156,11 +227,11 @@ export default function FormConnection() {
                         <h1 className='digital-dream'>HUMAN IDENTIFIED:</h1>
                         <h1>[<span>{clientId}</span>]<button className='clickable dark' onClick={resetClient}>reset identity</button></h1>
                         <div className='digital-dream'>choose adversary<button className='clickable dark' onClick={getAndSetPeerList}>refresh list</button></div>
-                        <input type="text" name="peerQuery" id="peerQuery" onChange={(event)=>{setPeerQuery(event.target.value)}}/>
-                        <ul>{peerList.filter((peerId) => (connectedPeers.includes(peerId) || peerId !== clientId && stringMatch(peerId, peerQuery))).map((peerId) => { return (
+                        <input type="text" name="peerQuery" id="peerQuery" placeholder={'filter opponents'} onChange={(event)=>{setPeerQuery(event.target.value)}}/>
+                        <ul className={connectionProcessing ? 'no-access' : ''}>{peerList.filter((peerId) => (connectedPeers.includes(peerId) || peerId !== clientId && stringMatch(peerId, peerQuery))).map((peerId) => { return (
                             <li
                                 key={peerId} 
-                                className={`clickable ${connectedPeers.includes(peerId) ? 'connected' : ''}`} 
+                                className={`clickable ${connectedPeers.map((peerEntry) => peerEntry.id).includes(peerId) ? 'connected' : ''}`} 
                                 onClick={(event)=>{toggleConnectionToPeer(event, peerId)}}
                             >{peerId}</li>
                         )})}</ul>
