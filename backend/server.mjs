@@ -47,8 +47,8 @@ server.use(express.static(path.join(__dirname, 'dist')));
 /////////////////////////////////////////
 /////   MIDDLEWARE FOR CONTROLLERS /////
 ////////////////////////////////////////
-import offerController from './controllers/offerController.mjs'
-server.use('/offer', offerController)
+import lobbiesController from './controllers/lobbiesController.mjs'
+server.use('/lobby', lobbiesController)
 
 ////////////////////////////////////
 //// MIDDLEWEAR TO LOG REQUESTS ////
@@ -65,33 +65,6 @@ server.get('/healthz', (req, res) => {
   res.sendStatus(200);
 })
 
-//////////////////////////
-//// POST OFFER ROUTE ////
-//////////////////////////
-// server.post('/offer', async (req, res) => {
-//   const data =  JSON.parse(await fs.readFile('./db/data.json', 'utf8'));
-//   data.currentOffers.push(req.body);
-//   await fs.writeFile('./db/data.json', JSON.stringify(data, null, 2));
-//   res.send(JSON.stringify(data.currentOffers));
-// });
-
-///////////////////////////
-//// DELETE ALL OFFERS ////
-///////////////////////////
-// server.delete('/offer', async (req, res) => {
-//   const data =  JSON.parse(await fs.readFile('./db/data.json', 'utf8'));
-//   data.currentOffers = [];
-//   await fs.writeFile('./db/data.json', JSON.stringify(data, null, 2));
-//   res.send(JSON.stringify(data.currentOffers));
-// });
-
-////////////////////////
-//// GET ALL OFFERS ////
-////////////////////////
-// server.get('/offer', async (req, res) => {
-//   const data =  JSON.parse(await fs.readFile('./db/data.json', 'utf8'));
-//   res.send(JSON.stringify(data.currentOffers));
-// });
 
 //////////////////////
 //// GET ALL MAPS ////
@@ -142,6 +115,25 @@ const peerServer = ExpressPeerServer(listener, {
 });
 
 server.use('/', peerServer);
+
+//////////////remove player from lobby on disconnect ////////////////
+peerServer.on('disconnect', async (client) => {
+  console.log(client.getId(), 'disconnected')
+  let data =  JSON.parse(await fs.readFile('./db/lobbies.json', 'utf8'));
+    data.forEach((lobby) => {
+        if(lobby.playerIds.includes(client.getId())){
+            lobby.playerIds = lobby.playerIds.filter((playerId) => playerId !== client.getId())
+        }
+        if(lobby.playerIds.length == 0){
+            data = data.filter(lobby => lobby.lobbyId !== lobby.lobbyId)
+        }
+    })
+    await fs.writeFile('./db/lobbies.json', JSON.stringify(data, null, 2));
+})
+////////////////notate player connect to server//////////////
+peerServer.on('connection', async (client) => {
+  console.log(client.getId(), 'connected')
+})
 
 
 ////////////////////////

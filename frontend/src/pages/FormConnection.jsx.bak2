@@ -8,16 +8,13 @@ import ThemeButtons from '../components/ThemeButtons'
 
 // script imports
 import { env } from '../assets/js/determineEnvironment.mjs'
-import { getPeers, getLobbies, joinLobby, createLobby, leaveLobby, deleteLobby } from '../assets/js/customFetch'
+import { getPeers } from '../assets/js/customFetch'
 import stringMatch from '../assets/js/stringMatch'
 
 // style imports
 import '../assets/styles/form-connections.css'
 
 export default function FormConnection() {
-
-    const [currentLobby, setCurrentLobby] = useState(null)
-    const [lobbyList, setLobbyList] = useState([])
     
     const [clientObject, setClientObject] = useState(null)
     const clientObjectRef = useRef({})
@@ -237,15 +234,9 @@ export default function FormConnection() {
     }, [connectedPeers])
 
     
-    async function getAndSetLobbies(){
-        setLobbyList(await getLobbies())
-    }
     useEffect(() => {
         //useeffect on render
         console.log('useEffect on render')
-        getAndSetLobbies()
-
-
         getAndSetPeerList()
         if(localStorage.getItem('clientId')){
             validateIdAndStoreClient(localStorage.getItem('clientId'))
@@ -255,14 +246,7 @@ export default function FormConnection() {
 
     useEffect(() => {
         console.log('clientObject', clientObject)
-        console.log('clientId', clientId)
-    }, [clientObject, clientId])
-
-    function handleLeaveLobby(){
-        leaveLobby(currentLobby.id, clientId)
-        setCurrentLobby(null)
-        // setClientId(null)
-    }
+    }, [clientObject])
     
 
 
@@ -285,30 +269,15 @@ export default function FormConnection() {
                     <>
                         <h1 className='digital-dream'>HUMAN IDENTIFIED:</h1>
                         <h1>[<span>{clientId}</span>]<button className='clickable dark' onClick={resetClient}>reset identity</button></h1>
-
-                        {!currentLobby ?<>
-                            <div className="digital-dream">Create Lobby</div>
-                            <form onSubmit={(event) => {event.preventDefault(); createLobby(event.target.children[0].value, clientId).then((response) => {console.log(response); if(!response.joined){notifyOnTarget(response.message, event.target, 100, 10); return};setCurrentLobby(response)})}}>
-                                <input placeholder='Lobby ID' onChange={validateInput} type="text" name="lobbyId" id="lobbyId" />
-                                <input type="submit" value="submit" />
-                            </form>
-
-                            <div className='digital-dream'>Join Lobby<button className='clickable dark' onClick={getAndSetLobbies}>refresh list</button></div>
-                            <input type="text" name="peerQuery" id="peerQuery" placeholder={'filter lobbies or players'} onChange={(event)=>{setPeerQuery(event.target.value)}}/>
-                            <ul className={connectionProcessing ? 'no-access' : ''}>{lobbyList.map((lobby)  => {return (
-                                <li
-                                    key={lobby.lobbyId} 
-                                    className={`clickable`} 
-                                    onClick={async (event)=>{const response = await getAndSetLobbies(); if(response.joined != true){notifyOnTarget(response.message, event.target, 100, 10); return};joinLobby(lobby.lobbyId, clientId)}}
-                                >{lobby.lobbyId}</li>
-                            )})}</ul>
-                        </> : <>
-                            <div className="digital-dream">Lobby ID: {currentLobby.lobbyId}</div>
-                            <div className="digital-dream">Current Players: {currentLobby?.playerIds.map((peerId) => <div key={peerId}>{peerId}</div>)}</div>
-                            <button className='clickable dark' onClick={handleLeaveLobby}>Leave Lobby</button> {currentLobby?.playerIds[0] == clientId && <button className='clickable dark' onClick={deleteLobby}>Delete Lobby</button>}
-                            
-                        </>}
-
+                        <div className='digital-dream'>choose adversary<button className='clickable dark' onClick={getAndSetPeerList}>refresh list</button></div>
+                        <input type="text" name="peerQuery" id="peerQuery" placeholder={'filter opponents'} onChange={(event)=>{setPeerQuery(event.target.value)}}/>
+                        <ul className={connectionProcessing ? 'no-access' : ''}>{peerList.filter((peerId) => (connectedPeers.includes(peerId) || peerId !== clientId && stringMatch(peerId, peerQuery))).map((peerId) => { return (
+                            <li
+                                key={peerId} 
+                                className={`clickable ${connectedPeers.map((peerEntry) => peerEntry.id).includes(peerId) ? 'connected' : ''}`} 
+                                onClick={(event)=>{toggleConnectionToPeer(event, peerId, false, clientObjectRef.current)}}
+                            >{peerId}</li>
+                        )})}</ul>
                     </>
                 }
             </div>

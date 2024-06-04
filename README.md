@@ -1,3 +1,5 @@
+<style>h1 {font-size: 40px; span {font-size: 20px;}}</style>
+
 # MilestOWN 2
 
 [See Version 1](https://github.com/moefingers/UNLV-MilestO-W-N) for local multiplayer.
@@ -8,7 +10,28 @@ This repository is hopefully the front and backend for MilestOWN 2. More notes w
 
 [And a backup frontend on GitHub Pages](https://moefingers.github.io/milestown2/)
 
-## Development note: running `npm run deploy` in either `/frontend` or `/` directory will do the following:
+# Index:
+- [Api Documentation](#backend-api-documentation) 
+- [Development notes](#development-notes) 
+  - [Getting up and running](#getting-up-and-running)
+
+
+
+
+
+<h1>Backend API Documentation</h1>
+# 
+# `GET /` - Returns index.html, frontend. (`backend/server.mjs`)
+
+`GET /*` - Returns 404 fragment with link to home.
+
+
+`/lobby`
+
+<h1>Express PeerJS Server Events <span>ExpressPeerServer</span></h1>
+
+## Development notes:
+### Development note: running `npm run deploy` in either `/frontend` or `/` directory will do the following:
 - **Do not run these commands**, these are not instructions.
 - This is a description of what running `npm run deploy` does.
 - *temporarily* add `base: '/milestown2/'` to vite.config.js
@@ -19,7 +42,7 @@ This repository is hopefully the front and backend for MilestOWN 2. More notes w
 - delete `backend/dist`
 - copy `frontend/dist` to `backend/dist` (so the host will read commits from the build)
 
-## Getting up and running:
+### Getting up and running:
 - `npm install` in main directory will install dependencies in BOTH frontend and backend
 - `npm run frontend` in main directory will run the vite app with live changes.
 - `npm run preview` in main directory will build and run the vite app locally in a production-style environment.

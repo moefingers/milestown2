@@ -1,0 +1,12 @@
+lobby
+
+[
+    ...,
+    {
+        lobbyId: string,
+        playerIds: [...strings]
+
+    }
+]
+
+

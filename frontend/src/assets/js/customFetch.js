@@ -17,6 +17,11 @@ const getMaps = () => customFetch('GET', '/maps')
 const getDefaultMap = () => customFetch('GET', '/defaultmap')
 const getAesthetics = () => customFetch('GET', '/aesthetics')
 const getPeers = () => customFetch('GET', '/peerjs/peers')
+const getLobbies = () => customFetch('GET', '/lobby')
+const joinLobby = (lobbyId, playerId) => customFetch('POST', '/lobby/join', {lobbyId: lobbyId, playerId: playerId})
+const leaveLobby = (lobbyId, playerId) => customFetch('POST', '/lobby/leave', {lobbyId: lobbyId, playerId: playerId})
+const createLobby = (lobbyId, playerId) => customFetch('POST', '/lobby', {lobbyId: lobbyId, playerId: playerId})
+const deleteLobby = (lobbyId) => customFetch('DELETE', '/lobby', {lobbyId: lobbyId})
 
 
-export {customFetch, getAllOffers, postOffer, deleteAllOffers, getMaps, getAesthetics, getDefaultMap, getPeers}
+export {customFetch, getAllOffers, postOffer, deleteAllOffers, getMaps, getAesthetics, getDefaultMap, getPeers, getLobbies, joinLobby, leaveLobby, createLobby, deleteLobby}
