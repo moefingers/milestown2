@@ -36,7 +36,6 @@ export default function TestClient() {
     logRef.current = visualLog
 
     async function retrievePeers(event){
-        event.preventDefault() 
 
         setPeerList(await getPeers())
 
@@ -193,12 +192,21 @@ export default function TestClient() {
                 <button onClick={(event)=>{setCurrentConnection(connectToPeer(peer, peerIdInput, setRemoteConnectionSuccessful, handleDataReception, sendMessage))}}> connect to peer</button>
             </>}
             {peerId && <div className="clickable" onClick={(event)=> {navigator.clipboard.writeText(peerId); console.log("copied to clipboard") }}>copy to clipboard my id:{peerId}</div>}
-            <button onClick={(event)=>{retrievePeers(event)}}>refresh peer list</button>
-            {peerList && peerList.filter((peer)=>peer !== peerId).map((remotePeerId, index) => <div className="clickable" onClick={(event)=>{connectToPeer(peer, remotePeerId, setRemoteConnectionSuccessful, handleDataReception, sendMessage)}} key={index}>connect to:{remotePeerId}</div>)}
+            
+            {peerList.length > 0 && peerId && 
+            <div>
+                <h2>peer list</h2>
+                <button className="clickable" onClick={(event)=>{retrievePeers(event)}}>refresh peer list</button>
+                {peerList.filter((peer)=>peer !== peerId).map((remotePeerId, index) => <div className="clickable" onClick={(event)=>{setCurrentConnection(connectToPeer(peer, remotePeerId, setRemoteConnectionSuccessful, handleDataReception, sendMessage))}} key={index}>connect to:{remotePeerId}</div>)}
+            </div>}
             <hr />
             {remoteConnectionSuccessful && <>
-                <input type="text" placeholder="chat input" onKeyUp={(event)=>{setChatInput(event.target.value); if(event.key === "Enter"){sendMessage(chatInput) }}} onChange={(event)=>{setChatInput(event.target.value)}} value={chatInput}/>
-                <button onClick={(event)=>{sendMessage(chatInput)}}>send chat</button>
+                {/* <input type="text" placeholder="chat input" onKeyUp={(event)=>{setChatInput(event.target.value); if(event.key === "Enter"){sendMessage(chatInput) }}} onChange={(event)=>{setChatInput(event.target.value)}} value={chatInput}/> */}
+                <form onSubmit={(event) => {event.preventDefault(); sendMessage(event.target.children[0].value)}}>
+                    <input type="text" name="clientId" id="clientId" />
+                    <input type="submit" value="submit" />
+                </form>
+                {/* <button onClick={(event)=>{sendMessage(chatInput)}}>send chat</button> */}
             </>}
             
             <div className="visual-log">{visualLog.map(({message, time, owner, received}, index) => 
