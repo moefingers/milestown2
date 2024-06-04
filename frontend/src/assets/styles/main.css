@@ -11,7 +11,6 @@
 }
 
 :root {
-    color-scheme: light;
     transition: 1s;
 
 
@@ -26,8 +25,14 @@
     --foreground-three: #ff0000;
     --foreground-three-faded: #ff000077;
 
+
     --clickable-hover: #ff8888;
     --clickable-active: #ff0000;
+
+    --positive-color: #00ff00;
+    --positive-color-faded: #00ff0077;
+    --negative-color: #ff0000;
+    --negative-color-faded: #ff000077;
 }
 
 html, body, #root {
@@ -37,6 +42,14 @@ html, body, #root {
     background-color: var(--background-one);
     animation: opacity0to1 1s;
     overflow: hidden;
+}
+@keyframes opacity0to1 { 0% {opacity: 0;} 100% {opacity: 1;} }
+
+.center-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 * {
@@ -50,16 +63,13 @@ html, body, #root {
 
 .digital-dream {
     font-family: "Digital Dream Regular", Courier, monospace;
+    font-style: normal;
+    font-weight: normal;
 }
 
-@keyframes opacity0to1 {
-    0% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
-}
+
+
+
 
 /*****************************
 ******** Clickables **********
@@ -67,6 +77,9 @@ html, body, #root {
 
 .clickable {
     cursor: pointer;
+}
+.clickable.dark{
+    color: var(--foreground-two);
 }
 
 .clickable:hover {

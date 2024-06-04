@@ -12,3 +12,21 @@ input.invalid {
 input.invalid:active{
     outline: var(--foreground-three) calc(var(--iunit) * 2) solid;
 }
+
+.center-wrapper.form-connection h1 {
+    display:flex;
+}
+
+.center-wrapper.form-connection h1 > span {
+    color: var(--foreground-three)
+}
+
+.center-wrapper.form-connection h1 > span.id{
+    display: inline;
+
+}
+
+/* For someone who you're connected to */
+.center-wrapper.form-connection ul > li.connected {
+    color:var(--positive-color)
+}

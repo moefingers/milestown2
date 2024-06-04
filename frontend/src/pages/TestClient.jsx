@@ -42,15 +42,19 @@ export default function TestClient() {
     }
 
 
+    async function checkIfIdTaken(id) {
+        const peers = await getPeers()
+        if(peers.includes(id)){
+            console.log(id, " is already taken.")
+            return true
+        }
+        return false
+    }
+
     async function constructAndRegisterPeer(setConnectionState, setConnectionObject, handleDataReception, oldConnection=null){
         // IMPORTANT: we can set a custom id by saying Peer(id, options) // https://peerjs.com/docs/
         // let peer = new Peer(env.clientPeerSettings)
-        await getPeers().then((peers) => {
-            console.log(peers)
-            if(peers.includes(clientId)){
-                console.log("Already has this id!")
-            }
-        })
+        if(await checkIfIdTaken(clientId)){return}
         console.log(oldConnection)
         if(oldConnection){
             console.log("dumping old connection")
@@ -85,19 +89,16 @@ export default function TestClient() {
     }
     function connectToPeer(currentPeer, remotePeerId, setConnectionState, handleDataReception, sendMessage){
         console.log('attempting to connect to peer ' + remotePeerId)
+
         let remoteConnection = currentPeer.connect(remotePeerId)
-        
+
         remoteConnection.on('data', handleDataReception)
 
-
         remoteConnection.on('open', () => {
-            sendMessage(`Connected.`, true, remoteConnection)
-
-
             console.log('remoteConnection open')
-            // setVisualLog([...visualLog, `local message - connected to ${remotePeerId}`])
+
+            sendMessage(`Connected.`, true, remoteConnection)
             setConnectionState(true)
-            // setConnectionObject(remoteConnection)
         })
         
         return remoteConnection
@@ -143,14 +144,12 @@ export default function TestClient() {
             setVisualLog([...logRef.current, data])
         }
 
-        
-
-        // console.log("received data: ", cyrb53(data.toString(), 1), data )
-        // console.log("Old message array: ", logRef.current)
-        // console.log("New message array: ", [...logRef.current, data])
-
     }
 
+    // DEPENDENCIES in parent context for following function
+    // logRef
+    // connectionRef, if using default
+    // setVisualLog
     function sendMessage(message, system=false, connection=connectionRef.current){
         const currentTime = new Date().toISOString()
 

@@ -15,6 +15,11 @@ export default [
 
             '--clickable-hover': '#990000',
             '--clickable-active': '#ff0000',
+
+            '--positive-color': '#00ff00',
+            '--positive-color-faded': '#00ff0077',
+            '--negative-color': '#ff0000',
+            '--negative-color-faded': '#ff000077',
         }
     },
     {
@@ -33,6 +38,11 @@ export default [
 
             '--clickable-hover': '#ff8888',
             '--clickable-active': '#ff0000',
+
+            '--positive-color': '#00ff00',
+            '--positive-color-faded': '#00ff0077',
+            '--negative-color': '#ff0000',
+            '--negative-color-faded': '#ff000077',
         }
     },
     {
@@ -51,6 +61,11 @@ export default [
 
             '--clickable-hover': '#ff8888',
             '--clickable-active': '#ff0000',
+
+            '--positive-color': '#00ff00',
+            '--positive-color-faded': '#00ff0077',
+            '--negative-color': '#ff0000',
+            '--negative-color-faded': '#ff000077',
         }
     }
 ]
