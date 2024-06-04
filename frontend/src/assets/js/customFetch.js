@@ -16,6 +16,7 @@ const deleteAllOffers = () => customFetch('DELETE', '/offer')
 const getMaps = () => customFetch('GET', '/maps')
 const getDefaultMap = () => customFetch('GET', '/defaultmap')
 const getAesthetics = () => customFetch('GET', '/aesthetics')
+const getPeers = () => customFetch('GET', '/peerjs/peers')
 
 
-export {customFetch, getAllOffers, postOffer, deleteAllOffers, getMaps, getAesthetics, getDefaultMap}
+export {customFetch, getAllOffers, postOffer, deleteAllOffers, getMaps, getAesthetics, getDefaultMap, getPeers}

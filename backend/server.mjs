@@ -130,16 +130,18 @@ const listener = server.listen(process.env.PORT, () => {
 });
 
 
-/////////////////////////////
-///// START PEER SERVER /////
-/////////////////////////////
+//////////////////////////////////////////
+///   START PEER SERVER ON /peerjs     ///
+/// https://www.npmjs.com/package/peer ///
+//////////////////////////////////////////
 
 const peerServer = ExpressPeerServer(listener, {
-  path: '/listener',
-  debug: true
+  path: '/',
+  debug: true,
+  allow_discovery: true,
 });
 
-server.use('/peerjs', peerServer);
+server.use('/', peerServer);
 
 
 ////////////////////////

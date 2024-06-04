@@ -7,8 +7,17 @@ import { env } from '../assets/js/determineEnvironment.mjs'
 
 import '../assets/styles/_testing.css'
 
+import { getPeers } from "../assets/js/customFetch"
+
 export default function TestClient() {
 
+    useEffect(() => {
+        retrievePeers()
+    }, [])
+
+    const [peerList, setPeerList] = useState([])
+
+    const [clientId, setClientId] = useState('')
 
     const [peer, setPeer] = useState(null)
     const [peerId, setPeerId] = useState(null)
@@ -26,11 +35,32 @@ export default function TestClient() {
     const logRef = useRef({})
     logRef.current = visualLog
 
+    async function retrievePeers(event){
+        event.preventDefault() 
+
+        setPeerList(await getPeers())
+
+    }
 
 
-    function constructAndRegisterPeer(setConnectionState, setConnectionObject, handleDataReception){
+    async function constructAndRegisterPeer(setConnectionState, setConnectionObject, handleDataReception, oldConnection=null){
         // IMPORTANT: we can set a custom id by saying Peer(id, options) // https://peerjs.com/docs/
-        let peer = new Peer(env.clientPeerSettings)
+        // let peer = new Peer(env.clientPeerSettings)
+        await getPeers().then((peers) => {
+            console.log(peers)
+            if(peers.includes(clientId)){
+                console.log("Already has this id!")
+            }
+        })
+        console.log(oldConnection)
+        if(oldConnection){
+            console.log("dumping old connection")
+            oldConnection.disconnect()
+            setConnectionObject(null)
+            setConnectionState(null)
+        }
+        let peer = new Peer(clientId,env.clientPeerSettings)
+        
 
         peer.on('open', (id) => {
             console.log('My peer ID is: ' + id);
@@ -57,7 +87,7 @@ export default function TestClient() {
     function connectToPeer(currentPeer, remotePeerId, setConnectionState, handleDataReception, sendMessage){
         console.log('attempting to connect to peer ' + remotePeerId)
         let remoteConnection = currentPeer.connect(remotePeerId)
-
+        
         remoteConnection.on('data', handleDataReception)
 
 
@@ -156,17 +186,21 @@ export default function TestClient() {
 
             <button onClick={async (event)=>{setDevResponse(await getAllOffers())}}>get all offers</button> */}
 
-            <button onClick={(event)=>{setPeer(constructAndRegisterPeer(setRemoteConnectionSuccessful, setCurrentConnection, handleDataReception))}} >register with peerserver</button>
+            <input type="text" placeholder="optional custom id for you" onChange={(event)=>{setClientId(event.target.value)}} value={clientId}/>
+            <button onClick={async (event)=>{setPeer(await constructAndRegisterPeer(setRemoteConnectionSuccessful, setCurrentConnection, handleDataReception, peer));retrievePeers(event);}} >register with peerserver</button>
             {peer && <>
-                <input type="text" onChange={(event)=>{setPeerIdInput(event.target.value)}} value={peerIdInput}/>
+                <input type="text"  placeholder="peer id (them)" onChange={(event)=>{setPeerIdInput(event.target.value)}} value={peerIdInput}/>
                 <button onClick={(event)=>{setCurrentConnection(connectToPeer(peer, peerIdInput, setRemoteConnectionSuccessful, handleDataReception, sendMessage))}}> connect to peer</button>
             </>}
-            {peerId && <div style={{cursor: 'pointer'}} onClick={(event)=> {navigator.clipboard.writeText(peerId); console.log("copied to clipboard") }}>my id:{peerId}</div>}
+            {peerId && <div className="clickable" onClick={(event)=> {navigator.clipboard.writeText(peerId); console.log("copied to clipboard") }}>copy to clipboard my id:{peerId}</div>}
+            <button onClick={(event)=>{retrievePeers(event)}}>refresh peer list</button>
+            {peerList && peerList.filter((peer)=>peer !== peerId).map((remotePeerId, index) => <div className="clickable" onClick={(event)=>{connectToPeer(peer, remotePeerId, setRemoteConnectionSuccessful, handleDataReception, sendMessage)}} key={index}>connect to:{remotePeerId}</div>)}
+            <hr />
             {remoteConnectionSuccessful && <>
-                <input type="text" onKeyUp={(event)=>{setChatInput(event.target.value); if(event.key === "Enter"){sendMessage(chatInput) }}} onChange={(event)=>{setChatInput(event.target.value)}} value={chatInput}/>
+                <input type="text" placeholder="chat input" onKeyUp={(event)=>{setChatInput(event.target.value); if(event.key === "Enter"){sendMessage(chatInput) }}} onChange={(event)=>{setChatInput(event.target.value)}} value={chatInput}/>
                 <button onClick={(event)=>{sendMessage(chatInput)}}>send chat</button>
             </>}
-            <hr />
+            
             <div className="visual-log">{visualLog.map(({message, time, owner, received}, index) => 
                 <div key={index}>
                     {time} - {owner}<br/>

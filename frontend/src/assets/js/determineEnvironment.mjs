@@ -5,7 +5,7 @@ export const env = {
   peerServerHost: window.location.hostname === 'localhost' ? 'localhost' : 'milestown2.onrender.com',
   clientPeerSettings: {
     host: window.location.hostname === 'localhost' ? 'localhost' : 'milestown2.onrender.com',
-    path: '/peerjs/listener',
+    path: '/',
     port: window.location.hostname === 'localhost' ? 3000 : 443,
   }
 }
