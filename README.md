@@ -1,5 +1,3 @@
-<style>h1 {font-size: 40px; span {font-size: 20px;}}</style>
-
 # MilestOWN 2
 
 [See Version 1](https://github.com/moefingers/UNLV-MilestO-W-N) for local multiplayer.
@@ -28,7 +26,7 @@ This repository is hopefully the front and backend for MilestOWN 2. More notes w
 
 `/lobby`
 
-<h1>Express PeerJS Server Events <span>ExpressPeerServer</span></h1>
+<h1 style="font-size: 40px">Express PeerJS Server Events <span>ExpressPeerServer</span></h1>
 
 ## Development notes:
 ### Development note: running `npm run deploy` in either `/frontend` or `/` directory will do the following:
