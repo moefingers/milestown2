@@ -31,7 +31,7 @@
 .landing-options {
     position: relative;
     width: fit-content;
-    margin-top: 15%;
+    margin-top: 3%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, 0%);
 }

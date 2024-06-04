@@ -50,7 +50,7 @@ const router = createBrowserRouter([
         element: <TestMaps />
       },
       {
-        path: "EstablishConnection",
+        path: "FormConnection",
         element: <FormConnection />
       }
     ],

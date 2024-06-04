@@ -1,0 +1,14 @@
+input {
+    outline: var(--foreground-two) var(--iunit) solid;
+}
+input:active{
+    outline: var(--foreground-two) calc(var(--iunit) * 2) solid;
+}
+
+input.invalid {
+    outline: var(--foreground-three) var(--iunit) solid;
+}
+
+input.invalid:active{
+    outline: var(--foreground-three) calc(var(--iunit) * 2) solid;
+}

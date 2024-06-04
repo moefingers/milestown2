@@ -28,6 +28,7 @@ export default function Landing() {
         <div className="landing-options">
           <Link to={"TestClient"} className='clickable'>test p2p chat</Link>
           <Link to={"TestMaps"} className='clickable'>test maps</Link>
+          <Link to={"FormConnection"} className='clickable'>connect</Link>
         </div>
       </div>
       
