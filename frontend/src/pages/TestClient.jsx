@@ -58,7 +58,7 @@ export default function TestClient() {
         console.log(oldConnection)
         if(oldConnection){
             console.log("dumping old connection")
-            oldConnection.disconnect()
+            oldConnection.destroy()
             setConnectionObject(null)
             setConnectionState(null)
         }
