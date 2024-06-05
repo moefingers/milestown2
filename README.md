@@ -9,27 +9,67 @@ This repository is hopefully the front and backend for MilestOWN 2. More notes w
 [And a backup frontend on GitHub Pages](https://moefingers.github.io/milestown2/)
 
 # Index:
-- [Api Documentation](#backend-api-documentation) 
+- [API Documentation](#backend-api-documentation) 
 - [Development notes](#development-notes) 
+  - [Cross-origin resource sharing](#cross-origin-resource-sharing-cors)
   - [Getting up and running](#getting-up-and-running)
 
 
 
 
+# Backend API Documentation
 
-<h1>Backend API Documentation</h1>
-# 
-# `GET /` - Returns index.html, frontend. (`backend/server.mjs`)
+# `GET '/'`
+### Returns index.html, frontend. \
+Format of response: `<!DOCTYPE html>`
 
-`GET /*` - Returns 404 fragment with link to home.
+# `GET '/*'`
+### Returns 404 fragment with link to home.
 
+# `GET '/healthz'`
+### Returns `200 OK`
 
-`/lobby`
+# `GET '/maps'`
+### Returns maps.json
+Format of response: `[{...}, {name, map, spawns}]`
 
-<h1 style="font-size: 40px">Express PeerJS Server Events <span>ExpressPeerServer</span></h1>
+# `GET '/maps/:nameOrIndex'`
+### Returns one map by name or index
+Example request by index: `GET /maps/0` \
+Example request by name: `GET /maps/4x2` \
+Format of response: `{name, map, spawns}`
 
-## Development notes:
-### Development note: running `npm run deploy` in either `/frontend` or `/` directory will do the following:
+# `POST '/maps'`
+### Store one or many maps
+Format of request for one map: `{name, map, spawns}` \
+Format of request for many maps: `[..., {name, map, spawns}]` \
+Format of **(200 OK)** response: 
+
+    { 
+        "message": "here are the results of your post request",
+        "mapStatuses": [
+            {...},
+            {
+                "map": "test1",
+                "message": "created successfully",
+                "link": "<base>/maps/test7" || 
+            }
+        ]
+    }
+# `GET '/aesthetics'`
+Returns aesthetics.json
+
+# `GET '/lobby'`
+Returns lobbies.json (`backend/controllers/lobbiesController.mjs`)
+
+# Express PeerJS Server Events 
+[(npm link)`import {ExpressPeerServer} from 'peer'`](https://www.npmjs.com/package/peer)
+# Development notes:
+## cross-origin resource sharing (cors)
+### in `development` environment, `cors origin` is set to `*`
+### in `production` environment, `cors origin` is set to `[...definedOrigins]`
+
+###  running `npm run deploy` in either `/frontend` or `/` directory will do the following:
 - **Do not run these commands**, these are not instructions.
 - This is a description of what running `npm run deploy` does.
 - *temporarily* add `base: '/milestown2/'` to vite.config.js

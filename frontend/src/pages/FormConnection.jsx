@@ -28,7 +28,7 @@ export default function FormConnection() {
 
     // peer list
     const [peerList, setPeerList] = useState([])
-    const [peerQuery, setPeerQuery] = useState('')
+    const [lobbyQuery, setLobbyQuery] = useState('')
 
     const [connectedPeers, setConnectedPeers] = useState([])
 
@@ -95,60 +95,13 @@ export default function FormConnection() {
         if(clientId){
             setClientId(null)
         }
-        setPeerQuery('')
+        if(currentLobby){
+            setCurrentLobby(null)
+        }
+        setLobbyQuery('')
         localStorage.removeItem('clientId')
     }
 
-    function toggleConnectionToPeer(event, id, tryToConnect = false, clientObject) {
-        let alreadyConnected = false
-        connectedPeers.forEach((peerEntry) => {
-            if(peerEntry.id == id){
-                alreadyConnected = true
-                console.log('id already connected', id)
-                peerEntry.connection.close()
-                removeFromConnectedPeerList(id)
-            }
-        }); if(alreadyConnected){return}
-        console.log('id not already connected')
-        
-        if(connectedPeers.length >= 1){
-            if(event){notifyOnTarget('already max connections',event.target, 100, 5)}
-            return
-        }
-        console.log(clientObject)
-        // if(tryToConnect){clientObject.connect()}
-        if(!clientObject.disconnected){
-            console.log('attempting to peer since client is connected to server')
-            let peerConnection = clientObject.connect(id, {SerializationType: 'json'})
-            // console.log(peerConnection)
-
-            setConnectionProcessing(true)
-
-            peerConnection.on('open', () => {
-                console.log('opened connection to peer (probably local initiator)', id)
-                setConnectionProcessing(false)
-                getAndSetPeerList().then(()=>{
-                    addToConnectedPeerList(id, peerConnection)
-                })
-            })
-            peerConnection.on('close', () => {
-                console.log('disconnected from peer', id)
-                setConnectionProcessing(false)
-                removeFromConnectedPeerList(id)
-                console.log(connectedPeers)
-            })
-            peerConnection.on('error', (error) => {
-                console.log('error connecting to peer', id,error)
-                setConnectionProcessing(false)
-            })
-            peerConnection.on('data', (data) => {
-                console.log('data: ', data)
-                if(data.type = 'connectionIdList'){
-                    handleReceiveConnectionIdList(data.data)
-                }
-            })
-        }
-    }; useEffect(() => {console.log(connectedPeers)},[connectedPeers])
 
     function addToConnectedPeerList(id, connection){
         if(!connectedPeers.includes({id: id, connection: connection})){
@@ -164,11 +117,11 @@ export default function FormConnection() {
         resetClient()
         let client
         if(await checkIfIdTaken(id)){
-            
             clientIdInputRef.current.value = localStorage.getItem('clientId')
             return
         }
         client = new Peer(id, env.clientPeerSettings)
+        console.log(client.options.token)
         client.on('error', (error) => {
             console.log(error)
             console.log(error.type)
@@ -187,16 +140,10 @@ export default function FormConnection() {
             connection.on('open', () => {
                 console.log('client connection OPEN event (probably remote initiator)')
                 setConnectionProcessing(false)
-                getAndSetPeerList().then(()=>{
-                    addToConnectedPeerList(connection.peer, connection)
-                })
             })
             connection.on('data', (data) => { //receiving
                 getAndSetPeerList()
                 console.log('data: ', data)
-                if(data.type = 'connectionIdList'){
-                    handleReceiveConnectionIdList(data.data)
-                }
             })
             connection.on('close', () => {
                 console.log('remote? maybe client close')
@@ -208,8 +155,6 @@ export default function FormConnection() {
             })
         })
 
-
-
         setClientObject(client)
         setClientId(id)
         localStorage.setItem('clientId', id)
@@ -217,51 +162,49 @@ export default function FormConnection() {
         return client
     }
 
-    function sendToEachPeer(type, data) {
-        console.log('sending to each peer', type, data)
-        connectedPeers.forEach((peerEntry) => {
-            console.log('sending to ', peerEntry.id)
-            peerEntry.connection.send({type: type, data: data})
-        })
-    }
-    function handleReceiveConnectionIdList(idList) {
-        console.log(idList)
-        idList.filter(id => id != clientId && !connectedPeers.map((peerEntry) => peerEntry.id).includes(id)).forEach((id) => {
-            console.log(clientObjectRef.current)
-            toggleConnectionToPeer(null, id, true, clientObjectRef.current)
-        })
-    }
 
-    useEffect(() => {
-        sendToEachPeer('connectionIdList', [...connectedPeers.map((peerEntry) => peerEntry.id), clientId].filter(id => id != clientId))
-    }, [connectedPeers])
-
-    
     async function getAndSetLobbies(){
-        setLobbyList(await getLobbies())
+        const lobbies = await getLobbies()
+        setLobbyList(lobbies)
+        return lobbies
     }
     useEffect(() => {
         //useeffect on render
         console.log('useEffect on render')
+        
         getAndSetLobbies()
-
-
         getAndSetPeerList()
         if(localStorage.getItem('clientId')){
             validateIdAndStoreClient(localStorage.getItem('clientId'))
         }
     }, [])
 
-
     useEffect(() => {
         console.log('clientObject', clientObject)
         console.log('clientId', clientId)
     }, [clientObject, clientId])
 
-    function handleLeaveLobby(){
-        leaveLobby(currentLobby.id, clientId)
+    async function handleLeaveLobby(){
+        await leaveLobby(currentLobby.lobbyId, clientId, clientObject.options.token)
         setCurrentLobby(null)
+        getAndSetLobbies()
         // setClientId(null)
+    }
+    async function handleDeleteLobby(){
+        console.log(currentLobby.lobbyId, clientId, clientObject.options.token)
+        const response = await deleteLobby(currentLobby.lobbyId, clientId, clientObject.options.token);
+        setCurrentLobby(null)
+        getAndSetLobbies()
+    }
+
+    function filterLobbyList(lobby) { // return true or false on each lobby
+        if(stringMatch(lobby.lobbyId, lobbyQuery)){
+            return true
+        }
+        if(lobby.playerIds.some(playerId => stringMatch(playerId, lobbyQuery))){
+            return true
+        }
+        return false
     }
     
 
@@ -288,24 +231,29 @@ export default function FormConnection() {
 
                         {!currentLobby ?<>
                             <div className="digital-dream">Create Lobby</div>
-                            <form onSubmit={(event) => {event.preventDefault(); createLobby(event.target.children[0].value, clientId).then((response) => {console.log(response); if(!response.joined){notifyOnTarget(response.message, event.target, 100, 10); return};setCurrentLobby(response)})}}>
+                            <form onSubmit={(event) => {event.preventDefault(); createLobby(event.target.children[0].value, clientId, clientObject.options.token).then((response) => {console.log(response); if(!response.joined){notifyOnTarget(response.message, event.target, 100, 10); return};setCurrentLobby(response)})}}>
                                 <input placeholder='Lobby ID' onChange={validateInput} type="text" name="lobbyId" id="lobbyId" />
                                 <input type="submit" value="submit" />
                             </form>
 
                             <div className='digital-dream'>Join Lobby<button className='clickable dark' onClick={getAndSetLobbies}>refresh list</button></div>
-                            <input type="text" name="peerQuery" id="peerQuery" placeholder={'filter lobbies or players'} onChange={(event)=>{setPeerQuery(event.target.value)}}/>
-                            <ul className={connectionProcessing ? 'no-access' : ''}>{lobbyList.map((lobby)  => {return (
+                            <input type="text" name="peerQuery" id="peerQuery" placeholder={'filter lobbies or players'} onChange={(event)=>{setLobbyQuery(event.target.value)}}/>
+                            <ul className={connectionProcessing ? 'no-access' : ''}>{lobbyList.filter(filterLobbyList).map((lobby)  => {return (
                                 <li
                                     key={lobby.lobbyId} 
                                     className={`clickable`} 
-                                    onClick={async (event)=>{const response = await getAndSetLobbies(); if(response.joined != true){notifyOnTarget(response.message, event.target, 100, 10); return};joinLobby(lobby.lobbyId, clientId)}}
-                                >{lobby.lobbyId}</li>
+                                    onClick={async (event)=>{const response = await getAndSetLobbies(); joinLobby(lobby.lobbyId, clientId, clientObject.options.token); if(response.joined != true){notifyOnTarget(response.message, event.target, 100, 10); return}}}
+                                >Lobby: {lobby.lobbyId}
+                                    <ul>{lobby.playerList.map((playerEntry) => <li key={playerEntry.playerId} className={playerEntry.owner ? 'owner' : ''}>{playerEntry.playerId}</li>) }</ul>
+                                </li>
                             )})}</ul>
                         </> : <>
                             <div className="digital-dream">Lobby ID: {currentLobby.lobbyId}</div>
-                            <div className="digital-dream">Current Players: {currentLobby?.playerIds.map((peerId) => <div key={peerId}>{peerId}</div>)}</div>
-                            <button className='clickable dark' onClick={handleLeaveLobby}>Leave Lobby</button> {currentLobby?.playerIds[0] == clientId && <button className='clickable dark' onClick={deleteLobby}>Delete Lobby</button>}
+                            <div className="digital-dream">Current Players:</div>
+                            <ul>{currentLobby?.playerList.map((playerEntry) => <li key={playerEntry.playerId} className={playerEntry.owner ? 'owner' : ''}>{playerEntry.owner ? 'Owner: ' : ''}{playerEntry.playerId}</li>) }</ul>
+                            <button className='clickable dark' onClick={handleLeaveLobby}>Leave Lobby</button> 
+                            {currentLobby?.playerList.some((playerEntry) => playerEntry.owner && playerEntry.playerId === clientId) && 
+                                <button className='clickable dark' onClick={handleDeleteLobby}>Delete Lobby</button>}
                             
                         </>}
 

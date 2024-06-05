@@ -13,6 +13,7 @@ import fs from 'fs/promises';
 
 import { ExpressPeerServer } from 'peer';
 
+import cullLobbies from './js/cullLobbies.mjs';
 
 /////////////////////////////////////////
 ///// CORS MIDDLEWEAR AND WHITELIST /////
@@ -20,8 +21,8 @@ import { ExpressPeerServer } from 'peer';
 const devOrigins = '*'; // for development CORS
 const prodOrigins = ['https://milestown2.onrender.com', "https://moefingers.github.io"]; // for production CORS
 const whitelist = process.env.NODE_ENV === 'production' // determine production or development environment and set whitelist to be...
-? prodOrigins // production origins
-: devOrigins; // development origins
+  ? prodOrigins // production origins
+  : devOrigins; // development origins
 
 server.use(cors({ 
   origin: whitelist,
@@ -44,19 +45,21 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 server.use(express.static(path.join(__dirname, 'dist')));
 
+////////////////////////////////////
+//// MIDDLEWEAR TO LOG REQUESTS ////
+//// AND CULL LOBBIES           ////
+////////////////////////////////////
+server.use(async (req, res, next) => {
+  console.log(`-request received-\n    ${req.method} ${req.originalUrl}`)
+  if(req.method !== 'GET' && req.originalUrl !== '/peerjs/peers'){await cullLobbies()}
+  next()
+})
+
 /////////////////////////////////////////
 /////   MIDDLEWARE FOR CONTROLLERS /////
 ////////////////////////////////////////
 import lobbiesController from './controllers/lobbiesController.mjs'
 server.use('/lobby', lobbiesController)
-
-////////////////////////////////////
-//// MIDDLEWEAR TO LOG REQUESTS ////
-////////////////////////////////////
-server.use((req, res, next) => {
-  console.log(`-request received-\n    ${req.method} ${req.originalUrl}`)
-  next()
-})
 
 //////////////////////////
 /// HEALTH CHECK ROUTE ///
@@ -71,15 +74,58 @@ server.get('/healthz', (req, res) => {
 //////////////////////
 server.get('/maps', async (req, res) => {
   const maps =  JSON.parse(await fs.readFile('./db/maps.json', 'utf8'));
-  res.send(JSON.stringify(maps));
+  res.send((maps));
 });
-
-/////////////////////////
-//// GET DEFAULT MAP ////
-/////////////////////////
-server.get('/defaultmap', async (req, res) => {
+//////////////////////
+//// GET ONE MAP  ////
+//////////////////////
+server.get('/maps/:nameOrIndex', async (req, res) => {
   const maps =  JSON.parse(await fs.readFile('./db/maps.json', 'utf8'));
-  res.send(JSON.stringify(maps[0]));
+  if(!isNaN(Number(req.params.nameOrIndex))){
+    console.log('Searching one map by index...')
+    res.send((maps[Number(req.params.nameOrIndex)]));
+  }else {
+    console.log('Searching one map by name...')
+    res.send((maps.find(map => map.name === req.params.nameOrIndex)));
+  }
+});
+////////////////////////////////
+//// POST ONE OR MORE MAPS  ////
+////////////////////////////////
+server.post('/maps', async (req, res) => {
+  try {
+    const maps =  JSON.parse(await fs.readFile('./db/maps.json', 'utf8'));
+    let mapStatuses = []
+    if(Array.isArray(req.body)){
+      req.body.forEach((eachMap) => {
+        if(!eachMap.name){mapStatuses.push({map: eachMap.name, message: 'ERROR: map name is required'}); return}
+        if(!eachMap.map){mapStatuses.push({map: eachMap.name, message: 'map is required'}); return}
+        if(!eachMap.spawns || !Array.isArray(eachMap.spawns)){mapStatuses.push({map: eachMap.name, message: 'spawns are missing or badly formatted'}); return}
+        if(!eachMap.spawns.every((spawn) => Array.isArray(spawn) && spawn.length === 2)){mapStatuses.push({map: eachMap.name, message: 'spawns are  badly formatted'}); return}
+        if(maps.find(map => map.name === eachMap.name)){mapStatuses.push({map: eachMap.name, message: 'map with that name already exist'}); return}
+        maps.push(eachMap)
+        mapStatuses.push({map: eachMap.name, message: 'created successfully', 
+          link: (process.env.NODE_ENV === 'production' ? 'https://milestown2.onrender.com' : 'http://localhost:3000') + '/maps/' + eachMap.name
+        })
+      })
+    } else{
+      maps.push(req.body)
+      mapStatuses.push({map: req.body.name, message: 'created successfully', 
+        link: (process.env.NODE_ENV === 'production' ? 'https://milestown2.onrender.com' : 'http://localhost:3000') + '/maps/' + req.body.name
+      })
+    }
+    await fs.writeFile('./db/maps.json', JSON.stringify(maps, null, 2));
+    res.status(200)
+    res.send(({
+      message: 'here are the results of your post request',
+      mapStatuses: mapStatuses
+    }));
+    
+  } catch (error) {
+    console.log(error)
+    console.log("The server is still running.")
+    res.status(400).send({message: error.toString()});
+  }
 });
 
 //////////////////////
@@ -87,7 +133,7 @@ server.get('/defaultmap', async (req, res) => {
 //////////////////////
 server.get('/aesthetics', async (req, res) => {
   const aesthetics =  JSON.parse(await fs.readFile('./db/aesthetics.json', 'utf8'));
-  res.send(JSON.stringify(aesthetics));
+  res.send((aesthetics));
 });
 
 
@@ -119,21 +165,26 @@ server.use('/', peerServer);
 //////////////remove player from lobby on disconnect ////////////////
 peerServer.on('disconnect', async (client) => {
   console.log(client.getId(), 'disconnected')
-  let data =  JSON.parse(await fs.readFile('./db/lobbies.json', 'utf8'));
-    data.forEach((lobby) => {
-        if(lobby.playerIds.includes(client.getId())){
-            lobby.playerIds = lobby.playerIds.filter((playerId) => playerId !== client.getId())
-        }
-        if(lobby.playerIds.length == 0){
-            data = data.filter(lobby => lobby.lobbyId !== lobby.lobbyId)
-        }
-    })
+  const data =  JSON.parse(await fs.readFile('./db/lobbies.json', 'utf8'));
+  const lobbyIndex = data.findIndex(lobby => lobby.playerList.findIndex(player => player.playerId === client.getId()) !== -1)
+  if(lobbyIndex !== -1){
+    const playerIndex = data[lobbyIndex].playerList.findIndex(player => player.playerId === client.getId())
+    if(data[lobbyIndex].playerList[playerIndex].owner){
+      data.splice(lobbyIndex, 1)
+    } else {
+      data[lobbyIndex].playerList.splice(playerIndex, 1)
+    }
     await fs.writeFile('./db/lobbies.json', JSON.stringify(data, null, 2));
+  }
+  
+  cullLobbies()
 })
 ////////////////notate player connect to server//////////////
 peerServer.on('connection', async (client) => {
   console.log(client.getId(), 'connected')
+  cullLobbies()
 })
+
 
 
 ////////////////////////

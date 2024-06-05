@@ -31,6 +31,10 @@ input.invalid:active{
     color:var(--positive-color)
 }
 
+li.owner{
+    color:var(--foreground-three)
+}
+
 .no-access {
     pointer-events: none;
     user-select: none;

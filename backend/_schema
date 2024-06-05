@@ -4,9 +4,14 @@ lobby
     ...,
     {
         lobbyId: string,
-        playerIds: [...strings]
-
-    }
+        playerList: [
+          {
+            playerId: string, 
+            playerToken: string,
+            owner: boolean
+          }
+        ]
+      }
 ]
 
 
