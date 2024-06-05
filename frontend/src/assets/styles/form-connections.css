@@ -26,6 +26,18 @@ input.invalid:active{
 
 }
 
+.flex-row {
+    display: flex;
+    flex-direction: row;
+}
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+.justify-end {
+    justify-content: end;
+}
+
 /* For someone who you're connected to */
 .center-wrapper.form-connection ul > li.connected {
     color:var(--positive-color)

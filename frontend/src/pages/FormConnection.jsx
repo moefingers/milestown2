@@ -226,8 +226,14 @@ export default function FormConnection() {
                     </>
                 :
                     <>
-                        <h1 className='digital-dream'>HUMAN IDENTIFIED:</h1>
-                        <h1>[<span>{clientId}</span>]<button className='clickable dark' onClick={resetClient}>reset identity</button></h1>
+                        <h1 className='digital-dream flex-row'>HUMAN IDENTIFIED:</h1>
+                        <h1>
+                            <div>[<span>{clientId}</span>]</div>
+                            <div className='flex-column justify-end'>
+                                <button className='clickable dark' onClick={resetClient}>reset identity</button>
+                                <button className='clickable dark' onClick={getAndSetLobbies}>refresh list</button>
+                            </div>
+                        </h1>
 
                         {!currentLobby ?<>
                             <div className="digital-dream">Create Lobby</div>
@@ -236,7 +242,7 @@ export default function FormConnection() {
                                 <input type="submit" value="submit" />
                             </form>
 
-                            <div className='digital-dream'>Join Lobby<button className='clickable dark' onClick={getAndSetLobbies}>refresh list</button></div>
+                            <div className='digital-dream'>Join Lobby</div>
                             <input type="text" name="peerQuery" id="peerQuery" placeholder={'filter lobbies or players'} onChange={(event)=>{setLobbyQuery(event.target.value)}}/>
                             <ul className={connectionProcessing ? 'no-access' : ''}>{lobbyList.filter(filterLobbyList).map((lobby)  => {return (
                                 <li
