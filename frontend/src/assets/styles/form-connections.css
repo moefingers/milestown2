@@ -1,5 +1,14 @@
+.center-wrapper.form-connection *{
+    font-size: min(5vw, 5vh);
+}
+
+.center-wrapper.form-connection h1{
+    font-size: min(15vw, 8vh);
+}
+
 input {
     outline: var(--foreground-two) var(--iunit) solid;
+    max-width: 100vw;
 }
 input:active{
     outline: var(--foreground-two) calc(var(--iunit) * 2) solid;
@@ -17,7 +26,7 @@ input.invalid:active{
     display:flex;
 }
 
-.center-wrapper.form-connection h1 > span {
+.center-wrapper.form-connection h1 > div > span {
     color: var(--foreground-three)
 }
 

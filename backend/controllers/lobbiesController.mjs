@@ -16,7 +16,7 @@ import cullLobbies from '../js/cullLobbies.mjs';
 //// GET ALL LOBBIES ////
 /////////////////////////
 router.get('/', async (req, res) => {
-  
+
   const data =  JSON.parse(await fs.readFile('./db/lobbies.json', 'utf8'));
   const newData = data.map(lobby => {
     return {
@@ -111,11 +111,24 @@ router.post('/join', async (req, res) => {
           leaveLobby(req.body.playerId);
           {res.send({"joined": false, "message": "auto-kicked from old lobby, now try again."});return}
         } else {
+          console.log("playertoken does not match: ", req.body.playerToken, 'notifying client to refresh page or change identity')
           {res.send({"joined": false, "message": "Token conflict. Refresh page or change identity."});return}
         }
+    } else {
+      console.log("player", req.body.playerId, 'joining lobby: ', req.body.lobbyId)
+        const lobby = lobbies.find(lobby => lobby.lobbyId === req.body.lobbyId);
+        if(lobby && lobby.playerList.length < 4){
+          lobby.playerList.push({
+            playerId: req.body.playerId, 
+            playerToken: req.body.playerToken,
+            owner: false
+          })
+          await fs.writeFile('./db/lobbies.json', JSON.stringify(lobbies, null, 2));
+          res.send({"joined": true, "message": "joined lobby successfully", "lobbyId": req.body.lobbyId, "playerList": lobby.playerList, 'lobby': lobby});
+        } else {
+          res.send({"joined": false, "message": "lobby not found or already has 4 players"})
+        }
     }
-    
-    {res.send({"joined": false, "message": "player already exists in lobby"});return}
     
 });
 

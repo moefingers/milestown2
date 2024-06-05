@@ -196,6 +196,16 @@ export default function FormConnection() {
         setCurrentLobby(null)
         getAndSetLobbies()
     }
+    async function handleJoinLobby(event, lobby){
+        // console.log(event.target.lobby.id, clientId, clientObject.options.token)
+        const response = await joinLobby(lobby.lobbyId, clientId, clientObject.options.token);
+        if(response.joined != true){
+            notifyOnTarget(response.message, event.target, 100, 10); return
+        } else {
+            setCurrentLobby(response.lobby)
+            getAndSetLobbies()
+        }
+    }
 
     function filterLobbyList(lobby) { // return true or false on each lobby
         if(stringMatch(lobby.lobbyId, lobbyQuery)){
@@ -212,9 +222,8 @@ export default function FormConnection() {
     return (
         <>  
             <ThemeButtons />
-            <Link to={".."}>go back</Link>
-            <h1>FormConnection.jsx</h1>
             <div className="center-wrapper form-connection">
+            <Link to={".."}>GO BACK</Link>
                 {!clientId 
                 ?
                     <>
@@ -236,26 +245,27 @@ export default function FormConnection() {
                         </h1>
 
                         {!currentLobby ?<>
-                            <div className="digital-dream">Create Lobby</div>
+                            <h2 className="digital-dream">Create Lobby</h2>
                             <form onSubmit={(event) => {event.preventDefault(); createLobby(event.target.children[0].value, clientId, clientObject.options.token).then((response) => {console.log(response); if(!response.joined){notifyOnTarget(response.message, event.target, 100, 10); return};setCurrentLobby(response)})}}>
                                 <input placeholder='Lobby ID' onChange={validateInput} type="text" name="lobbyId" id="lobbyId" />
                                 <input type="submit" value="submit" />
                             </form>
 
-                            <div className='digital-dream'>Join Lobby</div>
+                            <h2 className='digital-dream'>Join Lobby</h2>
                             <input type="text" name="peerQuery" id="peerQuery" placeholder={'filter lobbies or players'} onChange={(event)=>{setLobbyQuery(event.target.value)}}/>
                             <ul className={connectionProcessing ? 'no-access' : ''}>{lobbyList.filter(filterLobbyList).map((lobby)  => {return (
                                 <li
                                     key={lobby.lobbyId} 
                                     className={`clickable`} 
-                                    onClick={async (event)=>{const response = await getAndSetLobbies(); joinLobby(lobby.lobbyId, clientId, clientObject.options.token); if(response.joined != true){notifyOnTarget(response.message, event.target, 100, 10); return}}}
+                                    onClick={(event)=>handleJoinLobby(event, lobby)}
+                                    lobby={lobby}
                                 >Lobby: {lobby.lobbyId}
                                     <ul>{lobby.playerList.map((playerEntry) => <li key={playerEntry.playerId} className={playerEntry.owner ? 'owner' : ''}>{playerEntry.playerId}</li>) }</ul>
                                 </li>
                             )})}</ul>
                         </> : <>
-                            <div className="digital-dream">Lobby ID: {currentLobby.lobbyId}</div>
-                            <div className="digital-dream">Current Players:</div>
+                            <h2 className="digital-dream">Lobby ID: {currentLobby.lobbyId}</h2>
+                            <h2 className="digital-dream">Current Players:</h2>
                             <ul>{currentLobby?.playerList.map((playerEntry) => <li key={playerEntry.playerId} className={playerEntry.owner ? 'owner' : ''}>{playerEntry.owner ? 'Owner: ' : ''}{playerEntry.playerId}</li>) }</ul>
                             <button className='clickable dark' onClick={handleLeaveLobby}>Leave Lobby</button> 
                             {currentLobby?.playerList.some((playerEntry) => playerEntry.owner && playerEntry.playerId === clientId) && 

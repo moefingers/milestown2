@@ -9,6 +9,8 @@ import '../assets/styles/_testing.css'
 
 import { getPeers } from "../assets/js/customFetch"
 
+import ThemeButtons from '../components/ThemeButtons'
+
 export default function TestClient() {
 
     useEffect(() => {
@@ -176,6 +178,7 @@ export default function TestClient() {
 
     return (
         <>
+            <ThemeButtons />
             <h1 className="test-client-title">test client</h1>
             <Link to={".."}>go back</Link>
 
