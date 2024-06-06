@@ -145,6 +145,33 @@ router.post('/join', async (req, res) => {
     
 });
 
+/////////////////////////////////////
+//// KICK PLAYER FROM LOBBY ROUTE////  EXPECTS lobbyId, playerId, playerToken, kickPlayerId
+/////////////////////////////////////
+router.delete('/kick', async (req, res) => {
+    if (!req.body.playerId) {res.send({"joined": false, "message": "playerId is missing in request", "playerId": req.body.playerId});return;}
+    if (!req.body.lobbyId) {res.send({"joined": false, "message": "lobbyId is missing in request", "playerId": req.body.lobbyId});return;}
+    if (!req.body.playerToken) {res.send({"joined": false, "message": "playerToken is missing in request", "playerId": req.body.playerToken});return;}
+    const {lobbies} =  JSON.parse(await fs.readFile('./db/lobbies.json', 'utf8'));
+    const lobby = lobbies.find(lobby => lobby.lobbyId === req.body.lobbyId);
+    if(lobby){
+      const owner = lobby.playerList.find(player => (player.playerId === req.body.playerId && player.playerToken === req.body.playerToken && player.owner === true));
+      if(owner){
+        const playerToKick = lobby.playerList.find(player => player.playerId === req.body.kickPlayerId)
+        if(playerToKick){
+          lobby.playerList = lobby.playerList.filter(player => player.playerId !== req.body.kickPlayerId)
+          await fs.writeFile('./db/lobbies.json', JSON.stringify({lobbies: lobbies}, null, 2));
+          res.send({"success": true, "message": "kicked player successfully", "playerId": req.body.kickPlayerId});return;
+        } else {
+          res.send({"success": false, "message": "player not found in lobby", "playerId": req.body.kickPlayerId});return;
+        }
+      }else {
+        res.send({"success": false, "message": "unauthorized for one or more reasons: playerId, playerToken, not owner", "playerId": req.body.playerId});return;
+      }
+    } else {
+      res.send({"success": false, "message": "lobby not found", "playerId": req.body.playerId});return;
+    }
+})
 //////////////////////////
 //// LEAVE LOBBY ROUTE ////  EXPECTS lobbyId and playerId and playerToken
 //////////////////////////

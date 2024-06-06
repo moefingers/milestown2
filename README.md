@@ -231,6 +231,9 @@ The rough outline is to have a...
 - lobby leader starting game navigates to Network page for other players
 - navigating to Network page deletes lobby from list
 - boot player in lobby button for owner of lobby
+- /lobby/kick route
+  - test route
+  - add custom fetch
 
 ## long term todo:
 - maybe transition from using clip paths to using svg

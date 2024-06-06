@@ -6,7 +6,7 @@
 
 // package imports
 import { useEffect, useState, useRef, useContext } from 'react'
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import Peer, { SerializationType } from 'peerjs'
 
 // context imports
@@ -24,6 +24,7 @@ import stringMatch from '../assets/js/stringMatch'
 import '../assets/styles/form-connections.css'
 
 export default function FormConnection() {
+    const navigate = useNavigate()
 
     const {
         connectionProcessing, setConnectionProcessing,
@@ -298,14 +299,16 @@ export default function FormConnection() {
 
     async function handleStartGame(event){
         event.preventDefault()
+        setConnectionProcessing(true)
         const lobbies = await getLobbies()
+
         const thisLobby = lobbies.find(lobby => lobby.lobbyId === currentLobby.lobbyId)
-        console.log("lobby from get", JSON.stringify(thisLobby))
-        console.log("current lobby", JSON.stringify(currentLobby))
         if(JSON.stringify(thisLobby) !== JSON.stringify(currentLobby)){
             console.log('lobby has changed')
             notifyOnTarget('lobby changed', event.target, 100, 10)
             getAndSetLobbies()
+        } else {
+            navigate('../Network') // - go to /#/Network
         }
     }
 
