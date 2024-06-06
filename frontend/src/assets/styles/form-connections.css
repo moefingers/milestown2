@@ -1,3 +1,7 @@
+.center-wrapper.form-connection {
+    transition: .5s;
+}
+
 .center-wrapper.form-connection *{
     font-size: min(5vw, 5vh);
 }
