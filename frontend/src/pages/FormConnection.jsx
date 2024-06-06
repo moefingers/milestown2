@@ -46,7 +46,7 @@ export default function FormConnection() {
         if(stringMatch(lobby.lobbyId, lobbyQuery)){
             return true
         }
-        if(lobby.playerIds.some(playerId => stringMatch(playerId, lobbyQuery))){
+        if(lobby.playerList.some(playerEntry => stringMatch(playerEntry.playerId, lobbyQuery))){
             return true
         }
         return false
@@ -256,7 +256,7 @@ export default function FormConnection() {
         } else {
             setCurrentLobby(response.lobby)
         }
-            getAndSetLobbies()
+        getAndSetLobbies()
     }
     async function handleCreateLobby(event){
         event.preventDefault()
@@ -266,8 +266,9 @@ export default function FormConnection() {
         console.log(response);
         if(!response.joined){
             await notifyOnTarget(response.message, event.target, 100, 10)
-        };
-        setCurrentLobby(response)
+        } else {
+            setCurrentLobby(response)
+        }
         getAndSetLobbies()
     }
 
@@ -282,14 +283,14 @@ export default function FormConnection() {
     return (
         <>  
             <ThemeButtons />
-            <div className="center-wrapper form-connection">
-            <Link to={".."} className='clickable'>GO BACK</Link>
+            <Link to={".."} className='clickable' style={{fontSize: 'min(4vw, 4vh)'}}>BACK TO MENU</Link>
+            <div className={`center-wrapper form-connection${connectionProcessing ? ' no-access' : ''}`}>
                 {!clientId 
                 ?
                     <>
                         <h1 className='digital-dream'>IDENTIFY YOURSELF</h1>
-                        <form onSubmit={(event) => {event.preventDefault(); validateIdAndStoreClient(event.target.children[0].value)}}>
-                            <input placeholder='input identity' ref={clientIdInputRef} onChange={validateInput} type="text" name="clientId" id="clientId" />
+                        <form onSubmit={(event) => {event.preventDefault(); if(validateInput(event.target.children[0])){validateIdAndStoreClient(event.target.children[0].value)}}}>
+                            <input placeholder='input identity' ref={clientIdInputRef} onChange={(event)=>validateInput(event.target)} type="text" name="clientId" id="clientId" />
                             <input type="submit" value="submit" />
                         </form>
                     </>
@@ -313,20 +314,21 @@ export default function FormConnection() {
 
                             <h2 className='digital-dream'>Join Lobby</h2>
                             <input type="text" name="peerQuery" id="peerQuery" placeholder={'filter lobbies or players'} onChange={(event)=>{setLobbyQuery(event.target.value)}}/>
-                            <ul className={connectionProcessing ? 'no-access' : ''}>{lobbyList.filter(filterLobbyList).map((lobby)  => {return (
+                            <ul className='lobby-list'>{lobbyList.filter(filterLobbyList).map((lobby)  => {return (
                                 <li
                                     key={lobby.lobbyId} 
-                                    className={`clickable`} 
+                                    className={`clickable digital-dream`} 
                                     onClick={(event)=>handleJoinLobby(event, lobby)}
                                     lobby={lobby}
-                                >Lobby: {lobby.lobbyId}
-                                    <ul>{lobby.playerList.map((playerEntry) => <li key={playerEntry.playerId} className={playerEntry.owner ? 'owner' : ''}>{playerEntry.playerId}</li>) }</ul>
+                                >Lobby:<em className="four">{lobby.lobbyId}</em>
+                                    <ul>{lobby.playerList.map((playerEntry) => <li key={playerEntry.playerId} className={playerEntry.owner ? 'three' : 'five indent'}>{playerEntry.owner ? 'owner:' : ''}{playerEntry.playerId}</li>) }</ul>
+                                    <hr />
                                 </li>
                             )})}</ul>
                         </> : <>
                             <h2 className="digital-dream">Lobby ID: <em className="three">{currentLobby.lobbyId}</em></h2>
                             <h2 className="digital-dream">Current Players:</h2>
-                            <ul>{currentLobby?.playerList.map((playerEntry) => <li key={playerEntry.playerId} className={playerEntry.owner ? 'owner' : ''}>{playerEntry.owner ? 'Owner: ' : ''}{playerEntry.playerId}</li>) }</ul>
+                            <ul>{currentLobby?.playerList.map((playerEntry) => <li key={playerEntry.playerId} className={`${playerEntry.owner ? 'three' : 'five indent'}`}>{playerEntry.owner ? 'Owner: ' : ''}{playerEntry.playerId}</li>) }</ul>
                             <div className='flex-row justify-space-between'>
                                 {currentLobby?.playerList.some((playerEntry) => playerEntry.owner && playerEntry.playerId === clientId) ?
                                 <>

@@ -50,9 +50,22 @@ html, body, #root {
     font-weight: normal;
 }
 
-em.three {
+
+.three {
     color: var(--foreground-three);
     font-style: normal;
+}
+.four {
+    color: var(--foreground-four);
+    font-style: normal;
+}
+.five {
+    color: var(--foreground-five);
+    font-style: normal;
+}
+
+.indent{
+    margin-left: calc(var(--iunit) * 100);
 }
 
 

@@ -5,6 +5,19 @@
 .center-wrapper.form-connection h1{
     font-size: min(12.4vw, 8vh);
 }
+.center-wrapper.form-connection h2{
+    margin-top: calc(var(--iunit) * 3);
+}
+
+.center-wrapper.form-connection ul {
+    list-style-type: none;
+}
+.center-wrapper.form-connection > ul {  
+    margin-top: calc(var(--iunit) * 3);
+}
+.center-wrapper.form-connection > ul > li {
+    border-bottom: var(--foreground-two) solid calc(var(--iunit) * .5);
+}
 
 input {
     outline: var(--foreground-two) var(--iunit) solid;
@@ -79,9 +92,6 @@ div.center-wrapper.form-connection > h1 > div.identity {
     color:var(--positive-color)
 }
 
-li.owner{
-    color:var(--foreground-three)
-}
 
 .no-access {
     pointer-events: none;

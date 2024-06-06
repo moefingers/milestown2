@@ -9,6 +9,10 @@ body.black-on-white{
     --foreground-two-faded: #55555577;
     --foreground-three: #ff0000;
     --foreground-three-faded: #ff000077;
+    --foreground-four: #4444ff;
+    --foreground-four-faded: #0000ff77;
+    --foreground-five: #aaaaff;
+    --foreground-five-faded: #0000ff77;
 
     --clickable-hover: #990000;
     --clickable-active: #ff0000;
@@ -29,6 +33,10 @@ body.two-shades-of-gray{
     --foreground-two-faded: #44444477;
     --foreground-three: #ff0000;
     --foreground-three-faded: #ff000077;
+    --foreground-four: #4444ff;
+    --foreground-four-faded: #0000ff77;
+    --foreground-five: #aaaaff;
+    --foreground-five-faded: #0000ff77;
 
     --clickable-hover: #ff8888;
     --clickable-active: #ff0000;
@@ -49,6 +57,10 @@ body.white-on-black{
     --foreground-two-faded: #88888877;
     --foreground-three: #ff0000;
     --foreground-three-faded: #ff000077;
+    --foreground-four: #4444ff;
+    --foreground-four-faded: #0000ff77;
+    --foreground-five: #aaaaff;
+    --foreground-five-faded: #0000ff77;
 
     --clickable-hover: #ff8888;
     --clickable-active: #ff0000;
