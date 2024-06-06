@@ -5,27 +5,22 @@ import themes from '../assets/js/themes'
 
 export default function LightSwitch() {
     const [themeState, setThemeState] = useState(0)
-
     function applyTheme(themeToApply) {
         console.log("applying theme: ", themeToApply)
         localStorage.setItem('Theme', themeToApply)
         setThemeState(themeToApply)
-        Object.entries(themes[themeToApply].attributes).forEach((entry) => {
-            // document.documentElement.setAttribute(Object.key, attribute.value)
-            // console.log(entry)
-            document.documentElement.style.setProperty(entry[0], entry[1])
-        })
+        document.body.className = themeToApply
     }
     function toggleLights(event) {
-        if(localStorage.getItem('Theme') == 0){
-            applyTheme(1)
+        if(localStorage.getItem('Theme') == 'black-on-white') {
+            applyTheme('two-shades-of-gray')
         } else {
-            applyTheme(0)
+            applyTheme('black-on-white')
         }
     }
 
     if(themeState != localStorage.getItem('Theme')){
-        applyTheme(localStorage.getItem('Theme') || 0)
+        applyTheme(localStorage.getItem('Theme') || 'black-on-white')
     }
     
 
@@ -35,7 +30,7 @@ export default function LightSwitch() {
             <button className="light-switch" onClick={toggleLights}>💡</button>
             <div className='custom-picker'>
                 <div className="list">
-                    {themes.map((theme, index) => <button className="clickable" key={index} onClick={() => applyTheme(index)}>{theme.name}</button>)}
+                    {themes.map((theme, index) => <button className="clickable" key={index} onClick={() => applyTheme(theme.class)}>{theme.name}</button>)}
                 </div>
                 
                 <button className='button'>🎨</button>

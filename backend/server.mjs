@@ -51,7 +51,9 @@ server.use(express.static(path.join(__dirname, 'dist')));
 ////////////////////////////////////
 server.use(async (req, res, next) => {
   console.log(`-request received-\n    ${req.method} ${req.originalUrl}`)
-  if(req.method !== 'GET' && req.originalUrl !== '/peerjs/peers'){await cullLobbies()}
+  // if(req.method !== 'GET' && req.originalUrl !== '/peerjs/peers'){await cullLobbies()}
+  if(req.originalUrl !== '/peerjs/peers'){await cullLobbies()}
+  // await cullLobbies()
   next()
 })
 

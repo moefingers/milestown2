@@ -41,9 +41,9 @@ Format of response: `{name, map, spawns}`
 
 # `POST '/maps'`
 ### Store one or many maps
-Format of request for one map: `{name, map, spawns}` \
-Format of request for many maps: `[..., {name, map, spawns}]` \
-Format of **(200 OK)** response: 
+Format of request body (`req.body`) for one map: `{name, map, spawns}` \
+Format of request body (`req.body`) for many maps: `[..., {name, map, spawns}]` \
+Example and format of **(200 OK)** response: 
 
     { 
         "message": "here are the results of your post request",
@@ -57,19 +57,129 @@ Format of **(200 OK)** response:
         ]
     }
 # `GET '/aesthetics'`
+### Get aesthetic data like colors and shapes for players.
 Returns aesthetics.json
 
 # `GET '/lobby'`
-Returns lobbies.json (`backend/controllers/lobbiesController.mjs`)
+### Get All Lobbies
+Worth noting that each `playerToken` is omitted from the response.\
+Example and format of **(200 OK)** response:
+
+      [
+            {...},
+            {
+                lobbyId: asdf
+                playerList: [
+                    {...},
+                    {
+                        playerId: asdf,
+                        owner: true
+                    }
+              ]
+          }
+      ]
+
+# `GET '/lobby/:id'`
+### Get One Lobby
+Returns one lobby by `lobbyId`\
+Worth noting that each `playerToken` is omitted from the response.\
+Example and format of **(200 OK)** response:
+
+      {
+          lobbyId: asdf
+          playerList: [
+              {...},
+              {
+                  playerId: asdf,
+                  owner: true
+              }
+          ]
+      }
+
+# `POST '/lobby'`
+### Create Lobby
+Creates one lobby with `lobbyId` and `playerId` and `playerToken` from request body (`req.body`). \
+Format of request body (`req.body`): `{lobbyId, playerId, playerToken}`
+Example response:
+
+    {
+      "joined": true, 
+      "message": "lobby created successfully and joined as owner", 
+      "lobbyId": req.body.lobbyId, 
+      "playerList": [
+        {
+          playerId: req.body.playerId, 
+          playerToken: req.body.playerToken,
+          owner: true
+        }
+      ]
+    }
+# `POST '/lobby/join'`
+### Join Lobby
+Joins one lobby with `lobbyId` with player as `playerId` and `playerToken` from request body (`req.body`). \
+Worth noting that each `playerToken` is omitted from the response.\
+Also worth noting the response will contain a `joined` boolean to show if the join was successful.\
+Format of request body (`req.body`): `{lobbyId, playerId, playerToken}`
+Example of successful join response: 
+
+    {
+      joined: true,
+      message: "joined lobby successfully", 
+      lobby: {
+        lobbyId: req.body.lobbyId, 
+        playerList:  [
+          {...},
+          {
+            playerId: player.playerId, 
+            owner: player.owner
+          }
+        ]
+      }
+    }
+Example of unsuccessful join response:\
+
+    {
+      joined: false, 
+      message: "Token conflict. Refresh page or change identity."
+    }
+
+# `POST '/lobby/leave'`
+### Leave Lobby
+Leaves one lobby with `lobbyId` with player as `playerId` and `playerToken` from request body (`req.body`). \
+Format of request body (`req.body`): `{lobbyId, playerId, playerToken}` \
+Example of successful leave response: `{message: 'left lobby'}` \
+Example of unsuccessful leave response: `{message: 'Token conflict. Refresh page or change identity.'}`
+
+# `DELETE '/lobby/:id'`
+### Delete One Lobby
+Deletes one lobby with `lobbyId`, requiring `playerId` and `playerToken` from request body (`req.body`) to verify request. \
+Format of request body (`req.body`): `{lobbyId, playerId, playerToken}`
+Example of successful delete response: `{inLobby: false, message: 'lobby deleted'}` \
+Example of unsuccessful delete response: `{inLobby: false, message: 'lobby not found'}`
+
+# `DELETE '/lobby/all'` 
+### Delete All Lobbies
+Deletes all lobbies. \
+Expects `req.body.confirm` == `true`
+
 
 # Express PeerJS Server Events 
-[(npm link)`import {ExpressPeerServer} from 'peer'`](https://www.npmjs.com/package/peer)
+[(npm link)](https://www.npmjs.com/package/peer)`import {ExpressPeerServer} from 'peer'`
+## `peerServer.on('connection',...)`
+Lobbies will be culled for peers that are not in peerlist and empty lobbies.
+
+## `peerServer.on('disconnect',...)`
+Client will be removed from all lobbies. \
+Lobbies will be culled for peers that are not in peerlist and empty lobbies.
+
 # Development notes:
 ## cross-origin resource sharing (cors)
 ### in `development` environment, `cors origin` is set to `*`
 ### in `production` environment, `cors origin` is set to `[...definedOrigins]`
 
-###  running `npm run deploy` in either `/frontend` or `/` directory will do the following:
+## `npm` scripts
+### `npm run deploy` in either `/frontend` or `/` directory will do the following:
+
 - **Do not run these commands**, these are not instructions.
 - This is a description of what running `npm run deploy` does.
 - *temporarily* add `base: '/milestown2/'` to vite.config.js
@@ -88,6 +198,13 @@ Returns lobbies.json (`backend/controllers/lobbiesController.mjs`)
 - `npm run backend` in main directory will run the backend app in a production-style environment.
 - `npm run backendpreview` in main directory will run the backend with `nodemon`.
 
+## Middlwear
+- All requests will be intercepted and logged to console.
+- All requests except to `/peerjs/peers` will trigger a culling.
+
+## Culling Lobbies `js/cullLobbies.js`
+- `js/cullLobbies.js` is a script that will be run in the backend. It will cull lobbies that have no peers in the peerlist by retreiving the peerlist and then checking through the lobbies.
+
 ## Other important notes:
 - Please use localhost for development cors to work propery. I'd include 127.0.0.1 but it's not necessary and I don't think it's appropriate to dedicate many lines of code to simply accept multiple local addresses unrelated to production.
 
@@ -105,10 +222,12 @@ The rough outline is to have a...
   - sends movements in the game to be evaluated and accepted by backend
 
 ## short term todo:
-- Ensure when owner of lobby leaves, lobby is deleted or ownership transferred .
+- Ensure when owner of lobby leaves, lobby is deleted or ownership transferred.
+
 
 ## long term todo:
 - maybe transition from using clip paths to using svg
 
 ## done:
 - Owner of lobby cannot see other players in lobby
+- change themes to be by applied by css, (class on body) instead of apply to each variable in :root

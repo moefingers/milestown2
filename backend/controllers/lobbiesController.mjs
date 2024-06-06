@@ -18,7 +18,7 @@ import cullLobbies from '../js/cullLobbies.mjs';
 router.get('/', async (req, res) => {
   try {
     const {lobbies} =  JSON.parse(await fs.readFile('./db/lobbies.json', 'utf8'));
-    const newLobbies = lobbies.map(lobby => {
+    const lobbiesWithoutPlayerTokens = lobbies.map(lobby => {
       return {
         lobbyId: lobby.lobbyId,
         playerList: lobby.playerList.map(player => {
@@ -29,7 +29,7 @@ router.get('/', async (req, res) => {
         })
       }
     })
-    res.send(newLobbies);
+    res.send(lobbiesWithoutPlayerTokens);
   } catch (error) {
     console.log(error)
     res.status(400).send({message: error.toString()});
