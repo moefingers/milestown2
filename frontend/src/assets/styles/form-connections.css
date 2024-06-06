@@ -83,7 +83,6 @@ div.center-wrapper.form-connection > h1 > div.identity {
     line-height: min(11vw, 11vh);
     align-self: center;
 
-    font-family: monospace, monospace
 }
 
 .create-lobby-input {

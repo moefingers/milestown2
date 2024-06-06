@@ -298,7 +298,15 @@ export default function FormConnection() {
 
     async function handleStartGame(event){
         event.preventDefault()
-        console.log(await getAndSetLobbies())
+        const lobbies = await getLobbies()
+        const thisLobby = lobbies.find(lobby => lobby.lobbyId === currentLobby.lobbyId)
+        console.log("lobby from get", JSON.stringify(thisLobby))
+        console.log("current lobby", JSON.stringify(currentLobby))
+        if(JSON.stringify(thisLobby) !== JSON.stringify(currentLobby)){
+            console.log('lobby has changed')
+            notifyOnTarget('lobby changed', event.target, 100, 10)
+            getAndSetLobbies()
+        }
     }
 
 
@@ -323,7 +331,7 @@ export default function FormConnection() {
                     <>
                         <h1 className='digital-dream'>HUMAN IDENTIFIED</h1>
                         <h1 className='identity-and-buttons flex-row justify-space-between'>
-                            <div className='identity'>[<div ref={idSpanRef}>{clientId}</div>]</div>
+                            <div className='identity'>[<div className='monospace' ref={idSpanRef}>{clientId}</div>]</div>
                             <div className='flex-column justify-end'>
                                 <button className='clickable dark nowrap' onClick={resetClient}>reset identity</button>
                                 <button className='clickable dark' onClick={getAndSetLobbies}>refresh</button>
@@ -345,15 +353,15 @@ export default function FormConnection() {
                                     className={`clickable digital-dream`} 
                                     onClick={(event)=>{handleJoinLobby(event, lobby)}}
                                     lobby={lobby}
-                                >Lobby:<em className="three">{lobby.lobbyId}</em>
-                                    <ul className='player-list'>{lobby.playerList.map((playerEntry) => <li key={playerEntry.playerId} className={playerEntry.owner ? 'four' : 'five'}>{playerEntry.owner ? 'owner:' : 'other:'}{ifMoreThan16Letters(playerEntry.playerId)}</li>) }</ul>
+                                >Lobby:<em className="three monospace">{lobby.lobbyId}</em>
+                                    <ul className='player-list'>{lobby.playerList.map((playerEntry) => <li key={playerEntry.playerId} className={playerEntry.owner ? 'four' : 'five'}>{playerEntry.owner ? 'owner:' : 'other:'}<span className={`monospace${playerEntry.owner ? ' four' : ' five'}`}>{ifMoreThan16Letters(playerEntry.playerId)}</span></li>) }</ul>
                                     
                                 </li>
                             )})}</ul>
                         </> : <>
                             <h2 className="digital-dream">Lobby ID: <em className="three">{currentLobby.lobbyId}</em></h2>
                             <h2 className="digital-dream">Current Players:</h2>
-                            <ul className='player-list digital-dream'>{currentLobby?.playerList.map((playerEntry) => <li key={playerEntry.playerId} className={`${playerEntry.owner ? 'four' : 'five'}`}>{playerEntry.owner ? 'Owner:' : 'other:'}{ifMoreThan16Letters(playerEntry.playerId)}</li>) }</ul>
+                            <ul className='player-list digital-dream'>{currentLobby?.playerList.map((playerEntry) => <li key={playerEntry.playerId} className={`${playerEntry.owner ? 'four' : 'five'}`}>{playerEntry.owner ? 'Owner:' : 'other:'}<span className={`monospace${playerEntry.owner ? ' four' : ' five'}`}>{ifMoreThan16Letters(playerEntry.playerId)}</span></li>) }</ul>
                             <div className='flex-row justify-space-between'>
                                 {currentLobby?.playerList.some((playerEntry) => playerEntry.owner && playerEntry.playerId === clientId) ?
                                 <>

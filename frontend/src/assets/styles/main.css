@@ -50,6 +50,12 @@ html, body, #root {
     font-weight: normal;
 }
 
+.monospace {
+    
+    font-family: monospace, monospace;
+    font-style: normal;
+}
+
 
 .three {
     color: var(--foreground-three);
