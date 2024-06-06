@@ -15,7 +15,7 @@
 .center-wrapper.form-connection > ul {  
     margin-top: calc(var(--iunit) * 3);
 }
-.center-wrapper.form-connection > ul > li {
+.center-wrapper.form-connection ul.player-list {
     border-bottom: var(--foreground-two) solid calc(var(--iunit) * .5);
 }
 

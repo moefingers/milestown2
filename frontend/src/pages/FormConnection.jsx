@@ -42,6 +42,13 @@ export default function FormConnection() {
 
     const [clientId, setClientId] = useState(null)
 
+    function ifMoreThan16Letters(id) {
+        if(id.length > 16){
+            return id.slice(0, 16) + '...'
+        } else {
+            return id
+        }
+    }
     function filterLobbyList(lobby) { // return true or false on each lobby
         if(stringMatch(lobby.lobbyId, lobbyQuery)){
             return true
@@ -63,19 +70,26 @@ export default function FormConnection() {
             return true
         }
     }
-    async function notifyOnTarget(notification,target, flashDuration, iterations) {
-        console.log(notification)
+    async function notifyOnTarget(notification,target, flashDuration, iterations, targetShouldHave=null) {
+        if(targetShouldHave){ // to resolve target being child instead of parent on something like lobby
+            while(target.attributes[targetShouldHave] === undefined){
+                target = target.parentElement
+            } 
+        }
+        console.log(target) // this target for example may have something like lobby. if it has that, that means it's not one of the children
         const originalText = target.innerHTML
-            target.innerHTML = notification
-            target.animate([
-                { color: 'var(--negative-color)' },
-                { color: 'var(--foreground-one)' },
-            ], {
-                duration: flashDuration,
-                iterations: iterations,
-                direction:"alternate"
-            })
-            return new Promise(resolve => setTimeout(resolve, flashDuration * iterations))
+        target.innerHTML = notification
+        target.style.pointerEvents = 'none'
+        target.style.userSelect = 'none'
+        target.animate([
+            { color: 'var(--negative-color)' },
+            { color: 'var(--foreground-one)' },
+        ], {
+            duration: flashDuration,
+            iterations: iterations,
+            direction:"alternate"
+        })
+        return new Promise(resolve => setTimeout(() => {target.innerHTML = originalText; target.style.pointerEvents = 'auto'; target.style.userSelect = 'auto'; resolve()}, flashDuration * iterations))
     }
     async function getAndSetPeerList() {
     // Dependencies for below function:
@@ -252,7 +266,7 @@ export default function FormConnection() {
         console.log(response)
         setConnectionProcessing(false)
         if(response.joined != true){
-            await notifyOnTarget(response.message, event.target, 100, 10)
+            await notifyOnTarget(response.message, event.target, 100, 10, "lobby")
         } else {
             setCurrentLobby(response.lobby)
         }
@@ -318,17 +332,17 @@ export default function FormConnection() {
                                 <li
                                     key={lobby.lobbyId} 
                                     className={`clickable digital-dream`} 
-                                    onClick={(event)=>handleJoinLobby(event, lobby)}
+                                    onClick={(event)=>{handleJoinLobby(event, lobby)}}
                                     lobby={lobby}
-                                >Lobby:<em className="four">{lobby.lobbyId}</em>
-                                    <ul>{lobby.playerList.map((playerEntry) => <li key={playerEntry.playerId} className={playerEntry.owner ? 'three' : 'five indent'}>{playerEntry.owner ? 'owner:' : ''}{playerEntry.playerId}</li>) }</ul>
-                                    <hr />
+                                >Lobby:<em className="three">{lobby.lobbyId}</em>
+                                    <ul className='player-list'>{lobby.playerList.map((playerEntry) => <li key={playerEntry.playerId} className={playerEntry.owner ? 'four' : 'five'}>{playerEntry.owner ? 'owner:' : 'other:'}{ifMoreThan16Letters(playerEntry.playerId)}</li>) }</ul>
+                                    
                                 </li>
                             )})}</ul>
                         </> : <>
                             <h2 className="digital-dream">Lobby ID: <em className="three">{currentLobby.lobbyId}</em></h2>
                             <h2 className="digital-dream">Current Players:</h2>
-                            <ul>{currentLobby?.playerList.map((playerEntry) => <li key={playerEntry.playerId} className={`${playerEntry.owner ? 'three' : 'five indent'}`}>{playerEntry.owner ? 'Owner: ' : ''}{playerEntry.playerId}</li>) }</ul>
+                            <ul className='player-list digital-dream'>{currentLobby?.playerList.map((playerEntry) => <li key={playerEntry.playerId} className={`${playerEntry.owner ? 'four' : 'five'}`}>{playerEntry.owner ? 'Owner:' : 'other:'}{ifMoreThan16Letters(playerEntry.playerId)}</li>) }</ul>
                             <div className='flex-row justify-space-between'>
                                 {currentLobby?.playerList.some((playerEntry) => playerEntry.owner && playerEntry.playerId === clientId) ?
                                 <>
