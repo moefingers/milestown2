@@ -297,7 +297,7 @@ export default function FormConnection() {
     return (
         <>  
             <ThemeButtons />
-            <Link to={".."} className='clickable' style={{fontSize: 'min(4vw, 4vh)'}}>BACK TO MENU</Link>
+            <Link to={".."} className='clickable' style={{fontSize: 'min(4vw, 4vh)'}} onClick={resetClient}>BACK TO MENU</Link>
             <div className={`center-wrapper form-connection${connectionProcessing ? ' no-access' : ''}`}>
                 {!clientId 
                 ?

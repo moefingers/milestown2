@@ -10,6 +10,7 @@ import {
   RouterProvider,
   Route,
   Link,
+  createHashRouter,
 } from "react-router-dom";
 
 ////////////////////////////
@@ -32,7 +33,7 @@ import './assets/styles/infinity-response.css'
 //////////////////////
 //// REACT ROUTER ////
 //////////////////////
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
     path: "/",
     errorElement: <Error />,

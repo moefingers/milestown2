@@ -11,3 +11,9 @@
 .test-client-title ~ button:active{
     background-color: green;
 }
+
+div.visual-log {
+    overflow-y: scroll;
+    scrollbar-width: thin;
+    max-height: 50vh;
+}

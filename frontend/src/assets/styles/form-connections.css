@@ -16,8 +16,11 @@
 .center-wrapper.form-connection ul {
     list-style-type: none;
 }
-.center-wrapper.form-connection > ul {  
+.center-wrapper.form-connection > ul.lobby-list {  
     margin-top: calc(var(--iunit) * 3);
+    overflow-y: auto;
+    scrollbar-width:thin;
+    max-height: 47vh
 }
 .center-wrapper.form-connection ul.player-list {
     border-bottom: var(--foreground-two) solid calc(var(--iunit) * .5);
