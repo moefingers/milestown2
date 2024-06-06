@@ -51,14 +51,16 @@ export default function FormConnection() {
         }
         return false
     }
-    function validateInput(event){
+    function validateInput(eventTarget){
         const regex = /^[a-zA-Z0-9][a-zA-Z0-9_\- ]*[a-zA-Z0-9]$/;
-        if (!regex.test(event.target.value)) {
-            event.target.classList.add('invalid');
-            event.target.setCustomValidity('The ID must start and end with an alphanumeric character (lower or upper case character or a digit). In the middle of the ID spaces, dashes (-) and underscores (_) are allowed.');
+        if (!regex.test(eventTarget.value)) {
+            eventTarget.classList.add('invalid');
+            eventTarget.setCustomValidity('The ID must start and end with an alphanumeric character (lower or upper case character or a digit). In the middle of the ID spaces, dashes (-) and underscores (_) are allowed.');
+            return false
         } else {
-            event.target.setCustomValidity('');
-            event.target.classList.remove('invalid');
+            eventTarget.setCustomValidity('');
+            eventTarget.classList.remove('invalid');
+            return true
         }
     }
     async function notifyOnTarget(notification,target, flashDuration, iterations) {
@@ -304,8 +306,8 @@ export default function FormConnection() {
 
                         {!currentLobby ?<>
                             <h2 className="digital-dream">Create Lobby</h2>
-                            <form onSubmit={handleCreateLobby}>
-                                <input placeholder='Lobby ID' onChange={validateInput} type="text" name="lobbyId" id="lobbyId" className='create-lobby-input'/>
+                            <form onSubmit={(event) => {event.preventDefault(); if(validateInput(event.target.children[0])){handleCreateLobby(event)}} }>
+                                <input placeholder='Lobby ID' onChange={(event)=>{validateInput(event.target)}} type="text" name="lobbyId" id="lobbyId" className='create-lobby-input'/>
                                 <input className='create-lobby-button' type="submit" value="+" />
                             </form>
 
