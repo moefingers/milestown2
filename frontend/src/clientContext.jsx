@@ -7,6 +7,7 @@ export default function ClientContextProvider({ children }) {
     const [clientObject, setClientObject] = useState(null)
     const [clientId, setClientId] = useState(null)
     const [currentLobby, setCurrentLobby] = useState(null)
+    const [connectionProcessing, setConnectionProcessing] = useState(false)
 
     return (
         <ClientContext.Provider value={{ clientObject, setClientObject, clientId, setClientId, currentLobby, setCurrentLobby }}>

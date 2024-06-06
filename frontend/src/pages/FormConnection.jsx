@@ -26,6 +26,7 @@ import '../assets/styles/form-connections.css'
 export default function FormConnection() {
 
     const {
+        connectionProcessing, setConnectionProcessing,
         clientObject, setClientObject,
         clientId, setClientId,
         currentLobby, setCurrentLobby
@@ -33,8 +34,6 @@ export default function FormConnection() {
 
     const [lobbyList, setLobbyList] = useState([])
     
-
-    const [connectionProcessing, setConnectionProcessing] = useState(false)
 
     // peer list
     const [peerList, setPeerList] = useState([])
@@ -299,6 +298,7 @@ export default function FormConnection() {
 
     async function handleStartGame(event){
         event.preventDefault()
+
     }
 
 

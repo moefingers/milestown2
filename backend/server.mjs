@@ -195,11 +195,37 @@ peerServer.on('connection', async (client) => {
 server.use((req, res) => {
   res.status(404)
   res.send(`
-  <div>
-    <h1>Server 404 - Page Not Found</h1>
-    <div>Due to the single-page nature of this application, routes are simulated off of a single page.</div>
-    <div>You may not access a page directly for now and the ultimate application may not use pages.</div>
-    <div>Try navigating to the  <a href="/">index</a>.</div>
-  </div>
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404, Not Found</title>
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        height: 100vh;
+        font-family: sans-serif;
+        background-color: #ffe2e2;
+        font-size: min(5.5vw, 5.5vh);
+      }
+      *{
+        margin: 0;
+        padding: 0;
+        text-wrap: nowrap;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>UwU, Not Found</h1>
+    <h1>I mean I mean 404</h1>
+    <a href="/#/">OMG TAKE ME BACK TO SAFETY</a>
+  </body>
+  </html>
   `)
 })
