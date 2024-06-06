@@ -10,7 +10,7 @@ export default function ClientContextProvider({ children }) {
     const [connectionProcessing, setConnectionProcessing] = useState(false)
 
     return (
-        <ClientContext.Provider value={{ clientObject, setClientObject, clientId, setClientId, currentLobby, setCurrentLobby }}>
+        <ClientContext.Provider value={{ clientObject, setClientObject, clientId, setClientId, currentLobby, setCurrentLobby, connectionProcessing, setConnectionProcessing }}>
             {children}
         </ClientContext.Provider>
     )

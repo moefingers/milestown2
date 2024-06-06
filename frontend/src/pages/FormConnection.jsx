@@ -298,7 +298,7 @@ export default function FormConnection() {
 
     async function handleStartGame(event){
         event.preventDefault()
-
+        console.log(await getAndSetLobbies())
     }
 
 
