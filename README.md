@@ -9,10 +9,15 @@ This repository is hopefully the front and backend for MilestOWN 2. More notes w
 [And a backup frontend on GitHub Pages](https://moefingers.github.io/milestown2/)
 
 # Index:
-- [API Documentation](#backend-api-documentation) 
+- [API Documentation](#backend-api-documentation)
+- [Express PeerJS Server Events](#express-peerjs-server-events)
 - [Development notes](#development-notes) 
   - [Cross-origin resource sharing](#cross-origin-resource-sharing-cors)
+  - [npm scripts](#npm-scripts)
   - [Getting up and running](#getting-up-and-running)
+  - [Middlwear](#middlwear)
+  - [Culling Lobbies](#culling-lobbies-jsculllobbiesjs)
+  - [Other important notes](#other-important-notes)
 
 
 
@@ -190,7 +195,7 @@ Lobbies will be culled for peers that are not in peerlist and empty lobbies.
 - delete `backend/dist`
 - copy `frontend/dist` to `backend/dist` (so the host will read commits from the build)
 
-### Getting up and running:
+## Getting up and running:
 - `npm install` in main directory will install dependencies in BOTH frontend and backend
 - `npm run frontend` in main directory will run the vite app with live changes.
 - `npm run preview` in main directory will build and run the vite app locally in a production-style environment.
