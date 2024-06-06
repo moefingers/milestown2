@@ -101,5 +101,5 @@ div.center-wrapper.form-connection > h1 > div.identity {
     pointer-events: none;
     user-select: none;
 
-    filter: blur(calc(var(--iunit) * 2));
+    filter: blur(calc(var(--iunit) * 10));
 }
