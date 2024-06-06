@@ -24,6 +24,7 @@ import Error from './pages/Error.jsx'
 import TestClient from './pages/TestClient.jsx';
 import TestMaps from './pages/TestMaps.jsx';
 import FormConnection from './pages/FormConnection.jsx';
+import Network from './pages/Network.jsx';
 
 /* Context to keep track of clientObject, clientId, currentLobby */
 import  ClientContextProvider  from './clientContext'
@@ -56,6 +57,10 @@ const router = createHashRouter([
       {
         path: "FormConnection",
         element: <FormConnection />
+      },
+      {
+        path: "Network",
+        element: <Network/>
       }
     ],
   }

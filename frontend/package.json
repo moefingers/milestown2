@@ -1,9 +1,10 @@
 {
   "name": "milestown2",
   "private": true,
-  "version": "0.0.0",
+  "version": "2.0.0",
   "type": "module",
-  "homepage": "https://moefingers.github.io/milestown2/#/",
+  "license": "MIT",
+  "homepage": "https://moefingers.github.io/milestown2/#",
   "scripts": {
     "start": "npm run dev",
     "dev": "vite --host",
