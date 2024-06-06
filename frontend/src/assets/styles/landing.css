@@ -1,4 +1,4 @@
-.landing-options > a {
+.landing-options > * {
     position: relative;
     display: block;
     width: fit-content;
@@ -14,6 +14,11 @@
     
     font-family: "Digital Dream Regular", Courier, monospace;
     text-decoration: none;
+}
+
+.landing-options > div.warning {
+    font-size: min(5vh, 5vw);
+    color: var(--foreground-three)
 }
 
 .landing-options > a:hover {

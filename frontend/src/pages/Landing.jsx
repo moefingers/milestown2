@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef, useContext } from 'react'
 
 import { Link } from "react-router-dom"
 
@@ -9,11 +9,13 @@ import { env } from '../assets/js/determineEnvironment.mjs'// This determines th
 import ThemeButtons from '../components/ThemeButtons'
 import SplashTitle from '../components/SplashTitle'
 
+import { ClientContext } from '../clientContext'
+
 import '../assets/styles/landing.css'
 
 
 export default function Landing() {
-
+  const {clientObject, currentLobby} = useContext(ClientContext)
 
 
 
@@ -28,7 +30,15 @@ export default function Landing() {
         <div className="landing-options">
           <Link to={"TestClient"} className='clickable'>test p2p chat</Link>
           <Link to={"TestMaps"} className='clickable'>test maps</Link>
-          <Link to={"FormConnection"} className='clickable'>connect</Link>
+          <Link to={"FormConnection"} className='clickable'>{clientObject?.disconnected == false ? (currentLobby ? 'see lobby' : 'play') : 'connect'}</Link>
+          
+          {clientObject?.disconnected == false ? <>
+            <div className='warning'>
+              {currentLobby ? `You're in a lobby!` : `You're connected!`}
+            </div>
+          </>: <>
+            
+          </>}
         </div>
       </div>
       

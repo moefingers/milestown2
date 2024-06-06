@@ -25,6 +25,9 @@ import TestClient from './pages/TestClient.jsx';
 import TestMaps from './pages/TestMaps.jsx';
 import FormConnection from './pages/FormConnection.jsx';
 
+/* Context to keep track of clientObject, clientId, currentLobby */
+import  ClientContextProvider  from './clientContext'
+
 /* Styles.. These will be applied to everything in the application.*/
 import './assets/styles/main.css'
 import './assets/styles/infinity-response.css'
@@ -66,7 +69,9 @@ const router = createHashRouter([
 //////////////////////////
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <RouterProvider router={router}/>
+    <ClientContextProvider>
+      <RouterProvider router={router}/>
+    </ClientContextProvider>
   </React.StrictMode>,
 )
 

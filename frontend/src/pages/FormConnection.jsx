@@ -5,9 +5,12 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // package imports
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, useContext } from 'react'
 import { Link } from "react-router-dom"
 import Peer, { SerializationType } from 'peerjs'
+
+// context imports
+import  {ClientContext}  from '../clientContext'
 
 // component imports
 import ThemeButtons from '../components/ThemeButtons'
@@ -22,13 +25,14 @@ import '../assets/styles/form-connections.css'
 
 export default function FormConnection() {
 
-    const [currentLobby, setCurrentLobby] = useState(null)
+    const {
+        clientObject, setClientObject,
+        clientId, setClientId,
+        currentLobby, setCurrentLobby
+    } = useContext(ClientContext)
+
     const [lobbyList, setLobbyList] = useState([])
     
-    const [clientObject, setClientObject] = useState(null)
-    const clientObjectRef = useRef({})
-    clientObjectRef.current = clientObject
-    const [clientConnectionObject, setClientConnectionObject] = useState(null)
 
     const [connectionProcessing, setConnectionProcessing] = useState(false)
 
@@ -38,9 +42,8 @@ export default function FormConnection() {
 
     const [connectedPeers, setConnectedPeers] = useState([])
 
-    const clientIdInputRef = useRef(null)
 
-    const [clientId, setClientId] = useState(null)
+    const clientIdInputRef = useRef(null)
 
     function ifMoreThan16Letters(id) {
         if(id.length > 16){
@@ -165,6 +168,11 @@ export default function FormConnection() {
             console.log('client open event')
             getAndSetPeerList()
         })
+        client.on('disconnected', () => {
+            console.log('client disconnected event')
+            setClientObject(null)
+            setClientId(null)
+        })
         client.on('connection', (connection) => {
             setConnectionProcessing(true)
             console.log('client connection event (probably remote initiator)')
@@ -214,12 +222,15 @@ export default function FormConnection() {
         return lobbies
     }
     useEffect(() => {
-        //useeffect on render
-        console.log('useEffect on render')
-        
+        console.log('useEffect on render of FormConnection.jsx')
+        const clientConnected = clientObject?.disconnected == false
+        console.log("client connected: ", clientConnected)
+        console.log("clientId from context: ", clientId)
+        console.log('clientId from localStorage: ', localStorage.getItem('clientId'))
         getAndSetLobbies()
         getAndSetPeerList()
-        if(localStorage.getItem('clientId')){
+        if(!clientConnected && localStorage.getItem('clientId')){
+            console.log('client not connected, id present in storage. trying to connect using it')
             validateIdAndStoreClient(localStorage.getItem('clientId'))
         }
     }, [])
@@ -297,7 +308,7 @@ export default function FormConnection() {
     return (
         <>  
             <ThemeButtons />
-            <Link to={".."} className='clickable' style={{fontSize: 'min(4vw, 4vh)'}} onClick={resetClient}>BACK TO MENU</Link>
+            <Link to={".."} className='clickable' style={{fontSize: 'min(4vw, 4vh)'}}>BACK TO MENU</Link>
             <div className={`center-wrapper form-connection${connectionProcessing ? ' no-access' : ''}`}>
                 {!clientId 
                 ?
