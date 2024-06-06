@@ -64,7 +64,7 @@ const router = createHashRouter([
       }
     ],
   }
-], {basename: env.indexPath});
+]);
 
 
 //////////////////////////
