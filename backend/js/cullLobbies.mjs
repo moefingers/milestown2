@@ -7,7 +7,7 @@ import {customFetch, getPeers} from './backendCustomFetch.mjs'
 export default async function cullLobbies(){
     try {
         const peers =  await getPeers()
-        console.log('|||CULLING lobbies to remove all|||\n', peers.length, 'peers not in\n', peers)
+        console.log('||||||||CULLING lobbies||||||||\nto remove all', peers.length, 'peers not in\n', peers)
         
         let {lobbies} =  JSON.parse(await fs.readFile('./db/lobbies.json', 'utf8'));
         let newLobbyList

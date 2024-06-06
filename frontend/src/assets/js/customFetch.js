@@ -1,7 +1,7 @@
 import {env} from './determineEnvironment.mjs'
 
 async function customFetch(method = 'GET', path = '/date', body = undefined) {
-    console.log(method, path, body || " && omg no body!")
+    console.log(method, path, body || " && no body specified.")
     const res = await fetch(env.backend + path, {
         method: method,
         headers: ['POST', 'PUT', 'DELETE'].includes(method) ? {'Content-Type': 'application/json'} : {},

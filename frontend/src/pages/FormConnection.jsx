@@ -1,3 +1,9 @@
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// FILE NOTES:                                                                                            ///
+// Few of the functions in this file are pure. They almost all require the context of the parent function.///
+//
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // package imports
 import { useEffect, useState, useRef } from 'react'
 import { Link } from "react-router-dom"
@@ -36,6 +42,15 @@ export default function FormConnection() {
 
     const [clientId, setClientId] = useState(null)
 
+    function filterLobbyList(lobby) { // return true or false on each lobby
+        if(stringMatch(lobby.lobbyId, lobbyQuery)){
+            return true
+        }
+        if(lobby.playerIds.some(playerId => stringMatch(playerId, lobbyQuery))){
+            return true
+        }
+        return false
+    }
     function validateInput(event){
         const regex = /^[a-zA-Z0-9][a-zA-Z0-9_\- ]*[a-zA-Z0-9]$/;
         if (!regex.test(event.target.value)) {
@@ -46,7 +61,7 @@ export default function FormConnection() {
             event.target.classList.remove('invalid');
         }
     }
-    function notifyOnTarget(notification,target, flashDuration, iterations) {
+    async function notifyOnTarget(notification,target, flashDuration, iterations) {
         console.log(notification)
         const originalText = target.innerHTML
             target.innerHTML = notification
@@ -58,7 +73,7 @@ export default function FormConnection() {
                 iterations: iterations,
                 direction:"alternate"
             })
-            setTimeout(() => {target.innerHTML = originalText}, flashDuration * iterations)
+            return new Promise(resolve => setTimeout(resolve, flashDuration * iterations))
     }
     async function getAndSetPeerList() {
     // Dependencies for below function:
@@ -235,11 +250,11 @@ export default function FormConnection() {
         console.log(response)
         setConnectionProcessing(false)
         if(response.joined != true){
-            notifyOnTarget(response.message, event.target, 100, 10); return
+            await notifyOnTarget(response.message, event.target, 100, 10)
         } else {
             setCurrentLobby(response.lobby)
-            getAndSetLobbies()
         }
+            getAndSetLobbies()
     }
     async function handleCreateLobby(event){
         event.preventDefault()
@@ -247,23 +262,18 @@ export default function FormConnection() {
         let response = await createLobby(event.target.children[0].value, clientId, clientObject.options.token)
         setConnectionProcessing(false)
         console.log(response);
-        if(!response.joined){notifyOnTarget(response.message, event.target, 100, 10); return};
+        if(!response.joined){
+            await notifyOnTarget(response.message, event.target, 100, 10)
+        };
         setCurrentLobby(response)
+        getAndSetLobbies()
     }
 
     async function handleStartGame(event){
         event.preventDefault()
     }
 
-    function filterLobbyList(lobby) { // return true or false on each lobby
-        if(stringMatch(lobby.lobbyId, lobbyQuery)){
-            return true
-        }
-        if(lobby.playerIds.some(playerId => stringMatch(playerId, lobbyQuery))){
-            return true
-        }
-        return false
-    }
+
     
 
 
@@ -318,7 +328,7 @@ export default function FormConnection() {
                             <div className='flex-row justify-space-between'>
                                 {currentLobby?.playerList.some((playerEntry) => playerEntry.owner && playerEntry.playerId === clientId) ?
                                 <>
-                                    <button className='clickable dark' onClick={handleStartGame}>Start</button>
+                                    {currentLobby.playerList.length > 1 && <button className='clickable dark' onClick={handleStartGame}>Start</button>}
                                     <button className='clickable dark' onClick={handleLeaveLobby}>Leave (Delete)</button> 
                                 </>: <>
                                     <button className='clickable dark' onClick={handleLeaveLobby}>Leave</button> 
