@@ -4,7 +4,7 @@ import { Link } from "react-router-dom"
 
 import { getMaps, getAesthetics } from '../assets/js/customFetch'
 
-
+import ThemeButtons from '../components/ThemeButtons'
 import DrawnMap from '../components/DrawnMap'
 
 export default function TestMaps() {
@@ -21,6 +21,7 @@ export default function TestMaps() {
 
     return (
         <>
+            <ThemeButtons />
             <h1>TestMaps.jsx</h1> <Link to={".."}> go back</Link>
             <ul>{mapList.map((map, index) => <li key={index} className='clickable' onClick={(event)=>{setMap(map)}}>{map.name}</li>)}</ul>
 

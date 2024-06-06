@@ -19,7 +19,7 @@ export default async function cullLobbies(){
                     lobbyId: lobby.lobbyId,
                     playerList: newPlayerList
                 }
-            }).filter((lobby) => lobby.playerList.length > 0)
+            }).filter((lobby) => (lobby.playerList.length > 0 && lobby.playerList.find((player) => player.owner === true)))
         } else {
             newLobbyList = []
         }

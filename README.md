@@ -105,8 +105,10 @@ The rough outline is to have a...
   - sends movements in the game to be evaluated and accepted by backend
 
 ## short term todo:
-- Ensure when owner of lobby leaves, lobby is deleted or ownership transferred.
-- Owner of lobby cannot see other players in lobby
+- Ensure when owner of lobby leaves, lobby is deleted or ownership transferred .
 
 ## long term todo:
 - maybe transition from using clip paths to using svg
+
+## done:
+- Owner of lobby cannot see other players in lobby
