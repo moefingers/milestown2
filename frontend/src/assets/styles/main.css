@@ -54,6 +54,10 @@ html, body, #root {
     max-width: 100vw;
 }
 
+.nowrap {
+    white-space: nowrap;
+}
+
 * {
     border: 0;
     margin: 0;
@@ -67,6 +71,11 @@ html, body, #root {
     font-family: "Digital Dream Regular", Courier, monospace;
     font-style: normal;
     font-weight: normal;
+}
+
+em.three {
+    color: var(--foreground-three);
+    font-style: normal;
 }
 
 

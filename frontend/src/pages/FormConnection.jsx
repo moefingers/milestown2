@@ -164,8 +164,22 @@ export default function FormConnection() {
 
 
     async function getAndSetLobbies(){
+        setConnectionProcessing(true)
         const lobbies = await getLobbies()
+        setConnectionProcessing(false)
+        console.log(lobbies)
         setLobbyList(lobbies)
+        const lobby = lobbies.find(lobby => lobby.lobbyId === currentLobby?.lobbyId)
+        if(currentLobby && !lobby){
+            setCurrentLobby(null)
+        } else if (lobby) {
+            console.log('during the course of getAndSetLobbies, a lobby was found with id: ', lobby.lobbyId)
+            if(lobby.playerList.find(player => player.playerId === clientId)){
+                console.log('and it was found to have the client as a player. setting it as current lobby')
+                setCurrentLobby(lobby)
+            }
+        }
+
         return lobbies
     }
     useEffect(() => {
@@ -179,32 +193,66 @@ export default function FormConnection() {
         }
     }, [])
 
+    let idSpanRef = useRef(null);
+    useEffect(() => {
+        if(idSpanRef.current){
+            if(clientId.length > 10){  // 9, 9.6 - 10, 8.6 - 11, 7.9 - 12, 7.2 - 13, 6.7 - 14, 6.2 - 15, 5.8 - 16, 5.4 - 17 - 5.1 || 84.9x^-0.992
+                let size = 118 * clientId.length ** -1.01 // 11, 10.4 - 12, 9.5 - 13, 8.8 - 14, 8.1 - 15, 7.6 - 16, 7.1 - 17, 6.7  || 118x^-1.01
+                idSpanRef.current.style.fontSize = `min(${size}vw, ${size}vh)`
+                idSpanRef.current.style.lineHeight = `min(${size}vw, ${size}vh)`
+            }
+        }
+    }, [clientId])
+
     useEffect(() => {
         console.log('clientObject', clientObject)
         console.log('clientId', clientId)
     }, [clientObject, clientId])
+    useEffect(() => {
+        console.log('currentLobby', currentLobby)
+    }, [currentLobby])
 
     async function handleLeaveLobby(){
+        setConnectionProcessing(true)
         await leaveLobby(currentLobby.lobbyId, clientId, clientObject.options.token)
+        setConnectionProcessing(false)
         setCurrentLobby(null)
         getAndSetLobbies()
         // setClientId(null)
     }
     async function handleDeleteLobby(){
         console.log(currentLobby.lobbyId, clientId, clientObject.options.token)
+        setConnectionProcessing(true)
         const response = await deleteLobby(currentLobby.lobbyId, clientId, clientObject.options.token);
+        console.log(response)
+        setConnectionProcessing(false)
         setCurrentLobby(null)
         getAndSetLobbies()
     }
     async function handleJoinLobby(event, lobby){
-        // console.log(event.target.lobby.id, clientId, clientObject.options.token)
+        setConnectionProcessing(true)
         const response = await joinLobby(lobby.lobbyId, clientId, clientObject.options.token);
+        console.log(response)
+        setConnectionProcessing(false)
         if(response.joined != true){
             notifyOnTarget(response.message, event.target, 100, 10); return
         } else {
             setCurrentLobby(response.lobby)
             getAndSetLobbies()
         }
+    }
+    async function handleCreateLobby(event){
+        event.preventDefault()
+        setConnectionProcessing(true)
+        let response = await createLobby(event.target.children[0].value, clientId, clientObject.options.token)
+        setConnectionProcessing(false)
+        console.log(response);
+        if(!response.joined){notifyOnTarget(response.message, event.target, 100, 10); return};
+        setCurrentLobby(response)
+    }
+
+    async function handleStartGame(event){
+        event.preventDefault()
     }
 
     function filterLobbyList(lobby) { // return true or false on each lobby
@@ -223,7 +271,7 @@ export default function FormConnection() {
         <>  
             <ThemeButtons />
             <div className="center-wrapper form-connection">
-            <Link to={".."}>GO BACK</Link>
+            <Link to={".."} className='clickable'>GO BACK</Link>
                 {!clientId 
                 ?
                     <>
@@ -235,20 +283,20 @@ export default function FormConnection() {
                     </>
                 :
                     <>
-                        <h1 className='digital-dream flex-row'>HUMAN IDENTIFIED:</h1>
-                        <h1>
-                            <div>[<span>{clientId}</span>]</div>
+                        <h1 className='digital-dream'>HUMAN IDENTIFIED</h1>
+                        <h1 className='identity-and-buttons flex-row justify-space-between'>
+                            <div className='identity'>[<div ref={idSpanRef}>{clientId}</div>]</div>
                             <div className='flex-column justify-end'>
-                                <button className='clickable dark' onClick={resetClient}>reset identity</button>
-                                <button className='clickable dark' onClick={getAndSetLobbies}>refresh list</button>
+                                <button className='clickable dark nowrap' onClick={resetClient}>reset identity</button>
+                                <button className='clickable dark' onClick={getAndSetLobbies}>refresh</button>
                             </div>
                         </h1>
 
                         {!currentLobby ?<>
                             <h2 className="digital-dream">Create Lobby</h2>
-                            <form onSubmit={(event) => {event.preventDefault(); createLobby(event.target.children[0].value, clientId, clientObject.options.token).then((response) => {console.log(response); if(!response.joined){notifyOnTarget(response.message, event.target, 100, 10); return};setCurrentLobby(response)})}}>
-                                <input placeholder='Lobby ID' onChange={validateInput} type="text" name="lobbyId" id="lobbyId" />
-                                <input type="submit" value="submit" />
+                            <form onSubmit={handleCreateLobby}>
+                                <input placeholder='Lobby ID' onChange={validateInput} type="text" name="lobbyId" id="lobbyId" className='create-lobby-input'/>
+                                <input className='create-lobby-button' type="submit" value="+" />
                             </form>
 
                             <h2 className='digital-dream'>Join Lobby</h2>
@@ -264,12 +312,19 @@ export default function FormConnection() {
                                 </li>
                             )})}</ul>
                         </> : <>
-                            <h2 className="digital-dream">Lobby ID: {currentLobby.lobbyId}</h2>
+                            <h2 className="digital-dream">Lobby ID: <em className="three">{currentLobby.lobbyId}</em></h2>
                             <h2 className="digital-dream">Current Players:</h2>
                             <ul>{currentLobby?.playerList.map((playerEntry) => <li key={playerEntry.playerId} className={playerEntry.owner ? 'owner' : ''}>{playerEntry.owner ? 'Owner: ' : ''}{playerEntry.playerId}</li>) }</ul>
-                            <button className='clickable dark' onClick={handleLeaveLobby}>Leave Lobby</button> 
-                            {currentLobby?.playerList.some((playerEntry) => playerEntry.owner && playerEntry.playerId === clientId) && 
-                                <button className='clickable dark' onClick={handleDeleteLobby}>Delete Lobby</button>}
+                            <div className='flex-row justify-space-between'>
+                                {currentLobby?.playerList.some((playerEntry) => playerEntry.owner && playerEntry.playerId === clientId) ?
+                                <>
+                                    <button className='clickable dark' onClick={handleStartGame}>Start</button>
+                                    <button className='clickable dark' onClick={handleLeaveLobby}>Leave (Delete)</button> 
+                                </>: <>
+                                    <button className='clickable dark' onClick={handleLeaveLobby}>Leave</button> 
+                                </>}
+                            </div>
+                            
                             
                         </>}
 

@@ -3,12 +3,13 @@
 }
 
 .center-wrapper.form-connection h1{
-    font-size: min(15vw, 8vh);
+    font-size: min(12.4vw, 8vh);
 }
 
 input {
     outline: var(--foreground-two) var(--iunit) solid;
-    max-width: 100vw;
+    width: 100%;
+    max-width: 100%;
 }
 input:active{
     outline: var(--foreground-two) calc(var(--iunit) * 2) solid;
@@ -26,14 +27,6 @@ input.invalid:active{
     display:flex;
 }
 
-.center-wrapper.form-connection h1 > div > span {
-    color: var(--foreground-three)
-}
-
-.center-wrapper.form-connection h1 > span.id{
-    display: inline;
-
-}
 
 .flex-row {
     display: flex;
@@ -46,6 +39,40 @@ input.invalid:active{
 .justify-end {
     justify-content: end;
 }
+.justify-space-between {
+    justify-content: space-between;
+}
+
+.center-wrapper.form-connection h1 > div.identity,
+.center-wrapper.form-connection h1 > div.identity > span{
+    font-size: min(12.4vw, 8vh);
+}
+
+div.center-wrapper.form-connection > h1 > div.identity {
+    display: flex;
+    font-size: min(11vw, 11vh);
+    line-height: min(9vw, 9vh);
+    max-width: 63%;
+}
+.center-wrapper.form-connection h1 > div > div {
+    color: var(--foreground-three);
+    text-wrap: nowrap;
+    max-width: 100%;
+    
+    font-size: min(11vw, 11vh);
+    line-height: min(11vw, 11vh);
+    align-self: center;
+
+    font-family: monospace, monospace
+}
+
+.create-lobby-input {
+    width: 80%;
+}
+.create-lobby-button {
+    width: 20%;
+}
+
 
 /* For someone who you're connected to */
 .center-wrapper.form-connection ul > li.connected {

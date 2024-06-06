@@ -165,16 +165,16 @@ server.use('/', peerServer);
 //////////////remove player from lobby on disconnect ////////////////
 peerServer.on('disconnect', async (client) => {
   console.log(client.getId(), 'disconnected')
-  const data =  JSON.parse(await fs.readFile('./db/lobbies.json', 'utf8'));
-  const lobbyIndex = data.findIndex(lobby => lobby.playerList.findIndex(player => player.playerId === client.getId()) !== -1)
+  const {lobbies} =  JSON.parse(await fs.readFile('./db/lobbies.json', 'utf8'));
+  const lobbyIndex = lobbies.findIndex(lobby => lobby.playerList.findIndex(player => player.playerId === client.getId()) !== -1)
   if(lobbyIndex !== -1){
-    const playerIndex = data[lobbyIndex].playerList.findIndex(player => player.playerId === client.getId())
-    if(data[lobbyIndex].playerList[playerIndex].owner){
-      data.splice(lobbyIndex, 1)
+    const playerIndex = lobbies[lobbyIndex].playerList.findIndex(player => player.playerId === client.getId())
+    if(lobbies[lobbyIndex].playerList[playerIndex].owner){
+      lobbies.splice(lobbyIndex, 1)
     } else {
-      data[lobbyIndex].playerList.splice(playerIndex, 1)
+      lobbies[lobbyIndex].playerList.splice(playerIndex, 1)
     }
-    await fs.writeFile('./db/lobbies.json', JSON.stringify(data, null, 2));
+    await fs.writeFile('./db/lobbies.json', JSON.stringify({lobbies: lobbies}, null, 2));
   }
   
   cullLobbies()

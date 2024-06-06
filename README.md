@@ -106,6 +106,7 @@ The rough outline is to have a...
 
 ## short term todo:
 - Ensure when owner of lobby leaves, lobby is deleted or ownership transferred.
+- Owner of lobby cannot see other players in lobby
 
 ## long term todo:
 - maybe transition from using clip paths to using svg

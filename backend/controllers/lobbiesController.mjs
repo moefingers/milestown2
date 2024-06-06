@@ -16,29 +16,34 @@ import cullLobbies from '../js/cullLobbies.mjs';
 //// GET ALL LOBBIES ////
 /////////////////////////
 router.get('/', async (req, res) => {
-
-  const data =  JSON.parse(await fs.readFile('./db/lobbies.json', 'utf8'));
-  const newData = data.map(lobby => {
-    return {
-      lobbyId: lobby.lobbyId,
-      playerList: lobby.playerList.map(player => {
-        return {
-          playerId: player.playerId,
-          owner: player.owner
-        }
-      })
-    }
-  })
-  res.send(newData);
+  try {
+    const {lobbies} =  JSON.parse(await fs.readFile('./db/lobbies.json', 'utf8'));
+    const newLobbies = lobbies.map(lobby => {
+      return {
+        lobbyId: lobby.lobbyId,
+        playerList: lobby.playerList.map(player => {
+          return {
+            playerId: player.playerId,
+            owner: player.owner
+          }
+        })
+      }
+    })
+    res.send(newLobbies);
+  } catch (error) {
+    console.log(error)
+    res.status(400).send({message: error.toString()});
+  }
+  
 });
 
 ////////////////////////
 //// GET ONE LOBBY  ////  EXPECTS lobbyId
 ////////////////////////  // in url params
 router.get('/:lobbyId', async (req, res) => {
-  const data =  JSON.parse(await fs.readFile('./db/lobbies.json', 'utf8'));
-  const lobby = data.find(lobby => lobby.lobbyId === req.params.lobbyId);
-  const newData = {
+  const {lobbies} =  JSON.parse(await fs.readFile('./db/lobbies.json', 'utf8'));
+  const lobby = lobbies.find(lobby => lobby.lobbyId === req.params.lobbyId);
+  const lobbyWithoutTokens = {
     lobbyId: lobby.lobbyId,
     playerList: lobby.playerList.map(player => {
       return {
@@ -47,7 +52,7 @@ router.get('/:lobbyId', async (req, res) => {
       }
     })
   }
-  res.send(newData);
+  res.send(lobbyWithoutTokens);
 });
 
 ////////////////////////////
@@ -56,15 +61,17 @@ router.get('/:lobbyId', async (req, res) => {
 router.post('/', async (req, res) => {
   console.log(req.body.playerId, " is trying to create lobby: ", req.body.lobbyId)
   try {
-    const data =  JSON.parse(await fs.readFile('./db/lobbies.json', 'utf8'));
+    const {lobbies} =  JSON.parse(await fs.readFile('./db/lobbies.json', 'utf8'));
     // check if lobby already exists
-    if(data.find(lobby => lobby.lobbyId === req.body.lobbyId)){res.send({"joined": false, "message": "lobby already exists"});return}
+    if(lobbies.find(lobby => lobby.lobbyId === req.body.lobbyId)){res.send({"joined": false, "message": "lobby already exists"});return}
     // check for playerId
     if(!req.body.playerId){res.send({"joined": false, "message": "playerId is missing in request", "playerId": req.body.playerId}); return}
     // check for playerToken
     if(!req.body.playerToken){res.send({"joined": false, "message": "playerToken is missing in request", "playerToken": req.body.playerToken}); return}
+    // check for lobbyId
+    if(!req.body.lobbyId){res.send({"joined": false, "message": "lobbyId is missing in request", "lobbyId": req.body.lobbyId}); return}
 
-    data.push({
+    lobbies.push({
         lobbyId: req.body.lobbyId,
         playerList: [
           {
@@ -74,7 +81,7 @@ router.post('/', async (req, res) => {
           }
         ]
       })
-    await fs.writeFile('./db/lobbies.json', JSON.stringify(data, null, 2));
+    await fs.writeFile('./db/lobbies.json', JSON.stringify({lobbies: lobbies}, null, 2));
     res.send({
       "joined": true, 
       "message": "lobby created successfully and joined as owner", 
@@ -98,7 +105,7 @@ router.post('/join', async (req, res) => {
     if (!req.body.lobbyId) {res.send({"joined": false, "message": "lobbyId is missing in request", "playerId": req.body.lobbyId});return;}
     if (!req.body.playerToken) {res.send({"joined": false, "message": "playerToken is missing in request", "playerId": req.body.playerToken});return;}
     
-    const lobbies =  JSON.parse(await fs.readFile('./db/lobbies.json', 'utf8'));
+    const {lobbies} =  JSON.parse(await fs.readFile('./db/lobbies.json', 'utf8'));
     // check if playerid of any player in any playerlist of any lobby match req.body.playerId
     const playerMatch = lobbies.find(lobby => lobby.playerList.find(player => player.playerId === req.body.playerId));
     if(playerMatch){
@@ -123,8 +130,14 @@ router.post('/join', async (req, res) => {
             playerToken: req.body.playerToken,
             owner: false
           })
-          await fs.writeFile('./db/lobbies.json', JSON.stringify(lobbies, null, 2));
-          res.send({"joined": true, "message": "joined lobby successfully", "lobbyId": req.body.lobbyId, "playerList": lobby.playerList, 'lobby': lobby});
+          await fs.writeFile('./db/lobbies.json', JSON.stringify({lobbies: lobbies}, null, 2));
+          res.send({
+            "joined": true, "message": "joined lobby successfully", 
+            lobby: {
+              lobbyId: req.body.lobbyId, 
+              playerList: lobby.playerList.map(player => {return {
+                playerId: player.playerId, 
+                owner: player.owner}})}});
         } else {
           res.send({"joined": false, "message": "lobby not found or already has 4 players"})
         }
@@ -139,7 +152,7 @@ router.post('/leave', async (req, res) => {
     if (!req.body.playerId) {res.send({"joined": false, "message": "playerId is missing in request", "playerId": req.body.playerId});return;}
     if (!req.body.lobbyId) {res.send({"joined": false, "message": "lobbyId is missing in request", "playerId": req.body.lobbyId});return;}
     if (!req.body.playerToken) {res.send({"joined": false, "message": "playerToken is missing in request", "playerId": req.body.playerToken});return;}
-    const lobbies =  JSON.parse(await fs.readFile('./db/lobbies.json', 'utf8'));
+    const {lobbies} =  JSON.parse(await fs.readFile('./db/lobbies.json', 'utf8'));
     const lobby = lobbies.find(lobby => lobby.lobbyId === req.body.lobbyId);
     if(lobby){
       const player = lobby.playerList.find(player => player.playerId === req.body.playerId)
@@ -160,15 +173,15 @@ router.post('/leave', async (req, res) => {
 ///////////////////Leave Lobby Function
 async function leaveLobby(playerId) {
   console.log("leaving all lobbies: ", playerId)
-  const data = JSON.parse(await fs.readFile('./db/lobbies.json', 'utf8'));
-  const newData = data.map(lobby => {
+  const {lobbies} = JSON.parse(await fs.readFile('./db/lobbies.json', 'utf8'));
+  const newLobbies = lobbies.map(lobby => {
     const newPlayerList = lobby.playerList.filter(player => player.playerId !== playerId);
     return {
       lobbyId: lobby.lobbyId,
       playerList: newPlayerList
     }
   });
-  await fs.writeFile('./db/lobbies.json', JSON.stringify(newData, null, 2));
+  await fs.writeFile('./db/lobbies.json', JSON.stringify({lobbies: newLobbies}, null, 2));
   cullLobbies();
 }
 
@@ -181,14 +194,14 @@ router.delete('/', async (req, res) => {
   if (!req.body.lobbyId) {res.send({message: 'lobbyId is missing in request'});return;}
   if (!req.body.playerId) {res.send({message: 'playerId is missing in request'});return;}
   if (!req.body.playerToken) {res.send({message: 'playerToken is missing in request'});return;}
-  const lobbies =  JSON.parse(await fs.readFile('./db/lobbies.json', 'utf8'));
+  const {lobbies} =  JSON.parse(await fs.readFile('./db/lobbies.json', 'utf8'));
   const lobby = lobbies.find(lobby => lobby.lobbyId === req.body.lobbyId);
   if(lobby){
     const player = lobby.playerList.find(player => player.playerId === req.body.playerId)
     if(player){
       if(player.playerToken === req.body.playerToken){
         const newLobbies = lobbies.filter(lobby => lobby.lobbyId !== req.body.lobbyId);
-        await fs.writeFile('./db/lobbies.json', JSON.stringify(newLobbies, null, 2));
+        await fs.writeFile('./db/lobbies.json', JSON.stringify({lobbies:newLobbies}, null, 2));
         cullLobbies();
         res.send({inLobby: false, message: 'lobby deleted'});
       } else {
@@ -210,7 +223,7 @@ router.delete('/all', async (req, res) => {
     res.send({message: 'sowwy unauthorized'});
     return
   }else {
-    await fs.writeFile('./db/lobbies.json', JSON.stringify([], null, 2));
+    await fs.writeFile('./db/lobbies.json', JSON.stringify({lobbies: []}, null, 2));
     res.send({message: 'all lobbies deleted'});
   }
 });
