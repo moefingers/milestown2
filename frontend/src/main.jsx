@@ -80,4 +80,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 //// DEVELOPMENT  ////
 //////////////////////
 console.log("window.location.hostname: ",  window.location.hostname)
+console.log("window.location.pathname: ",  window.location.pathname)
+console.log('window.location.origin: ',  window.location.origin)
+console.log('window.location.hash:', window.location.hash)
 console.log("frontend env: ", env)
