@@ -22,7 +22,6 @@ export default function Network() {
     } = useContext(ClientContext)
 
     useEffect(() => {
-        setClientPeerConnectionList([])
         console.log("currentLobby", currentLobby)
         console.log("and that lobby's playerList", currentLobby.playerList)
 
@@ -30,17 +29,33 @@ export default function Network() {
         console.log("peerList", peerList)
 
         console.log("clientPeerConnectionList", clientPeerConnectionList)
-        const newConnections = peerList.forEach((peerId, index) => {
+        const newConnections = peerList.map(async (peerId, index) => {
              console.log('trying', clientId, 'to', peerId)
-             newClientAndConnectToPeer(clientId, peerId)
-        })
-        console.log("newConnections", newConnections)
+             let client = newClient(clientId, peerId)
+
+             await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 1 second
+
+             let connection = client.connect(peerId)
+
+             connection.on('open', () => {
+                console.log("connection open from", clientId, "to", peerId)
+             })
+
+             return {
+                clientId: clientId,
+                peerId: peerId,
+                client: client,
+                connection: connection
+             }
+
+            }).filter(connection => connection !== null)
+
+        setClientPeerConnectionList(newConnections)
     }, [])
 
-    function newClientAndConnectToPeer(clientId, peerId) {
-        let connection
-        const combinedName = `mesh${clientId}-${peerId}mefsafsddffffffdffffffffffffh`
-        console.log("newClientAndConnectToPeer", combinedName)
+    function newClient(clientId, nameModifier) {
+        const combinedName = `mesh${clientId}-${nameModifier}meshgx`
+        console.log("newClient", combinedName)
         let client = new Peer(combinedName, env.clientPeerSettings)
         client.on('error', (error) => {
             if(error.type == 'unavailable-id'){
@@ -54,13 +69,6 @@ export default function Network() {
         })
         client.on('open', () => {
             console.log("client open", clientId)
-            connection = client.connect(peerId)
-
-            connection.on('open', () => {
-                console.log("connection open from", clientId, "to", peerId)
-                // below => solves clientPeerConnectionList having old data
-                setClientPeerConnectionList(clientPeerConnectionList => [...clientPeerConnectionList, {pair: [clientId, peerId], client: client, connection: connection}])
-            })
         })
 
         client.on('connection', (connection) => {
@@ -70,29 +78,14 @@ export default function Network() {
                 console.log("data", data)
             })
         })
+        return client
+        
     }
 
     useEffect(() => {
         console.log("clientPeerConnectionList", clientPeerConnectionList)
-        let newPlayerPairs = playerPairs.map(playerPair => playerPair)
-        clientPeerConnectionList.forEach((clientPeerConnection, index) => {
-            console.log(clientPeerConnection.pair)
-            newPlayerPairs.forEach((newPair, index) => {
-                if(clientPeerConnection.pair.includes(newPair.pair[0]) 
-                && clientPeerConnection.pair.includes(newPair.pair[1])){
-                    console.log("connected", newPair)
-                    newPair.connected = true
-
-                }
-            })
-        })
-        console.log(newPlayerPairs)
-        setPlayerPairs(newPlayerPairs)
     }, [clientPeerConnectionList])
 
-    useEffect(() => {
-        console.log("playerPairs", playerPairs)
-    }, [playerPairs])
 
     // let testingList = []
     // for(let i = 0; i < 5; i++) {

@@ -206,7 +206,7 @@ export default function FormConnection() {
         setConnectionProcessing(true)
         const lobbies = await getLobbies()
         setConnectionProcessing(false)
-        console.log(lobbies)
+        console.log('lobbies', lobbies)
         setLobbyList(lobbies)
         const lobby = lobbies.find(lobby => lobby.lobbyId === currentLobby?.lobbyId)
         if(currentLobby && !lobby){

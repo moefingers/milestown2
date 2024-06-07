@@ -9,8 +9,19 @@ export default function ClientContextProvider({ children }) {
     const [currentLobby, setCurrentLobby] = useState(null)
     const [connectionProcessing, setConnectionProcessing] = useState(false)
 
+    const [playerPairs, setPlayerPairs] = useState([])
+
+    const [clientPeerConnectionList, setClientPeerConnectionList] = useState([])
+
     return (
-        <ClientContext.Provider value={{ clientObject, setClientObject, clientId, setClientId, currentLobby, setCurrentLobby, connectionProcessing, setConnectionProcessing }}>
+        <ClientContext.Provider value={{ 
+                clientObject, setClientObject, 
+                clientId, setClientId, 
+                currentLobby, setCurrentLobby, 
+                connectionProcessing, setConnectionProcessing, 
+                playerPairs, setPlayerPairs,
+                clientPeerConnectionList, setClientPeerConnectionList
+            }}>
             {children}
         </ClientContext.Provider>
     )

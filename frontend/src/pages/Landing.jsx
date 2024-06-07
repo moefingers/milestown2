@@ -28,7 +28,6 @@ export default function Landing() {
       <div className="center-wrapper">
         <SplashTitle/>
         <div className="landing-options">
-          <Link to={"TestClient"} className='clickable'>test p2p chat</Link>
           <Link to={"TestMaps"} className='clickable'>test maps</Link>
           <Link to={"FormConnection"} className='clickable'>{clientObject?.disconnected == false ? (currentLobby ? 'see lobby' : 'play') : 'connect'}</Link>
           

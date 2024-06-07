@@ -1,9 +1,12 @@
 
-import { useEffect, useState} from 'react'
+import { useEffect, useState, useContext} from 'react'
+
+import { ClientContext } from '../clientContext'
+
 import '../assets/styles/network-visualizer.css'
 
 export default function NetworkVisualizer({clientId, playerList}) {
-    const [playerPairs, setPlayerPairs] = useState([])
+    const {playerPairs, setPlayerPairs} = useContext(ClientContext)
 
     useEffect(() => {
         // This must be in a separate for loop because the next loop needs these values from later indices
@@ -25,7 +28,7 @@ export default function NetworkVisualizer({clientId, playerList}) {
             remainingList.forEach(otherPlayer => {
                 const angleOfSlope = Math.atan((otherPlayer.y - player.y)/(otherPlayer.x - player.x)) * (180 / Math.PI)
                 pairs.push({
-                    players: [player, otherPlayer],
+                    pair: [player.playerId, otherPlayer.playerId],
                     connected: false,
                     lineElement: {
                         origin: [player.x, player.y], 
@@ -48,6 +51,7 @@ export default function NetworkVisualizer({clientId, playerList}) {
 
     return (
         <div className="network-visualizer">
+            <div className="background"/>
             {playerList.map((player, index) => {return <div 
                 style={{"--position": index / playerList.length}}
                 key={player.playerId}
@@ -55,7 +59,7 @@ export default function NetworkVisualizer({clientId, playerList}) {
                 >{player.playerId}</div>}
             )}
             {playerPairs.map((pair, index) => {
-                return <div key={index} className="line" style={{
+                return <div key={index} className={`line${pair.connected ? ' connected' : ''}`} style={{
                     "--angle": pair.lineElement.angle + (pair.lineElement.reverseVector ? 180 : 0) + "deg", 
                     "--length": pair.lineElement.length + "%", 
                     "--origin-x": pair.lineElement.origin[0] + "%", 

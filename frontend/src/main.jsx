@@ -73,11 +73,11 @@ const router = createHashRouter([
 ////     ROUTER       ////
 //////////////////////////
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <ClientContextProvider>
       <RouterProvider router={router}/>
     </ClientContextProvider>
-  </React.StrictMode>,
+  // </React.StrictMode>,
 )
 
 

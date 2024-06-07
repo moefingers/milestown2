@@ -1,8 +1,17 @@
 .network-visualizer {
-    background-color: var(--background-two);
     border-radius: 50%;
     width: min(60vw, 60vh);
     height: min(60vw, 60vh);
+}
+
+.network-visualizer .background {
+    position: absolute;
+    width: 120%;
+    height: 120%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle at 50% 50%, var(--background-two) 40%, transparent 70%);
 }
 
 
@@ -49,5 +58,5 @@ div.line {
 
 div.line.connected {
     outline: solid var(--positive-color) var(--iunit);
-    box-shadow: 0 0  calc(var(--iunit) * 4) calc(var(--iunit) * 1)var(--positive-color) 
+    box-shadow: 0 0  calc(var(--iunit) * 4) calc(var(--iunit) * 3)var(--positive-color) 
 }
