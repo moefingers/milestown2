@@ -30,7 +30,9 @@ export default function FormConnection() {
         connectionProcessing, setConnectionProcessing,
         clientObject, setClientObject,
         clientId, setClientId,
-        currentLobby, setCurrentLobby
+        currentLobby, setCurrentLobby,
+        playerPairs, setPlayerPairs,
+        receivedData, setReceivedData
     } = useContext(ClientContext)
 
     const [lobbyList, setLobbyList] = useState([])
@@ -111,7 +113,7 @@ export default function FormConnection() {
             clientIdInputRef.current.setCustomValidity('That identity is already taken. Choose a different one')
             const oldPlaceholder = clientIdInputRef.current.placeholder
             clientIdInputRef.current.placeholder = id + ' taken'
-            setTimeout(() => { clientIdInputRef.current.placeholder = oldPlaceholder}, 1500);
+            setTimeout(() => { if(clientIdInputRef.current){clientIdInputRef.current.placeholder = oldPlaceholder}}, 1500);
             clientIdInputRef.current.classList.add('invalid')
             return true
         } else {
@@ -180,10 +182,8 @@ export default function FormConnection() {
                 console.log('client connection OPEN event (probably remote initiator)')
                 setConnectionProcessing(false)
             })
-            connection.on('data', (data) => { //receiving
-                getAndSetPeerList()
-                console.log('data: ', data)
-            })
+            connection.on('data', handleDataReception)
+            
             connection.on('close', () => {
                 console.log('remote? maybe client close')
                 setConnectionProcessing(false)
@@ -200,6 +200,23 @@ export default function FormConnection() {
         // console.log(client)
         return client
     }
+
+    function handleDataReception(data){
+        getAndSetPeerList()
+        console.log(data.type, 'from', data.from, 'data: ', data)
+        if(data.type == 'meshList'){
+            setConnectionProcessing(true)
+            setCurrentLobby(data.body.lobby)
+            navigate('../Network')
+            
+            setConnectionProcessing(false)
+        }
+        setReceivedData(data)
+        
+    }
+    useEffect(() => {
+        console.log(receivedData)
+    }, [receivedData])
 
 
     async function getAndSetLobbies(){
