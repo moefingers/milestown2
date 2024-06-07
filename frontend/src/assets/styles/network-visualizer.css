@@ -1,0 +1,30 @@
+.network-visualizer {
+    background-color: var(--background-two);
+    border-radius: 50%;
+    width: min(60vw, 60vh);
+    height: min(60vw, 60vh);
+}
+
+div.client {
+    z-index: 1;
+    --position: 0; /* expects 0 - 1, 0 starts at 3 o clock*/ 
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: rotate(calc(-90deg - (var(--position) * 360deg)));
+    offset-path: circle(50% at 50% 50%);
+    offset-distance: calc(100% * var(--position));
+}
+
+div.line {
+    --angle: 45deg;
+    --length: 100%;
+    --origin-x: 50%;
+    --origin-y: 50%;
+    width: var(--length);
+    position: absolute;
+    left: var(--origin-x);
+    top: var(--origin-y);
+    transform: translateX(-50%) rotate(calc(var(--angle))) translateX(-50%) ;
+    outline: solid red var(--iunit);
+}

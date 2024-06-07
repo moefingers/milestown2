@@ -1,24 +1,3 @@
 {
-  "lobbies": [
-    {
-      "lobbyId": "asdf",
-      "playerList": [
-        {
-          "playerId": "ffffffff",
-          "playerToken": "1j27iib2ow8",
-          "owner": true
-        },
-        {
-          "playerId": "asdss",
-          "playerToken": "9zee7rjzxhp",
-          "owner": false
-        },
-        {
-          "playerId": "asss",
-          "playerToken": "e6sgd35ajb",
-          "owner": false
-        }
-      ]
-    }
-  ]
+  "lobbies": []
 }

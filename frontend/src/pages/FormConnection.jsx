@@ -308,6 +308,9 @@ export default function FormConnection() {
             notifyOnTarget('lobby changed', event.target, 100, 10)
             getAndSetLobbies()
         } else {
+            setConnectionProcessing(true)
+            await deleteLobby(currentLobby.lobbyId, clientId, clientObject.options.token)
+            setConnectionProcessing(false)
             navigate('../Network') // - go to /#/Network
         }
     }
