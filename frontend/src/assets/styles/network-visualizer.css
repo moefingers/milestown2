@@ -5,6 +5,7 @@
     height: min(60vw, 60vh);
 }
 
+
 div.client {
     z-index: 1;
     --position: 0; /* expects 0 - 1, 0 starts at 3 o clock*/ 
@@ -14,6 +15,22 @@ div.client {
     transform: rotate(calc(-90deg - (var(--position) * 360deg)));
     offset-path: circle(50% at 50% 50%);
     offset-distance: calc(100% * var(--position));
+
+    font-size: min(5vh, 5vw);
+    font-family: monospace, monospace;
+
+    background-color: var(--background-one-faded);
+    padding: calc(var(--iunit) * 7);
+    border-radius: calc(var(--iunit) * 5);
+    backdrop-filter: blur(calc(var(--iunit) * 5));
+}
+
+div.client.owner {
+    color: var(--foreground-four);
+}
+div.client.self {
+    /* text-shadow: 0 0  calc(var(--iunit) * 4) var(--foreground-one); */
+    text-decoration-line: overline underline;
 }
 
 div.line {
@@ -26,5 +43,11 @@ div.line {
     left: var(--origin-x);
     top: var(--origin-y);
     transform: translateX(-50%) rotate(calc(var(--angle))) translateX(-50%) ;
-    outline: solid red var(--iunit);
+    outline: solid var(--negative-color) var(--iunit);
+    box-shadow: 0 0  calc(var(--iunit) * 4) calc(var(--iunit) * 1)var(--negative-color) 
+}
+
+div.line.connected {
+    outline: solid var(--positive-color) var(--iunit);
+    box-shadow: 0 0  calc(var(--iunit) * 4) calc(var(--iunit) * 1)var(--positive-color) 
 }

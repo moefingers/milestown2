@@ -3,10 +3,10 @@ import { useEffect, useState} from 'react'
 import '../assets/styles/network-visualizer.css'
 
 export default function NetworkVisualizer({clientId, playerList}) {
-    const [lineElements, setLineElements] = useState([])
     const [playerPairs, setPlayerPairs] = useState([])
 
     useEffect(() => {
+        // This must be in a separate for loop because the next loop needs these values from later indices
         playerList.forEach((player, index) => {
             const deg = (360 * index / playerList.length)
             const rad = deg * Math.PI / 180
@@ -19,7 +19,6 @@ export default function NetworkVisualizer({clientId, playerList}) {
     
         console.log("playerList", playerList)
         let pairs = []
-        let lines = []
         playerList.forEach((player, index) => {
             const remainingList = playerList.slice(index + 1)
             console.log(remainingList)
@@ -41,13 +40,10 @@ export default function NetworkVisualizer({clientId, playerList}) {
         setPlayerPairs(pairs)
 }, [])
 
-    useEffect(() => {
-        console.log("playerPairs", playerPairs)
-    }, [playerPairs])
-
-    useEffect(() => {
-        console.log("playerList", playerList)
-    }, [playerList])
+    // useEffect(() => {
+    //     console.log("playerPairs", playerPairs)
+    //     console.log("playerList", playerList)
+    // }, [playerPairs, playerList])
 
 
     return (
@@ -55,8 +51,8 @@ export default function NetworkVisualizer({clientId, playerList}) {
             {playerList.map((player, index) => {return <div 
                 style={{"--position": index / playerList.length}}
                 key={player.playerId}
-                className={player.owner ? 'client owner' : 'client'}
-                >{player.playerId} {index / playerList.length}</div>}
+                className={`client${player.owner ? ' owner' : ''}${player.playerId === clientId ? ' self' : ''}`}
+                >{player.playerId}</div>}
             )}
             {playerPairs.map((pair, index) => {
                 return <div key={index} className="line" style={{
