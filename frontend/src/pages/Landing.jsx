@@ -9,7 +9,7 @@ import { env } from '../assets/js/determineEnvironment.mjs'// This determines th
 import ThemeButtons from '../components/ThemeButtons'
 import SplashTitle from '../components/SplashTitle'
 
-import { ClientContext } from '../clientContext'
+import { ClientContext } from '../ClientContext'
 
 import '../assets/styles/landing.css'
 

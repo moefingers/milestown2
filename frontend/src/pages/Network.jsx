@@ -1,15 +1,18 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { useContext, useEffect, useState } from "react"
 import {Peer} from "peerjs"
 
 import NetworkVisualizer from "../components/NetworkVisualizer"
 
 import ThemeButtons from "../components/ThemeButtons"
+import CountDown from "../components/CountDown"
 
 import { env } from "../assets/js/determineEnvironment.mjs"
-import { ClientContext } from "../clientContext"
+import { ClientContext } from "../ClientContext"
 
 export default function Network() {
+
+    const navigate = useNavigate()
 
     const {
         clientId,
@@ -19,12 +22,18 @@ export default function Network() {
 
         clientPeerConnectionList, setClientPeerConnectionList,
 
-        receivedData, setReceivedData
+        receivedData, setReceivedData,
+
+        playerIndex, setPlayerIndex
 
     } = useContext(ClientContext)
 
+    const [countdown, setCountdown] = useState(-1)
+
     useEffect(() => {
         setClientPeerConnectionList([])
+        setPlayerIndex(currentLobby.playerList.findIndex(player => player.playerId === clientId))
+        console.log('playerIndex, ', currentLobby.playerList.findIndex(player => player.playerId === clientId))
         console.log("currentLobby", currentLobby)
         console.log("and that lobby's playerList", currentLobby.playerList)
 
@@ -39,9 +48,9 @@ export default function Network() {
         console.log("newConnections", newConnections)
     }, [])
 
-    function newClientAndConnectToPeer(clientId, peerId) {
+    function newClientAndConnectToPeer(clientId, peerId, playerNumber) {
         let connection
-        const combinedName = `mesh${clientId}-${peerId}mesffffffffh`
+        const combinedName = `mesh${clientId}-${peerId}mesh`
         console.log("newClientAndConnectToPeer", combinedName)
         let client = new Peer(combinedName, env.clientPeerSettings)
         client.on('error', (error) => {
@@ -134,19 +143,54 @@ export default function Network() {
         if(receivedData.type == 'connectedMeshPaths'){
             let newPlayerPairs = playerPairs.map(playerPair => {
                 let receivedPair = receivedData.body.playerPairs.find(receivedPair => {return (receivedPair.pair.includes(playerPair.pair[0]) && receivedPair.pair.includes(playerPair.pair[1]))})
-                if(receivedPair.connected && !playerPair.connected){
+                if(receivedPair && receivedPair?.connected && !playerPair?.connected){
                     return {...playerPair, connected: true}
                 } else {
                     return playerPair
                 }
             })
-
             setPlayerPairs(newPlayerPairs)
+        }
+        if(receivedData.type == 'startCountdown'){
+            setCountdown(3)
+        }
+        if(receivedData.type == 'navigateToMapPicker'){
+            navigate('../MapPicker')
         }
     }, [receivedData])
 
     useEffect(() => {
         console.log("playerPairs", playerPairs)
+        if(playerPairs.every(playerPair => playerPair.connected)){
+            console.log("all connected")
+                if(currentLobby.playerList.find(player => (player.owner && player.playerId == clientId))){
+                    console.log("owner")
+                    setCountdown(3)
+                    clientPeerConnectionList.forEach((clientPeerConnection, index) => {
+                        clientPeerConnection.connection.send({
+                            type: "startCountdown",
+                            from: clientPeerConnection.client.id,
+                            body: {
+                                lobby: currentLobby,
+                                playerPairs: playerPairs
+                            }
+                        })
+                        setTimeout(() => {
+                            clientPeerConnection.connection.send({
+                                type: "navigateToMapPicker",
+                                from: clientPeerConnection.client.id,
+                                body: {
+                                    lobby: currentLobby,
+                                    playerPairs: playerPairs
+                                }
+                            })
+                        }, 3* 1000)
+                        setTimeout(() => {
+                            navigate('../MapPicker')
+                        }, 3* 1000);
+                    })
+                }
+        }
     }, [playerPairs])
 
     // let testingList = []
@@ -158,6 +202,7 @@ export default function Network() {
     // }
     return (
         <>
+            {countdown > 0 && <CountDown initialCount={countdown}/>}
             <ThemeButtons />
             <Link to={".."}>go back</Link>
             <h1>Network</h1>

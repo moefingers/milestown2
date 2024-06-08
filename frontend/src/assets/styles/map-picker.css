@@ -1,0 +1,54 @@
+div.scroll-selector{
+    position: absolute;
+    transform: translate(0%, 0%);
+    left: 0%;
+    z-index: 2;
+
+    background-color: var(--background-two-faded);
+    backdrop-filter: blur(calc(var(--iunit) * 5));
+
+}
+
+div.scroll-selector,
+div.scroll-selector * {
+    transition: .5s;
+}
+
+div.scroll-selector > h3,
+div.scroll-selector > ul{
+    line-height: calc(min(8vh, 8vw));
+    font-size: calc(min(6vh, 6vw));
+    font-family: 'Digital Dream Regular';
+}
+div.scroll-selector > ul {
+    max-height: 0vh;
+    overflow-y: auto;
+}
+
+div.scroll-selector.map{
+    top: 30%;
+}
+
+div.scroll-selector.color{
+    top: 40%;
+}
+
+div.scroll-selector.shape{
+    top: 50%;
+}
+
+
+div.scroll-selector.expanded {
+    z-index: 3;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+}
+div.scroll-selector.expanded > ul {
+    max-height: min(35vh, 35vw);
+}
+
+
+.selected {
+    color: var(--clickable-hover);
+}

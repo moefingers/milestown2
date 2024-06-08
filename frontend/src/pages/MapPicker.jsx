@@ -1,0 +1,133 @@
+import { useEffect, useState, useContext } from 'react'
+import { Link, useNavigate } from "react-router-dom"
+
+import ThemeButtons from '../components/ThemeButtons'
+import CountDown from '../components/CountDown'
+import DrawnMap from '../components/DrawnMap'
+
+import { ClientContext } from '../ClientContext'
+
+import { getMaps, getAesthetics } from '../assets/js/customFetch'
+
+import '../assets/styles/map-picker.css'
+
+export default function MapPicker() {
+
+    const navigate = useNavigate()
+
+    const {
+        clientId,
+        clientObject,
+        currentLobby, setCurrentLobby,
+        playerPairs, setPlayerPairs,
+
+        playerIndex, setPlayerIndex,
+
+        clientPeerConnectionList, setClientPeerConnectionList,
+
+        receivedData, setReceivedData
+
+    } = useContext(ClientContext)
+
+
+    const [countdown, setCountdown] = useState(-1)
+
+    
+    const [mapList, setMapList] = useState([])
+    const [map, setMap] = useState(null)
+    const [aesthetics, setAesthetics] = useState(null)
+
+    const [currentlyExpanded, setCurrentlyExpanded] = useState("")
+  
+  
+    useEffect(() => {
+        setPlayerIndex(currentLobby.playerList.findIndex(player => player.playerId === clientId))
+        console.log('playerIndex, ', currentLobby.playerList.findIndex(player => player.playerId === clientId))
+        getInitialData()
+    },[])
+
+    async function getInitialData() {
+        const mapsResponse = await getMaps()
+        const aestheticsResponse = await getAesthetics()
+        setMapList( mapsResponse )
+        setAesthetics( aestheticsResponse )
+        setMap(mapsResponse[0])
+    }
+
+    function expandList(event, list) {
+        if (currentlyExpanded === list) {
+            setCurrentlyExpanded("")
+            return
+        } else {
+            setCurrentlyExpanded(list)
+        }
+    }
+    function updatePlayer(event, playerId, property, value) { 
+        console.log('updating player', playerId, property, value)
+        const index = currentLobby.playerList.findIndex(player => player.playerId === playerId)
+        console.log('index', index)
+        let newPlayerList = currentLobby.playerList.map(player => player)
+        newPlayerList[index][property] = value
+        setCurrentLobby({...currentLobby, playerList: newPlayerList})
+    }
+
+    function sendData(type,body) {
+        clientPeerConnectionList.forEach((clientPeerConnection) => {
+            clientPeerConnection.connection.send({type: type,from: clientId, body: body})
+        })
+    }
+    useEffect(() => {
+        if (receivedData) {
+            if (receivedData.type === 'selectionScreen' || receivedData.type === 'selectionScreen-redundancy') {
+                if(receivedData.body.mapIndex){setMap(mapList[receivedData.body.mapIndex])}
+                if(receivedData.body.colorIndex){
+                    updatePlayer(null, receivedData.body.for, 'color', aesthetics.colors[receivedData.body.colorIndex].hex)
+                }
+                if(receivedData.body.shapeIndex > -1){
+                    updatePlayer(null, receivedData.body.for, 'shape', aesthetics.shapes[receivedData.body.shapeIndex].clipPath)
+                }
+                if(receivedData.type === 'selectionScreen') {
+                    // sendData('selectionScreen-redundancy', receivedData.body)
+                }
+            }
+        }
+    }, [receivedData])
+
+    useEffect(() => {
+        console.log("currentLobby", currentLobby)
+    }, [currentLobby])
+
+    function colorFilter(color){
+        const otherPlayerConflict = currentLobby.playerList.find(player => player.color === color.hex && player.playerId !== clientId)
+        return !(otherPlayerConflict || color.index == 0)
+    }
+
+    return (
+        <>
+            <Link to="..">go back</Link>
+            <h1>MapPicker.jsx</h1>
+            <ThemeButtons />
+            {countdown > 0 && <CountDown initialCount={countdown} />}
+            {map && <DrawnMap
+                mapObject={map}
+                aesthetics={aesthetics}
+                characters={currentLobby.playerList.map((player, index) => { return {color: player.color || aesthetics.colors[0].hex, shape: player.shape || aesthetics.shapes[0].clipPath}})}
+            />}
+            <div id='color-selector' className={`color scroll-selector${currentlyExpanded === 'color-selector' ? ' expanded' : ''}`}>
+                <h3 className='clickable' onClick={(event) => expandList(event, 'color-selector')}>Color</h3>
+                <ul>{aesthetics?.colors.map((color, index) => ({...color, index})).filter(colorFilter).map((color, index) =>   <li onClick={(event) => {updatePlayer(event, clientId, 'color', aesthetics.colors[color.index].hex);sendData('selectionScreen', {colorIndex: color.index, colorName: color.name, for: clientId})}} key={color.index} className={`clickable${color.hex === currentLobby.playerList[playerIndex].color ? ' selected' : ''}`}>{color.name}</li>)}</ul>
+            </div>
+            <div id='shape-selector' className={`shape scroll-selector${currentlyExpanded === 'shape-selector' ? ' expanded' : ''}`}>
+                <h3 className='clickable' onClick={(event) => expandList(event, 'shape-selector')}>Shape</h3>
+                <ul>{aesthetics?.shapes.map((shape, index) =>   <li onClick={(event) => {updatePlayer(event, clientId, 'shape', aesthetics.shapes[index].clipPath);sendData('selectionScreen', {shapeIndex: index, shapeName: shape.name, for: clientId})}} key={index} className={`clickable${shape.clipPath === currentLobby.playerList[playerIndex].shape ? ' selected' : ''}`}>{shape.name}</li>)}</ul>
+            </div>
+            <div id='map-selector' className={`map scroll-selector${currentlyExpanded === 'map-selector' ? ' expanded' : ''}`}>
+                <h3 className='clickable' onClick={(event) => expandList(event, 'map-selector')}>Map</h3>
+                <ul>{mapList?.map((map, index) =>               <li onClick={(event) => {setMap(mapList[index]);sendData('selectionScreen', {mapIndex: index, mapName: map.name, for: clientId})}} key={index} className='clickable'>{map.name}</li>)}</ul>
+            </div>
+        </>
+    )
+}
+
+// goal is to have current map with current players,
+// and browsed map that infinitely cycles through players and shapes on all points

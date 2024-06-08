@@ -25,9 +25,10 @@ import TestClient from './pages/TestClient.jsx';
 import TestMaps from './pages/TestMaps.jsx';
 import FormConnection from './pages/FormConnection.jsx';
 import Network from './pages/Network.jsx';
+import MapPicker from './pages/MapPicker.jsx'
 
 /* Context to keep track of clientObject, clientId, currentLobby */
-import  ClientContextProvider  from './clientContext'
+import  ClientContextProvider  from './ClientContext.jsx'
 
 /* Styles.. These will be applied to everything in the application.*/
 import './assets/styles/main.css'
@@ -61,6 +62,10 @@ const router = createHashRouter([
       {
         path: "Network",
         element: <Network/>
+      },
+      {
+        path: "MapPicker",
+        element: <MapPicker />
       }
     ],
   }
@@ -73,7 +78,7 @@ const router = createHashRouter([
 ////     ROUTER       ////
 //////////////////////////
 ReactDOM.createRoot(document.getElementById('root')).render(
-  // <React.StrictMode>
+  // <React.StrictMode>  // BE MINDFUL STRICT MODE IS DISABLED
     <ClientContextProvider>
       <RouterProvider router={router}/>
     </ClientContextProvider>

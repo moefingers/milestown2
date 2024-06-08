@@ -15,6 +15,8 @@ export default function ClientContextProvider({ children }) {
 
     const [receivedData, setReceivedData] = useState([])
 
+    const [playerIndex, setPlayerIndex] = useState(-1)
+
 
     return (
         <ClientContext.Provider value={{ 
@@ -24,7 +26,8 @@ export default function ClientContextProvider({ children }) {
                 connectionProcessing, setConnectionProcessing, 
                 playerPairs, setPlayerPairs,
                 clientPeerConnectionList, setClientPeerConnectionList,
-                receivedData, setReceivedData
+                receivedData, setReceivedData, 
+                playerIndex, setPlayerIndex
             }}>
             {children}
         </ClientContext.Provider>

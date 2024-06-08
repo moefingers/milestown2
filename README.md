@@ -227,9 +227,7 @@ The rough outline is to have a...
   - sends movements in the game to be evaluated and accepted by backend
 
 ## short term todo:
-- Start game navigates to Network page
-- lobby leader starting game navigates to Network page for other players
-- navigating to Network page deletes lobby from list
+- Leaving network marks paths as red (peer/client.on('disconnetc.'))
 - boot player in lobby button for owner of lobby
 - /lobby/kick route
   - test route
@@ -238,6 +236,7 @@ The rough outline is to have a...
 ## long term todo:
 - maybe transition from using clip paths to using svg
 - Ensure when owner of lobby leaves,  ownership  is transferred instead of deleting lobby
+- reenable strictmode
 
 ## known bugs? 
 - themes not properly applied on first run.. maybe? rare bug
@@ -246,3 +245,6 @@ The rough outline is to have a...
 - Owner of lobby cannot see other players in lobby
 - change themes to be by applied by css, (class on body) instead of apply to each variable in :root
 - wwhen owner of lobby leaves, lobby is deleted
+- Start game navigates to Network page
+- lobby leader starting game navigates to Network page for other players
+- navigating to Network page deletes lobby from list

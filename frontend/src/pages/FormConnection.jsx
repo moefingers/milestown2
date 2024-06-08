@@ -10,7 +10,7 @@ import { Link, useNavigate } from "react-router-dom"
 import Peer, { SerializationType } from 'peerjs'
 
 // context imports
-import  {ClientContext}  from '../clientContext'
+import  {ClientContext}  from '../ClientContext'
 
 // component imports
 import ThemeButtons from '../components/ThemeButtons'
@@ -150,6 +150,7 @@ export default function FormConnection() {
 
     // wake up all the states by initializing client and storing it
     async function validateIdAndStoreClient(id) {
+        getAndSetLobbies()
         resetClient()
         let client
         if(await checkIfIdTaken(id)){

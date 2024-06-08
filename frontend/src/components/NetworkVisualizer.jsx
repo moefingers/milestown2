@@ -1,7 +1,7 @@
 
 import { useEffect, useState, useContext} from 'react'
 
-import { ClientContext } from '../clientContext'
+import { ClientContext } from '../ClientContext'
 
 import '../assets/styles/network-visualizer.css'
 
