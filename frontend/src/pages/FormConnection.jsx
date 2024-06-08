@@ -203,9 +203,9 @@ export default function FormConnection() {
     }
 
     function handleDataReception(data){
-        getAndSetPeerList()
         console.log(data.type, 'from', data.from, 'data: ', data)
         if(data.type == 'meshList'){
+            getAndSetPeerList()
             setConnectionProcessing(true)
             setCurrentLobby(data.body.lobby)
             navigate('../Network')

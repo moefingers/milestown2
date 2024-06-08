@@ -130,19 +130,19 @@ export default function MapPicker() {
             />}
             <div id='color-selector' className={`color scroll-selector${currentlyExpanded === 'color-selector' ? ' expanded' : ''}`}>
                 <h3 className='clickable' onClick={(event) => expandList(event, 'color-selector')}>{currentlyExpanded === 'color-selector' ? 'Close Colors' : 'Colors'}</h3>
-                <ul>{aesthetics?.colors.map((color, index) => ({...color, index})).filter(colorFilter).map((color, index) =>   <li onClick={(event) => {sendData('selectionScreen', {colorIndex: color.index, colorName: color.name, for: clientId})}} key={color.index} className={`clickable${color.hex === currentLobby.playerList[playerIndex].color ? ' selected' : ''}`}>{color.name}</li>)}</ul>
+                <ul>{aesthetics?.colors.map((color, index) => ({...color, index})).filter(colorFilter).map((color, index) =>   <li onClick={(event) => {updatePlayer(event, clientId, 'color', aesthetics.colors[color.index].hex);sendData('selectionScreen', {colorIndex: color.index, colorName: color.name, for: clientId})}} key={color.index} className={`clickable${color.hex === currentLobby.playerList[playerIndex].color ? ' selected' : ''}`}>{color.name}</li>)}</ul>
             </div>
             <div id='shape-selector' className={`shape scroll-selector${currentlyExpanded === 'shape-selector' ? ' expanded' : ''}`}>
                 <h3 className='clickable' onClick={(event) => expandList(event, 'shape-selector')}>{currentlyExpanded === 'shape-selector' ? 'Close Shapes' : 'Shapes'}</h3>
-                <ul>{aesthetics?.shapes.map((shape, index) =>   <li onClick={(event) => {sendData('selectionScreen', {shapeIndex: index, shapeName: shape.name, for: clientId})}} key={index} className={`clickable${shape.clipPath === currentLobby.playerList[playerIndex].shape ? ' selected' : ''}`}>{shape.name}</li>)}</ul>
+                <ul>{aesthetics?.shapes.map((shape, index) =>   <li onClick={(event) => {updatePlayer(event, clientId, 'shape', aesthetics.shapes[index].clipPath);sendData('selectionScreen', {shapeIndex: index, shapeName: shape.name, for: clientId})}} key={index} className={`clickable${shape.clipPath === currentLobby.playerList[playerIndex].shape ? ' selected' : ''}`}>{shape.name}</li>)}</ul>
             </div>
             <div id='map-selector' className={`map scroll-selector${currentlyExpanded === 'map-selector' ? ' expanded' : ''}`}>
                 <h3 className='clickable' onClick={(event) => expandList(event, 'map-selector')}>{currentlyExpanded === 'map-selector' ? 'Close Maps' : 'Maps'}</h3>
-                <ul>{mapList?.map((eachMap, index) =>               <li onClick={(event) => {sendData('selectionScreen', {mapIndex: index, mapName: eachMap.name, for: clientId})}} key={index} className={`clickable${ map?.name == eachMap.name ? ' selected' : ''}`}>{eachMap.name}</li>)}</ul>
+                <ul>{mapList?.map((eachMap, index) =>               <li onClick={(event) => {setMap(mapList[index]);sendData('selectionScreen', {mapIndex: index, mapName: eachMap.name, for: clientId})}} key={index} className={`clickable${ map?.name == eachMap.name ? ' selected' : ''}`}>{eachMap.name}</li>)}</ul>
             </div>
             <div className="players-ready">
                 <div>{currentLobby.playerList.filter((player) => player.ready === true).length}/{currentLobby.playerList.length} ready</div>
-                <div className='clickable' onClick={() => sendData('selectionScreen', {ready: !(currentLobby.playerList[playerIndex].ready) ? true : false, for: clientId})}>{(currentLobby.playerList[playerIndex].ready) ? 'cancel' : 'ready up'}</div>
+                <div className='clickable' onClick={() => sendData('selectionScreen', {ready: true, for: clientId})}>Ready</div>
             </div>
         </>
     )

@@ -7,6 +7,7 @@ div.scroll-selector{
     background-color: var(--background-two-faded);
     backdrop-filter: blur(calc(var(--iunit) * 5));
 
+    width: min(30vw, 30vh);
 }
 
 div.scroll-selector,
@@ -19,10 +20,16 @@ div.scroll-selector > ul{
     line-height: calc(min(8vh, 8vw));
     font-size: calc(min(6vh, 6vw));
     font-family: 'Digital Dream Regular';
+    
+
 }
 div.scroll-selector > ul {
     max-height: 0vh;
     overflow-y: auto;
+    overflow-x: hidden;
+    text-wrap: nowrap;
+    
+    width: 100%
 }
 
 div.scroll-selector.map{
@@ -43,6 +50,8 @@ div.scroll-selector.expanded {
     transform: translate(-50%, -50%);
     top: 50%;
     left: 50%;
+
+    width: min(80vw, 80vh);
 }
 div.scroll-selector.expanded > ul {
     max-height: min(35vh, 35vw);
@@ -51,4 +60,16 @@ div.scroll-selector.expanded > ul {
 
 .selected {
     color: var(--clickable-hover);
+}
+
+div.players-ready{
+    position: absolute;
+    bottom: 10%;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    font-size: calc(min(7vh, 7vw));
+    font-family: 'Digital Dream Regular';
+    width: fit-content;
+    text-wrap: nowrap;
+    text-align: center;
 }

@@ -231,6 +231,7 @@ The rough outline is to have a...
 
 
 ## long term todo:
+- vote to start
 - maybe transition from using clip paths to using svg
 - Ensure when owner of lobby leaves,  ownership  is transferred instead of deleting lobby
 - reenable strictmode
