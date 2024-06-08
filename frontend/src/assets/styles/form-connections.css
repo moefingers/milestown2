@@ -98,10 +98,3 @@ div.center-wrapper.form-connection > h1 > div.identity {
     color:var(--positive-color)
 }
 
-
-.no-access {
-    pointer-events: none;
-    user-select: none;
-
-    filter: blur(calc(var(--iunit) * 10));
-}

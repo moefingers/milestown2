@@ -25,17 +25,19 @@ export default function MapPicker() {
 
         clientPeerConnectionList, setClientPeerConnectionList,
 
-        receivedData, setReceivedData
+        receivedData, setReceivedData,
+
+        aesthetics, setAesthetics,
+
+        mapList, setMapList,
+
+        sendDataToEach
 
     } = useContext(ClientContext)
 
 
     const [countdown, setCountdown] = useState(-1)
 
-    
-    const [mapList, setMapList] = useState([])
-    const [map, setMap] = useState(null)
-    const [aesthetics, setAesthetics] = useState(null)
 
     const [currentlyExpanded, setCurrentlyExpanded] = useState("")
   
@@ -51,7 +53,8 @@ export default function MapPicker() {
         const aestheticsResponse = await getAesthetics()
         setMapList( mapsResponse )
         setAesthetics( aestheticsResponse )
-        setMap(mapsResponse[0])
+        
+        setCurrentLobby({...currentLobby, map: mapsResponse[0]})
     }
 
     function expandList(event, list) {
@@ -70,19 +73,22 @@ export default function MapPicker() {
         newPlayerList[index][property] = value
         setCurrentLobby({...currentLobby, playerList: newPlayerList})
     }
-
-    function sendData(type,body) {
-        clientPeerConnectionList.forEach((clientPeerConnection) => {
-            clientPeerConnection.connection.send({type: type,from: clientId, body: body})
-        })
+    function totalUpdatePlayer(event, playerId, newPlayerData){
+        console.log('updating player', playerId, newPlayerData)
+        const index = currentLobby.playerList.findIndex(player => player.playerId === playerId)
+        let newPlayerList = currentLobby.playerList.map(player => player)
+        newPlayerList[index] = newPlayerData
+        console.log('newPlayerList', newPlayerList)
+        setCurrentLobby({...currentLobby, playerList: newPlayerList})
     }
+
     useEffect(() => {
         if (receivedData) {
             if (receivedData.type === 'selectionScreen' || receivedData.type === 'selectionScreen-redundancy') {
 
                 // map data from selectionScreen type
                 if(receivedData.body.mapIndex != undefined){
-                    setMap(mapList[receivedData.body.mapIndex])
+                    setCurrentLobby({...currentLobby, map: mapList[receivedData.body.mapIndex]})
                 }
                 // color data from selectionScreen type
                 if(receivedData.body.colorIndex != undefined && receivedData.body.colorIndex != 0){
@@ -93,25 +99,27 @@ export default function MapPicker() {
                     updatePlayer(null, receivedData.body.for, 'shape', aesthetics.shapes[receivedData.body.shapeIndex].clipPath)
                 }
                 // ready data from selectionScreen type
-                if(receivedData.body.ready != undefined){
-                    updatePlayer(null, receivedData.body.for, 'ready', receivedData.body.ready)
+                if(receivedData.body.newPlayerData != undefined){
+                    // updatePlayer(null, receivedData.body.for, 'ready', receivedData.body.ready)
+                    // updatePlayer(null, receivedData.body.for, 'color', hex)
+                    totalUpdatePlayer(null, receivedData.body.for, receivedData.body.newPlayerData)
                 }
 
 
                 if(receivedData.type === 'selectionScreen') {
-                    sendData('selectionScreen-redundancy', receivedData.body)
+                    sendDataToEach('selectionScreen-redundancy', receivedData.body)
                 }
             }
-            if(receivedData.type === 'startCountdown') {
+            if(receivedData.type === 'startCountdown') { // snet out by owner
                 setCountdown(receivedData.body.duration)
             }
-            if(receivedData.type === 'startGame') {
-                sendData('startGame-redundancy', receivedData.body)
+            if(receivedData.type === 'startGame') { // sent by / received from  owner of lobby to trigger other peers confirming startedGame
+                sendDataToEach('startGame-redundancy', receivedData.body) // send out conifrmation
             }
-            if(receivedData.type === 'startGame-redundancy') {
-                updatePlayer(null, receivedData.from, 'startedGame', true)
+            if(receivedData.type === 'startGame-redundancy') { // receive confirmation from players
+                updatePlayer(null, receivedData.from, 'startedGame', true) // update any player status locally
             }
-            if(receivedData.type === 'startGameConfirmed') {
+            if(receivedData.type === 'startGameConfirmed') { //received from any player who sees startedGame from all other peers
                 navigate('../Game')
             }
 
@@ -126,61 +134,69 @@ export default function MapPicker() {
             if(currentLobby.playerList[playerIndex].owner) {
                 console.log('this client is owner so startin count down')
                 setCountdown(5)
-                sendData('startCountdown', {duration: 5})
+                sendDataToEach('startCountdown', {duration: 5})
                 setTimeout(() => {
-                    sendData('startGame', {duration: 5})
+                    sendDataToEach('startGame', {duration: 5, currentLobby: currentLobby})
                     updatePlayer(null, clientId, 'startedGame', true)
                 }, 5000);
             }
         }
-        if(currentLobby.playerList.every(player => player.startedGame)) {
+        if(currentLobby.playerList.every(player => player.startedGame)) { //
             console.log('every player confirmed game start')
-            sendData('startGameConfirmed')
+            sendDataToEach('startGameConfirmed')
             navigate('../Game')
         }
     }, [currentLobby])
     useEffect(() => {
         console.log(countdown)
     }, [countdown])
-    useEffect(() => {
-        console.log(map?.name)
-    }, [map])
 
     function colorFilter(color){
         const otherPlayerConflict = currentLobby.playerList.find(player => player.color === color.hex && player.playerId !== clientId)
         return !(otherPlayerConflict || color.index == 0)
     }
 
+    function handleReady(event) { // send all current data for self
+        setCurrentlyExpanded("")
+        sendDataToEach('selectionScreen', {
+            for: clientId, 
+            newPlayerData: {
+                ...currentLobby.playerList[playerIndex], 
+                ready: !(currentLobby.playerList[playerIndex].ready) ? true : false
+            }
+        })
+    }
+
     return (
-        <>
-            <Link to="..">go back</Link>
-            <h1>MapPicker.jsx</h1>
-            <ThemeButtons />
-            {countdown > 0 && <CountDown initialCount={countdown} />}
-            {map && <DrawnMap
-                mapObject={map}
+    <>
+        <ThemeButtons />
+        {countdown > 0 && <CountDown initialCount={countdown} />}
+        <div className={currentLobby.playerList[playerIndex].ready ? 'map-picker soft-no-access' : 'map-picker'}>
+            {currentLobby.map && <DrawnMap
+                mapObject={currentLobby.map}
                 aesthetics={aesthetics}
                 characters={currentLobby.playerList.map((player, index) => { return {color: player.color || aesthetics.colors[0].hex, shape: player.shape || aesthetics.shapes[0].clipPath}})}
             />}
             <div id='color-selector' className={`color scroll-selector${currentlyExpanded === 'color-selector' ? ' expanded' : ''}`}>
                 <h3 className='clickable' onClick={(event) => expandList(event, 'color-selector')}>{currentlyExpanded === 'color-selector' ? 'Close Colors' : 'Colors'}</h3>
-                <ul>{aesthetics?.colors.map((color, index) => ({...color, index})).filter(colorFilter).map((color, index) =>   <li onClick={(event) => {sendData('selectionScreen', {colorIndex: color.index, colorName: color.name, for: clientId})}} key={color.index} className={`clickable${color.hex === currentLobby.playerList[playerIndex].color ? ' selected' : ''}`}>{color.name}</li>)}</ul>
+                <ul>{aesthetics?.colors.map((color, index) => ({...color, index})).filter(colorFilter).map((color, index) =>   <li onClick={(event) => {sendDataToEach('selectionScreen', {colorIndex: color.index, colorName: color.name, for: clientId})}} key={color.index} className={`clickable${color.hex === currentLobby.playerList[playerIndex].color ? ' selected' : ''}`}>{color.name}</li>)}</ul>
             </div>
             <div id='shape-selector' className={`shape scroll-selector${currentlyExpanded === 'shape-selector' ? ' expanded' : ''}`}>
                 <h3 className='clickable' onClick={(event) => expandList(event, 'shape-selector')}>{currentlyExpanded === 'shape-selector' ? 'Close Shapes' : 'Shapes'}</h3>
-                <ul>{aesthetics?.shapes.map((shape, index) =>   <li onClick={(event) => {sendData('selectionScreen', {shapeIndex: index, shapeName: shape.name, for: clientId})}} key={index} className={`clickable${shape.clipPath === currentLobby.playerList[playerIndex].shape ? ' selected' : ''}`}>{shape.name}</li>)}</ul>
+                <ul>{aesthetics?.shapes.map((shape, index) =>   <li onClick={(event) => {sendDataToEach('selectionScreen', {shapeIndex: index, shapeName: shape.name, for: clientId})}} key={index} className={`clickable${shape.clipPath === currentLobby.playerList[playerIndex].shape ? ' selected' : ''}`}>{shape.name}</li>)}</ul>
             </div>
             <div id='map-selector' className={`map scroll-selector${currentlyExpanded === 'map-selector' ? ' expanded' : ''}`}>
                 <h3 className='clickable' onClick={(event) => expandList(event, 'map-selector')}>{currentlyExpanded === 'map-selector' ? 'Close Maps' : 'Maps'}</h3>
-                <ul>{mapList?.map((eachMap, index) =>               <li onClick={(event) => {sendData('selectionScreen', {mapIndex: index, mapName: eachMap.name, for: clientId})}} key={index} className={`clickable${ map?.name == eachMap.name ? ' selected' : ''}`}>{eachMap.name}</li>)}</ul>
+                <ul>{mapList?.map((eachMap, index) =>               <li onClick={(event) => {sendDataToEach('selectionScreen', {mapIndex: index, mapName: eachMap.name, for: clientId})}} key={index} className={`clickable${ currentLobby.map?.name == eachMap.name ? ' selected' : ''}`}>{eachMap.name}</li>)}</ul>
             </div>
-            <div className="players-ready">
-                <div>{currentLobby.playerList.filter((player) => player.ready === true).length}/{currentLobby.playerList.length} ready</div>
-                {currentLobby.playerList[playerIndex].color 
-                ? <div className='clickable' onClick={() => sendData('selectionScreen', {ready: !(currentLobby.playerList[playerIndex].ready) ? true : false, for: clientId})}>{(currentLobby.playerList[playerIndex].ready) ? 'cancel' : 'ready up'}</div>
-                : <div>Pick color first</div>}
-            </div>
-        </>
+        </div>
+        <div className={`players-ready${countdown > 0 ? ' soft-no-access' : ''}`}>
+            <div>{currentLobby.playerList.filter((player) => player.ready === true).length}/{currentLobby.playerList.length} ready</div>
+            {currentLobby.playerList[playerIndex].color 
+            ? <div className='clickable' onClick={handleReady}>{(currentLobby.playerList[playerIndex].ready) ? 'cancel' : 'ready up'}</div>
+            : <div>Pick color first</div>}
+        </div>
+    </>
     )
 }
 

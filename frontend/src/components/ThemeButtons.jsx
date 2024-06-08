@@ -3,7 +3,7 @@ import { useState } from 'react'
 import '../assets/styles/theme-buttons.css'
 import themes from '../assets/js/themes'
 
-export default function LightSwitch() {
+export default function ThemeButtons({hidden = false}) {
     const [themeState, setThemeState] = useState(0)
     function applyTheme(themeToApply) {
         console.log("applying theme: ", themeToApply)
@@ -26,7 +26,7 @@ export default function LightSwitch() {
 
     return (
         <>
-        <div className='theme-buttons'>
+        <div className={`theme-buttons${hidden ? ' hidden' : ''}`}>
             <button className="light-switch" onClick={toggleLights}>💡</button>
             <div className='custom-picker'>
                 <div className="list">

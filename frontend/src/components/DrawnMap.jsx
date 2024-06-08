@@ -154,11 +154,15 @@ export default function DrawnMap({mapObject, preview=true, aesthetics, character
                     })}</div>}
                 )
             }
-            {preview && spawns.map((spawn, index) => {
+            {preview ? spawns.map((spawn, index) => {
                 if(characters.length >= index + 1){
                     return <CharacterBlob key={index} character={characters[index]} x={spawn[0]} y={spawn[1]}/>
                 }
-            })}
+            }) :
+                characters.map((character, index) => {
+                    return <CharacterBlob key={index} character={character} x={character.x} y={character.y}/>
+                })
+            }
             {setSplashElements && <CharacterBlob character={{shape:aesthetics.shapes[0].clipPath, color:aesthetics.colors[0].hex}} x={0} y={0} setSplashElements={setSplashElements} blockSizeOverride={true}/>}
             </div>
         </>

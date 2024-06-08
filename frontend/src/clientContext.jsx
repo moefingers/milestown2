@@ -18,6 +18,16 @@ export default function ClientContextProvider({ children }) {
     const [playerIndex, setPlayerIndex] = useState(-1)
 
 
+    const [aesthetics, setAesthetics] = useState({colors: [], shapes: []})
+    const [mapList, setMapList] = useState([])
+
+    function sendDataToEach(type,body) {
+        clientPeerConnectionList.forEach((clientPeerConnection) => {
+            clientPeerConnection.connection.send({type: type,from: clientId, body: body})
+        })
+    }
+
+
     return (
         <ClientContext.Provider value={{ 
                 clientObject, setClientObject, 
@@ -27,7 +37,12 @@ export default function ClientContextProvider({ children }) {
                 playerPairs, setPlayerPairs,
                 clientPeerConnectionList, setClientPeerConnectionList,
                 receivedData, setReceivedData, 
-                playerIndex, setPlayerIndex
+                playerIndex, setPlayerIndex,
+
+                aesthetics, setAesthetics,
+                mapList, setMapList,
+
+                sendDataToEach
             }}>
             {children}
         </ClientContext.Provider>

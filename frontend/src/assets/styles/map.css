@@ -97,7 +97,7 @@
 }
 
 .character-blob {
-    transition: 1s;
+    transition: .3s;
 }
 .character-blob {
     position: absolute;

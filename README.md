@@ -228,10 +228,10 @@ The rough outline is to have a...
 
 ## short term todo:
 - start game button for owner of lobby
+- clear query on lobby filter screen in all situations
 
 
 ## long term todo:
-- vote to start
 - maybe transition from using clip paths to using svg
 - Ensure when owner of lobby leaves,  ownership  is transferred instead of deleting lobby
 - reenable strictmode
@@ -251,3 +251,4 @@ The rough outline is to have a...
 - Start game navigates to Network page
 - lobby leader starting game navigates to Network page for other players
 - navigating to Network page deletes lobby from list
+- vote to start

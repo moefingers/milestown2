@@ -16,8 +16,8 @@ export default function NetworkVisualizer({clientId, playerList}) {
             const x = 50 * Math.cos(rad) + 50
             const y = 50 * Math.sin(rad) + 50
             console.log(player.playerId, x, y)
-            playerList[index].x = x
-            playerList[index].y = y
+            playerList[index].onCircleX = x
+            playerList[index].onCircleY = y
         })
     
         console.log("playerList", playerList)
@@ -26,15 +26,15 @@ export default function NetworkVisualizer({clientId, playerList}) {
             const remainingList = playerList.slice(index + 1)
             console.log(remainingList)
             remainingList.forEach(otherPlayer => {
-                const angleOfSlope = Math.atan((otherPlayer.y - player.y)/(otherPlayer.x - player.x)) * (180 / Math.PI)
+                const angleOfSlope = Math.atan((otherPlayer.onCircleY - player.onCircleY)/(otherPlayer.onCircleX - player.onCircleX)) * (180 / Math.PI)
                 pairs.push({
                     pair: [player.playerId, otherPlayer.playerId],
                     connected: false,
                     lineElement: {
-                        origin: [player.x, player.y], 
+                        origin: [player.onCircleX, player.onCircleY], 
                         angle: angleOfSlope,
-                        reverseVector: otherPlayer.x - player.x >= 0,
-                        length: Math.sqrt(Math.pow(otherPlayer.x - player.x, 2) + Math.pow(otherPlayer.y - player.y, 2))
+                        reverseVector: otherPlayer.onCircleX - player.onCircleX >= 0,
+                        length: Math.sqrt(Math.pow(otherPlayer.onCircleX - player.onCircleX, 2) + Math.pow(otherPlayer.onCircleY - player.onCircleY, 2))
                     }
                 })
             })

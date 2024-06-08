@@ -2,6 +2,8 @@
     position: absolute;
     top: 1%;
     right: 1%;
+
+    z-index: 4;
 }
 
 .theme-buttons > * {
@@ -65,4 +67,8 @@
     visibility: visible;
     width: min(max(20vw, 20vh), 60vw);
     height: fit-content
+}
+
+.hidden {
+    display: none;
 }

@@ -1,0 +1,67 @@
+.testing {
+    position: fixed;
+}
+
+.input-intercept {
+    width: 100%;
+    height: 100%;
+}
+
+
+.button-cluster {
+    z-index: 4;
+    outline: red 1px solid;
+    position: fixed;
+    bottom: calc(var(--iunit) * 50);
+    right: calc(var(--iunit) * 50);
+    width: min(41vh, 41vw);
+    height: min(41vh, 41vw);
+}
+
+.movement-button {
+    background-color: var(--foreground-two-faded);
+
+    width: min(20vh, 20vw);
+    height: min(20vh, 20vw);
+    border: min(0.5vh, 0.5vw) solid var(--foreground-two);
+
+    clip-path: polygon(
+        0% 50%, 
+        50% 0%, 
+        100% 0%, 
+        100% 100%,
+        50% 100%
+        );
+}
+.movement-button.active{
+    background-color: var(--foreground-three-faded);
+}
+
+.movement-button.up {
+
+    position: absolute;
+    transform:translate(-50%, 0) rotate(-90deg) ;
+    top: 0%;
+    left: 50%;
+}
+
+.movement-button.left {
+    position: absolute;
+    transform:translate(0, -50%) rotate(180deg) ;
+    top: 50%;
+    left: 0%;
+}
+
+.movement-button.right {
+    position: absolute;
+    transform:translate(0, -50%) rotate(0deg) ;
+    top: 50%;
+    right: 0%;
+}
+
+.movement-button.down {
+    position: absolute;
+    transform:translate(-50%, 0) rotate(90deg) ;
+    bottom: 0%;
+    left: 50%;
+}
