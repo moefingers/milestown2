@@ -19,6 +19,8 @@ html, body, #root {
     background-color: var(--background-one);
     animation: opacity0to1 1s;
     overflow: hidden;
+    
+    user-select: none;
 }
 @keyframes opacity0to1 { 0% {opacity: 0;} 100% {opacity: 1;} }
 

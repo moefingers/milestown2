@@ -79,11 +79,11 @@ export default function MapPicker() {
     useEffect(() => {
         if (receivedData) {
             if (receivedData.type === 'selectionScreen' || receivedData.type === 'selectionScreen-redundancy') {
-                if(receivedData.body.mapIndex){setMap(mapList[receivedData.body.mapIndex])}
+                if(receivedData.body.mapIndex != undefined){setMap(mapList[receivedData.body.mapIndex])}
                 if(receivedData.body.colorIndex){
                     updatePlayer(null, receivedData.body.for, 'color', aesthetics.colors[receivedData.body.colorIndex].hex)
                 }
-                if(receivedData.body.shapeIndex > -1){
+                if(receivedData.body.shapeIndex != undefined){
                     updatePlayer(null, receivedData.body.for, 'shape', aesthetics.shapes[receivedData.body.shapeIndex].clipPath)
                 }
                 if(receivedData.type === 'selectionScreen') {
