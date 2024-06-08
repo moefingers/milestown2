@@ -8,6 +8,8 @@ This repository is hopefully the front and backend for MilestOWN 2. More notes w
 
 [And a backup frontend on GitHub Pages](https://moefingers.github.io/milestown2/)
 
+<img src="concept/form-network-4.gif" alt="forming a network between 4 players>
+
 # Index:
 - [API Documentation](#backend-api-documentation)
 - [Express PeerJS Server Events](#express-peerjs-server-events)
