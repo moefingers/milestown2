@@ -107,6 +107,10 @@ export default function MapPicker() {
 
     useEffect(() => {
         console.log("currentLobby", currentLobby)
+
+        if(currentLobby.playerList.every(player => player.ready)) {
+            navigate('../GameStarted')
+        }
     }, [currentLobby])
     useEffect(() => {
         console.log(map?.name)
@@ -142,7 +146,9 @@ export default function MapPicker() {
             </div>
             <div className="players-ready">
                 <div>{currentLobby.playerList.filter((player) => player.ready === true).length}/{currentLobby.playerList.length} ready</div>
-                <div className='clickable' onClick={() => sendData('selectionScreen', {ready: !(currentLobby.playerList[playerIndex].ready) ? true : false, for: clientId})}>{(currentLobby.playerList[playerIndex].ready) ? 'cancel' : 'ready up'}</div>
+                {currentLobby.playerList[playerIndex].color 
+                ? <div className='clickable' onClick={() => sendData('selectionScreen', {ready: !(currentLobby.playerList[playerIndex].ready) ? true : false, for: clientId})}>{(currentLobby.playerList[playerIndex].ready) ? 'cancel' : 'ready up'}</div>
+                : <div>Pick color first</div>}
             </div>
         </>
     )
