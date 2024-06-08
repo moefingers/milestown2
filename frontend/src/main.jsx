@@ -26,6 +26,7 @@ import TestMaps from './pages/TestMaps.jsx';
 import FormConnection from './pages/FormConnection.jsx';
 import Network from './pages/Network.jsx';
 import MapPicker from './pages/MapPicker.jsx'
+import Game from './pages/Game.jsx'
 
 /* Context to keep track of clientObject, clientId, currentLobby */
 import  ClientContextProvider  from './ClientContext.jsx'
@@ -66,6 +67,10 @@ const router = createHashRouter([
       {
         path: "MapPicker",
         element: <MapPicker />
+      },
+      {
+        path: "Game",
+        element: <Game />
       }
     ],
   }

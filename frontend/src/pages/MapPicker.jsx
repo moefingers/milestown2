@@ -102,16 +102,46 @@ export default function MapPicker() {
                     sendData('selectionScreen-redundancy', receivedData.body)
                 }
             }
+            if(receivedData.type === 'startCountdown') {
+                setCountdown(receivedData.body.duration)
+            }
+            if(receivedData.type === 'startGame') {
+                sendData('startGame-redundancy', receivedData.body)
+            }
+            if(receivedData.type === 'startGame-redundancy') {
+                updatePlayer(null, receivedData.from, 'startedGame', true)
+            }
+            if(receivedData.type === 'startGameConfirmed') {
+                navigate('../Game')
+            }
+
         }
     }, [receivedData])
 
     useEffect(() => {
         console.log("currentLobby", currentLobby)
 
-        if(currentLobby.playerList.every(player => player.ready)) {
-            navigate('../GameStarted')
+        if(!currentLobby.playerList[playerIndex].startedGame && currentLobby.playerList.every(player => player.ready)) {
+            console.log('every player ready')
+            if(currentLobby.playerList[playerIndex].owner) {
+                console.log('this client is owner so startin count down')
+                setCountdown(5)
+                sendData('startCountdown', {duration: 5})
+                setTimeout(() => {
+                    sendData('startGame', {duration: 5})
+                    updatePlayer(null, clientId, 'startedGame', true)
+                }, 5000);
+            }
+        }
+        if(currentLobby.playerList.every(player => player.startedGame)) {
+            console.log('every player confirmed game start')
+            sendData('startGameConfirmed')
+            navigate('../Game')
         }
     }, [currentLobby])
+    useEffect(() => {
+        console.log(countdown)
+    }, [countdown])
     useEffect(() => {
         console.log(map?.name)
     }, [map])

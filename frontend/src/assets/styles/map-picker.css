@@ -4,7 +4,7 @@ div.scroll-selector{
     left: 0%;
     z-index: 2;
 
-    background-color: var(--background-two-faded);
+    background-color: var(--background-one-faded);
     backdrop-filter: blur(calc(var(--iunit) * 5));
 
     width: min(30vw, 30vh);
@@ -72,4 +72,7 @@ div.players-ready{
     width: fit-content;
     text-wrap: nowrap;
     text-align: center;
+
+    background-color: var(--background-one-faded);
+    backdrop-filter: blur(calc(var(--iunit) * 5));
 }

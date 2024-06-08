@@ -152,7 +152,7 @@ export default function Network() {
             setPlayerPairs(newPlayerPairs)
         }
         if(receivedData.type == 'startCountdown'){
-            setCountdown(3)
+            setCountdown(receivedData.body.duration)
         }
         if(receivedData.type == 'navigateToMapPicker'){
             navigate('../MapPicker')
@@ -172,7 +172,8 @@ export default function Network() {
                             from: clientPeerConnection.client.id,
                             body: {
                                 lobby: currentLobby,
-                                playerPairs: playerPairs
+                                playerPairs: playerPairs,
+                                duration: 3
                             }
                         })
                         setTimeout(() => {

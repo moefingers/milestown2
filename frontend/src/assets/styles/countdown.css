@@ -8,4 +8,6 @@
     font-family: 'Digital Dream Regular';
     font-weight: 900;
     color: var(--foreground-three);
+
+    background-color: var(--background-one-faded);
 }
