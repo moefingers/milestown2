@@ -227,16 +227,18 @@ The rough outline is to have a...
   - sends movements in the game to be evaluated and accepted by backend
 
 ## short term todo:
-- Leaving network marks paths as red (peer/client.on('disconnetc.'))
-- boot player in lobby button for owner of lobby
-- /lobby/kick route
-  - test route
-  - add custom fetch
+- start game button for owner of lobby
+
 
 ## long term todo:
 - maybe transition from using clip paths to using svg
 - Ensure when owner of lobby leaves,  ownership  is transferred instead of deleting lobby
 - reenable strictmode
+- Leaving network marks paths as red (peer/client.on('disconnetc.'))
+- boot player in lobby button for owner of lobby
+- /lobby/kick route
+  - test route
+  - add custom fetch
 
 ## known bugs? 
 - themes not properly applied on first run.. maybe? rare bug
