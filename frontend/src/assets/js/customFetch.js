@@ -22,4 +22,8 @@ const createLobby = (lobbyId, playerId, playerToken) => customFetch('POST', '/lo
 const deleteLobby = (lobbyId, playerId, playerToken) => customFetch('DELETE', '/lobby', {lobbyId: lobbyId, playerId: playerId, playerToken: playerToken})
 
 
+
+
 export {customFetch, getMaps, getAesthetics, getDefaultMap, getPeers, getLobbies, joinLobby, leaveLobby, createLobby, deleteLobby}
+
+export const lobbyFetches  = { getPeers, getLobbies, joinLobby, createLobby, leaveLobby, deleteLobby }

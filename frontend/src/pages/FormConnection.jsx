@@ -17,13 +17,16 @@ import ThemeButtons from '../components/ThemeButtons'
 
 // script imports
 import { env } from '../assets/js/determineEnvironment.mjs'
-import { getPeers, getLobbies, joinLobby, createLobby, leaveLobby, deleteLobby } from '../assets/js/customFetch'
+import { lobbyFetches } from '../assets/js/customFetch'
+import { chatroomFetches } from '../assets/js/chatroomFetches'
 import stringMatch from '../assets/js/stringMatch'
 
 // style imports
 import '../assets/styles/form-connections.css'
 
-export default function FormConnection() {
+export default function FormConnection(chatrooms = false) {
+
+    const { getPeers, getLobbies, joinLobby, createLobby, leaveLobby, deleteLobby  } = (chatrooms == true) ? chatroomFetches : lobbyFetches
     const navigate = useNavigate()
 
     const {
@@ -363,13 +366,13 @@ export default function FormConnection() {
                         </h1>
 
                         {!currentLobby ?<>
-                            <h2 className="digital-dream">Create Lobby</h2>
+                            <h2 className="digital-dream">{chatrooms == true ? 'Create Chatroom' : 'Create Lobby'}</h2>
                             <form onSubmit={(event) => {event.preventDefault(); if(validateInput(event.target.children[0])){handleCreateLobby(event)}} }>
                                 <input placeholder='Lobby ID' onChange={(event)=>{validateInput(event.target)}} type="text" name="lobbyId" id="lobbyId" className='create-lobby-input'/>
                                 <input className='create-lobby-button' type="submit" value="+" />
                             </form>
 
-                            <h2 className='digital-dream'>Join Lobby</h2>
+                            <h2 className='digital-dream'>{chatrooms == true ? 'Join Chatroom' : 'Join Lobby'}</h2>
                             <input type="text" name="peerQuery" id="peerQuery" placeholder={'filter lobbies or players'} onChange={(event)=>{setLobbyQuery(event.target.value)}}/>
                             <ul className='lobby-list'>{lobbyList.filter(filterLobbyList).map((lobby)  => {return (
                                 <li
@@ -383,8 +386,8 @@ export default function FormConnection() {
                                 </li>
                             )})}</ul>
                         </> : <>
-                            <h2 className="digital-dream">Lobby ID: <em className="three">{currentLobby.lobbyId}</em></h2>
-                            <h2 className="digital-dream">Current Players:</h2>
+                            <h2 className="digital-dream">{chatrooms == true ? 'Chatroom ID:' : 'Lobby ID:'}<em className="three">{currentLobby.lobbyId}</em></h2>
+                            <h2 className="digital-dream">{chatrooms == true ? 'People:' : 'Current Players:'}</h2>
                             <ul className='player-list digital-dream'>{currentLobby?.playerList.map((playerEntry) => <li key={playerEntry.playerId} className={`${playerEntry.owner ? 'four' : 'five'}`}>{playerEntry.owner ? 'Owner:' : 'other:'}<span className={`monospace${playerEntry.owner ? ' four' : ' five'}`}>{ifMoreThan16Letters(playerEntry.playerId)}</span></li>) }</ul>
                             <div className='flex-row justify-space-between'>
                                 {currentLobby?.playerList.some((playerEntry) => playerEntry.owner && playerEntry.playerId === clientId) ?
