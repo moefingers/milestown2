@@ -1,13 +1,19 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, useContext } from 'react';
+
+import { ClientContext } from '../ClientContext';
 
 import CharacterBlob from './CharacterBlob';
 
 import '../assets/styles/map.css'
 
 export default function DrawnMap({mapObject, preview=true, aesthetics, characters=[], blockSizeOverride=undefined, setSplashElements, splashElements }) {
+
+    const {mapElements, setMapElements} = useContext(ClientContext)
+
+
     const {name, map, spawns=[]} = mapObject
     function resizeMap(containerWidth, containerHeight, mapWidth, mapHeight) { // gets fired by resize
-        // const mapIsTallerThanWide = map.length > map[0].length // If this is false, it could also be square. considering rotating the map down the road
+        // const mapIsTallerThanWide = map.length > map[0].length // If this is false, it could also be square.
         const mapRatio = mapWidth / mapHeight;
         const mapRatioRotated = mapHeight / mapWidth;
         const windowRatio = containerWidth / containerHeight;
@@ -20,19 +26,23 @@ export default function DrawnMap({mapObject, preview=true, aesthetics, character
                     // console.log("000 mapRatioRotated < mapRatio")
                     document.documentElement.style.setProperty('--full-block',  80 / mapHeight + "vw")
                     document.documentElement.style.setProperty('--map-transform', "translate(-50%, -50%) rotate(90deg)") // mapHeight, vw, rotate
+                    document.documentElement.style.setProperty('--rotate-controls', "rotate(90deg)")
                 }else if (mapRatioRotated >= mapRatio){
                     // console.log("001 mapRatioRotated > mapRatio")
                     document.documentElement.style.setProperty('--full-block',  80 / mapWidth + "vw")
                     document.documentElement.style.setProperty('--map-transform', "translate(-50%, -50%)") // mapWidth, vw
+                    document.documentElement.style.setProperty('--rotate-controls', "rotate(0deg)")
                 }
             } else if (mapRatioRotated <= windowRatio) {
                 // console.log("01 mapRatioRotated <= windowRatio")
                 document.documentElement.style.setProperty('--full-block',  80 / mapWidth + "vw")
                 document.documentElement.style.setProperty('--map-transform', "translate(-50%, -50%)") // mapWidth, vw
+                document.documentElement.style.setProperty('--rotate-controls', "rotate(0deg)")
                 if((windowRatio / mapRatioRotated) < (mapRatio)){
                     // console.log(`010 (windowRatio / mapRatioRotated) < (mapRatio)`)
                     document.documentElement.style.setProperty('--full-block',  80 / mapWidth + "vh")
                     document.documentElement.style.setProperty('--map-transform', "translate(-50%, -50%) rotate(90deg)") // mapWidth, vh, rotate
+                    document.documentElement.style.setProperty('--rotate-controls', "rotate(90deg)")
                 }
             }
         } else if ( mapRatio <= windowRatio) {
@@ -41,10 +51,12 @@ export default function DrawnMap({mapObject, preview=true, aesthetics, character
                 // console.log("10 mapRatioRotated > windowRatio", mapRatioRotated / windowRatio)
                 document.documentElement.style.setProperty('--full-block',  80 / mapHeight + "vw")
                 document.documentElement.style.setProperty('--map-transform', "translate(-50%, -50%) rotate(90deg)") // mapHeight, vw, rotate
+                document.documentElement.style.setProperty('--rotate-controls', "rotate(90deg)")
                 if((windowRatio / mapRatioRotated) < (mapRatio)){
                     // console.log(`100 (windowRatio / mapRatioRotated) < (mapRatio)`)
                     document.documentElement.style.setProperty('--full-block',  80 / mapHeight + "vh")
                     document.documentElement.style.setProperty('--map-transform', "translate(-50%, -50%)") // mapHeight, vh
+                    document.documentElement.style.setProperty('--rotate-controls', "rotate(0deg)")
                 }
             } else if (mapRatioRotated <= windowRatio) {
                 // console.log("11 mapRatioRotated <= windowRatio")
@@ -52,10 +64,12 @@ export default function DrawnMap({mapObject, preview=true, aesthetics, character
                     // console.log("110 mapRatioRotated < mapRatio")
                     document.documentElement.style.setProperty('--full-block',  80 / mapHeight + "vh")
                     document.documentElement.style.setProperty('--map-transform', "translate(-50%, -50%)") // mapHeight, vh
+                    document.documentElement.style.setProperty('--rotate-controls', "rotate(0deg)")
                 }else if (mapRatioRotated >= mapRatio){
                     // console.log("111 mapRatioRotated > mapRatio")
                     document.documentElement.style.setProperty('--full-block',  80 / mapWidth + "vh")
                     document.documentElement.style.setProperty('--map-transform', "translate(-50%, -50%) rotate(90deg)") // mapWidth, vh, rotate
+                    document.documentElement.style.setProperty('--rotate-controls', "rotate(90deg)")
                 }
             }
         }
@@ -63,6 +77,7 @@ export default function DrawnMap({mapObject, preview=true, aesthetics, character
         // document.documentElement.style.setProperty('--map-transform', `translate(-50%, -50%) ${rotate ? "rotate(90deg)" : ""}`)
         if(mapRatio == 1){
             document.documentElement.style.setProperty('--map-transform', "translate(-50%, -50%)")
+            document.documentElement.style.setProperty('--rotate-controls', "rotate(0deg)")
         }
     }
     if(!blockSizeOverride){
@@ -106,6 +121,16 @@ export default function DrawnMap({mapObject, preview=true, aesthetics, character
         console.log("tileElements: ", tileElements)
         console.log("blobElements: ", blobElements)
         console.log("edgeElements: ", edgeElements)
+
+        const figuredMapElements = [...tileElements, ...blobElements, ...edgeElements]
+        const mapElementsAlreadyTheSame = figuredMapElements.every((element) => mapElements.includes(element))
+        console.log("mapElementsAlreadyTheSame: ", mapElementsAlreadyTheSame)
+        if( !mapElementsAlreadyTheSame && !preview ){
+            console.log('updating mapElements context')
+            setMapElements(figuredMapElements)
+        }
+
+        
         Object.values(blobElements).filter((blob) => !blob.className.includes("override")).forEach((blob, index) => {
             const animationOptions = {
                 duration: 3000,

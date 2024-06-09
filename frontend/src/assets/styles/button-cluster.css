@@ -1,3 +1,7 @@
+:root {
+    --rotate-controls: rotate(0deg);
+}
+
 .testing {
     position: fixed;
 }
@@ -16,6 +20,10 @@
     right: calc(var(--iunit) * 50);
     width: min(41vh, 41vw);
     height: min(41vh, 41vw);
+
+    transform: var(--rotate-controls);
+    
+    transition: transform .3s;
 }
 
 .movement-button {

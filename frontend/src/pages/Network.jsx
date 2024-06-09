@@ -81,8 +81,9 @@ export default function Network() {
             })
 
             connection.on('close', () => {
-                console.log("connection close from", clientId, "to", peerId)
-                setClientPeerConnectionList(clientPeerConnectionList => clientPeerConnectionList.filter(clientPeerConnection => JSON.stringify(clientPeerConnection.connection) !== JSON.stringify(connection)))
+                console.log("connection close from", clientId, "to", peerId) /////////////////////////////////////////////////////////clientPeerConnection => clientPeerConnection.connection != connection
+                // setClientPeerConnectionList(clientPeerConnectionList => clientPeerConnectionList.filter(clientPeerConnection => JSON.stringify(clientPeerConnection.connection) !== JSON.stringify(connection)))
+                setClientPeerConnectionList(clientPeerConnectionList => clientPeerConnectionList.filter(clientPeerConnection => (   Object.values(clientPeerConnection.connection) != Object.values(connection)    ) ))
             })
         })
 
@@ -205,8 +206,6 @@ export default function Network() {
         <>
             {countdown > 0 && <CountDown initialCount={countdown}/>}
             <ThemeButtons />
-            <Link to={".."}>go back</Link>
-            <h1>Network</h1>
             <div className="center-wrapper">
 
                 {/* <NetworkVisualizer clientId={clientId} playerList={currentLobby.playerList}/> */}

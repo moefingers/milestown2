@@ -29,13 +29,20 @@ export default function ButtonCluster({movementFunctions}) {
         }
     }, [movementDelayed])
 
+    // useEffect(() => {
+    //     console.log("currentDirection requested", currentDirection == "" ? "none" : currentDirection)
+    //     if(currentDirection != "" && !movementDelayed) {
+    //         setMovementDelayed(true)
+    //         movementFunctions[currentDirection](clientId)
+    //     }
+    // }, [currentDirection])
+
     useEffect(() => {
-        console.log("currentDirection requested", currentDirection == "" ? "none" : currentDirection)
-        if(currentDirection != "" && !movementDelayed) {
+        if(currentDirection != "" && inputPressed && !movementDelayed) {
             setMovementDelayed(true)
-            movementFunctions[currentDirection]()
+            movementFunctions[currentDirection](clientId)
         }
-    }, [currentDirection])
+    }, [inputPressed])
 
     useInterval(() => {
         movementFunctions[currentDirection](clientId)
