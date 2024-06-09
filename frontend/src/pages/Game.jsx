@@ -97,6 +97,7 @@ export default function Game() {
         coveredElement.setAttribute('owner', playerId)
 
         let capturedTiles = []
+        let neutralizedTiles = []
         if(axis == "x"){
             const sharedX = Math.floor(axis == "x" ? coveredEdgeX : origX)
             const y1 = (axis == "y" ? coveredEdgeY : origY) - 1
@@ -106,12 +107,22 @@ export default function Game() {
                 const tile = mapElements.find(element => element.id == `tile-${sharedX}-${y1}`)
                 tile.style.backgroundColor = currentLobby.playerList.find(player => player.playerId === playerId).color + "88"
                 tile.setAttribute('owner', playerId)
+            } else if(checkTileEdges(sharedX, y1) == false){
+                neutralizedTiles.push([sharedX, y1])
+                const tile = mapElements.find(element => element.id == `tile-${sharedX}-${y1}`)
+                tile.style.backgroundColor = aesthetics.colors[0].hex + 66
+                tile.setAttribute('owner', null)
             }
             if(checkTileEdges(sharedX, y2)){
                 capturedTiles.push([sharedX, y2])
                 const tile = mapElements.find(element => element.id == `tile-${sharedX}-${y2}`)
                 tile.style.backgroundColor = currentLobby.playerList.find(player => player.playerId === playerId).color + "88"
                 tile.setAttribute('owner', playerId)
+            } else if(checkTileEdges(sharedX, y2) == false){
+                neutralizedTiles.push([sharedX, y2])
+                const tile = mapElements.find(element => element.id == `tile-${sharedX}-${y2}`)
+                tile.style.backgroundColor = aesthetics.colors[0].hex + 66
+                tile.setAttribute('owner', null)
             }
         } else if (axis == "y"){
             const sharedY = Math.floor(axis == "y" ? coveredEdgeY : origY)
@@ -122,19 +133,29 @@ export default function Game() {
                 const tile = mapElements.find(element => element.id == `tile-${x1}-${sharedY}`)
                 tile.style.backgroundColor = currentLobby.playerList.find(player => player.playerId === playerId).color + "88"
                 tile.setAttribute('owner', playerId)
+            }   else if(checkTileEdges(x1, sharedY) == false){
+                neutralizedTiles.push([x1, sharedY])
+                const tile = mapElements.find(element => element.id == `tile-${x1}-${sharedY}`)
+                tile.style.backgroundColor = aesthetics.colors[0].hex + 66
+                tile.setAttribute('owner', null)
             }
             if(checkTileEdges(x2, sharedY)){
                 capturedTiles.push([x2, sharedY])
                 const tile = mapElements.find(element => element.id == `tile-${x2}-${sharedY}`)
                 tile.style.backgroundColor = currentLobby.playerList.find(player => player.playerId === playerId).color + "88"
                 tile.setAttribute('owner', playerId)
+            }   else if(checkTileEdges(x2, sharedY) == false){
+                neutralizedTiles.push([x2, sharedY])
+                const tile = mapElements.find(element => element.id == `tile-${x2}-${sharedY}`)
+                tile.style.backgroundColor = aesthetics.colors[0].hex + 66
+                tile.setAttribute('owner', null)
             }
         }
         function checkTileEdges(tileX, tileY){
             const tile = mapElements.find(element => element.id == `tile-${tileX}-${tileY}`)
             if(tile == undefined || tile.classList.contains('blank')){
                 console.log('that tile doesnt exist, ', tileX, tileY)
-                return
+                return undefined
             } else {
                 console.log('tile,', tile)
             }
@@ -160,6 +181,8 @@ export default function Game() {
             ){
                 console.log(tileX, tileY, "tile captured")
                 return true
+            } else {
+                return false
             }
         }
 
@@ -169,7 +192,7 @@ export default function Game() {
             return (playerEntry.playerId === playerId) ? {...playerEntry, [axis]: newAxisValue} : playerEntry
         })
         setCurrentLobby({...currentLobby, playerList: newPlayerList})
-        sendDataToEach('move', {playerData: newPlayerList[playerIndex], edgeCaptureId: coveredElementId, capturedTiles: capturedTiles})
+        sendDataToEach('move', {playerData: newPlayerList[playerIndex], edgeCaptureId: coveredElementId, capturedTiles: capturedTiles, neutralizedTiles: neutralizedTiles})
     }
     const up = (playerId) => move(playerId, 'y', -0.5)
     const down = (playerId) => move(playerId, 'y', 0.5)
@@ -192,6 +215,12 @@ export default function Game() {
                 const tileElement = mapElements.find(element => element.id === `tile-${tile[0]}-${tile[1]}`)
                 tileElement.style.backgroundColor = currentLobby.playerList.find(player => player.playerId === receivedData.from).color + "88"
                 tileElement.setAttribute('owner', receivedData.from)
+            })
+
+            receivedData.body.neutralizedTiles.forEach((tile) => {
+                const tileElement = mapElements.find(element => element.id === `tile-${tile[0]}-${tile[1]}`)
+                tileElement.style.backgroundColor = aesthetics.colors[0].hex + 66
+                tileElement.setAttribute('owner', null)
             })
         }
     },[receivedData])

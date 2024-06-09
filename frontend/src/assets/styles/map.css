@@ -28,11 +28,12 @@
 }
 
 .tile {
-    background-color: rgba(var(--netural), .3);
 
     position: relative;
     width: var(--full-block);
     height: var(--full-block);
+
+    transition: background-color .3s;
 }
 
 .tile.override {
@@ -54,10 +55,12 @@
 
     width: 100%;  /* Edge length */
     height: 10%;  /* Edge thickness*/
+    transition: background-color .3s;
 }
 
 .edge.horizontal {
     transform:translate(0, -50%);
+
 }
 .edge.vertical {
     transform:translate(-50%, -50%) rotate(90deg) translate(50%, 0%);
@@ -91,6 +94,9 @@
 
         15%     100%
       );
+
+      
+    transition: background-color .5s;
 }
 
 .half-edge.end{

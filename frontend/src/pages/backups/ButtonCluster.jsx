@@ -43,10 +43,7 @@ export default function ButtonCluster({movementFunctions}) {
 
     // if mouse down inside element and then mouse is moved out of element, there is a problem where mouse up is not sent
     return (
-        <div className='input-intercept'
-        onMouseDown={() => setInputPressed(true)}
-        onMouseUp={ () => setInputPressed(false)}
-        >
+        <div className='input-intercept' onMouseDown={() => setInputPressed(true)} onMouseUp={ () => setInputPressed(false)}>
             <div className="button-cluster">
                 {['up', 'left', 'down', 'right'].map((direction, index) => {
                     return (
@@ -54,11 +51,7 @@ export default function ButtonCluster({movementFunctions}) {
                         onMouseEnter={inputPressed ? ()=>setCurrentDirection(direction)  : ()=>setCurrentDirection("")   } 
                         onMouseLeave={inputPressed ? ()=>setCurrentDirection("")    : ()=>setCurrentDirection("")   } 
                         onMouseDown={()=>setCurrentDirection(direction)}
-                        onMouseUp={()=>setCurrentDirection("")}
-                        
-                        
-                        
-                        />
+                        onMouseUp={()=>setCurrentDirection("")}/>
                     )
                 })}
             </div>
